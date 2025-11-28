@@ -35,7 +35,7 @@ export class AuthService {
   login(credentials: LoginReq): Observable<boolean> {
     // Uses ApiService.post ('account/login' is appended to base URL)
     // The jwtInterceptor and errorInterceptor run automatically here!
-    return this.apiService.post<AuthResponse>('account/login', credentials).pipe(
+    return this.apiService.post<AuthResponse>('api/account/login', credentials).pipe(
       tap((response) => {
         this.setSession(response);
         this.snackBar.open(`Welcome back, ${response.user.displayName}!`, 'Close', { duration: 3000 });
@@ -50,7 +50,7 @@ export class AuthService {
   }
 
   register(formData: FormData): Observable<boolean> {
-    return this.apiService.post<AuthResponse>('account/register', formData).pipe(
+    return this.apiService.post<AuthResponse>('api/account/register', formData).pipe(
       tap((response) => {
         this.setSession(response);
         this.snackBar.open('Registration successful!', 'Close', { duration: 3000 });
@@ -73,7 +73,7 @@ export class AuthService {
 
   getProfile(): Observable<User | null> {
     // Uses ApiService.get
-    return this.apiService.get<User>('account/me').pipe(
+    return this.apiService.get<User>('api/account/me').pipe(
       tap(user => this.currentUserSignal.set(user)),
       catchError(() => {
         // If 'me' fails (e.g. token expired), log out
@@ -84,7 +84,7 @@ export class AuthService {
   }
 
   updateProfile(formData: FormData): Observable<User | null> {
-    return this.apiService.put<User>('account/profile', formData).pipe(
+    return this.apiService.put<User>('api/account/profile', formData).pipe(
       tap(updatedUser => {
         this.currentUserSignal.set(updatedUser);
         this.snackBar.open('Profile updated!', 'Close', { duration: 3000 });

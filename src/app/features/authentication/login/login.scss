@@ -1,0 +1,4 @@
+/* Custom override if Tailwind isn't catching the mat-form-field width */
+mat-form-field {
+    width: 100%;
+}
