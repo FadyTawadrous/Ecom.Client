@@ -1,0 +1,78 @@
+<nav class="flex items-center justify-between bg-white shadow p-4">
+  <!-- Logo -->
+  <a routerLink="/" class="font-bold text-xl">Ecom</a>
+
+  <!-- Search Bar -->
+  <input
+    type="text"
+    placeholder="Search products..."
+    class="border rounded px-2 py-1 w-1/3"
+  />
+
+  <!-- Right Side Icons and User -->
+  <div class="flex items-center space-x-4">
+    <!-- Wishlist Icon -->
+    <a routerLink="/wishlist" class="relative">
+      <span class="material-icons">favorite</span>
+      @if (totalWishlistItems() > 0) {
+        <span
+          class="absolute -top-1 -right-2 bg-red-600 text-white rounded-full text-xs px-1"
+        >
+          {{ totalWishlistItems() }}
+        </span>
+      }
+    </a>
+
+    <!-- Cart Icon -->
+    <a routerLink="/cart" class="relative">
+      <span class="material-icons">shopping_cart</span>
+      @if (totalCartItems() > 0) {
+        <span
+          class="absolute -top-1 -right-2 bg-red-600 text-white rounded-full text-xs px-1"
+        >
+          {{ totalCartItems() }}
+        </span>
+      }
+    </a>
+
+    <!-- User Info Dropdown -->
+    @if (isAuthenticated()) {
+      <div class="relative group">
+        <button
+          class="flex items-center space-x-2 px-3 py-1 bg-gray-100 text-gray-700 rounded hover:bg-gray-200 transition"
+        >
+          <span>{{ currentUser()?.displayName }}</span>
+          <span class="material-icons">arrow_drop_down</span>
+        </button>
+
+        <!-- Dropdown Menu -->
+        <div
+          class="absolute right-0 mt-2 w-40 bg-white border rounded shadow-lg hidden group-hover:block"
+        >
+          <a
+            routerLink="/account/profile"
+            class="block px-4 py-2 hover:bg-gray-100 transition"
+            >Profile</a
+          >
+          <button
+            (click)="logout()"
+            class="w-full text-left px-4 py-2 hover:bg-gray-100 transition"
+          >
+            Logout
+          </button>
+        </div>
+      </div>
+    } @else {
+      <a
+        routerLink="/account/login"
+        class="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 transition"
+        >Login</a
+      >
+      <a
+        routerLink="/account/register"
+        class="px-3 py-1 bg-green-500 text-white rounded hover:bg-green-600 transition"
+        >Register</a
+      >
+    }
+  </div>
+</nav>

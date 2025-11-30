@@ -1,0 +1,21 @@
+<div>
+  <h3 class="text-lg font-semibold mb-3">
+    @if (type === 'company') {
+      Company
+    } @else {
+      Customer Service
+    }
+  </h3>
+
+  <ul class="space-y-2">
+    @if (type === 'company') {
+      @for (item of companyLinks; track item.label) {
+        <li><a [routerLink]="item.url" class="hover:text-white">{{ item.label }}</a></li>
+      }
+    } @else {
+      @for (item of customerServiceLinks; track item.label) {
+        <li><a [routerLink]="item.url" class="hover:text-white">{{ item.label }}</a></li>
+      }
+    }
+  </ul>
+</div>
