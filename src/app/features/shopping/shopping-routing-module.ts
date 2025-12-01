@@ -5,6 +5,7 @@ import { ProductListComponent } from './product-list-component/product-list-comp
 import { ProductDetailsComponent } from './product-details-component/product-details-component';
 import { TestinComponent } from './testin.component/testin.component';
 
+
 const routes: Routes = [
   { 
     path: '', 

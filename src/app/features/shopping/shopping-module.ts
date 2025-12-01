@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
+
 import { ShoppingRoutingModule } from './shopping-routing-module';
 
 import { ProductListComponent } from './product-list-component/product-list-component';
@@ -11,7 +12,7 @@ import { SearchFilterComponent } from './search-filter/search-filter.component';
 import { CategorySliderComponent } from './category-slider/category-slider.component';
 import { BrandSliderComponent } from './brand-slider/brand-slider.component';
 import { MaterialModule } from '../../shared/material/material-module';
-
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 // Services
 import { ProductService } from '../../core/services/product-service';
 @NgModule({
@@ -26,7 +27,12 @@ import { ProductService } from '../../core/services/product-service';
     ProductDetailsComponent,
     ProductCardComponent,
     ProductListComponent,
-    MaterialModule
+    MaterialModule,
+    FormsModule,
+    ReactiveFormsModule
+    
+   
+    
     
 
   ],

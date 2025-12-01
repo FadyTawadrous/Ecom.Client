@@ -1,1 +1,40 @@
-<p>brand-slider works!</p>
+<div class="brand-slider">
+  <!-- "All Brands" Button -->
+  <button 
+    mat-stroked-button 
+    class="brand-button"
+    [class.active]="!selectedBrandId"
+    (click)="selectAllBrands()">
+    <mat-icon>branding_watermark</mat-icon>
+    <span>All Brands</span>
+  </button>
+  
+  <!-- Loop through each brand -->
+  @for (brand of brands; track brand.id) {
+    <button 
+      mat-stroked-button 
+      class="brand-button"
+      [class.active]="isBrandSelected(brand.id)"
+      (click)="selectBrand(brand.id)">
+      
+      <!-- Brand Logo or Icon -->
+      @if (brand.imageUrl) {
+        <div class="brand-logo">
+          <img 
+            [src]="getBrandLogo(brand)" 
+            [alt]="brand.name || 'Brand'"
+            (error)="brand.imageUrl = null">
+        </div>
+      } @else {
+        <div class="brand-icon">
+          <mat-icon>store</mat-icon>
+        </div>
+      }
+      
+      <!-- Brand Name -->
+      <span class="brand-name">
+        {{ brand.name || 'Brand ' + brand.id }}
+      </span>
+    </button>
+  }
+</div>

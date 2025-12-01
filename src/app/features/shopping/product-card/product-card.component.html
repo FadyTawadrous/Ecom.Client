@@ -1,1 +1,57 @@
-<p>product-card works!</p>
+<!-- Simple Material Card displaying ONE product -->
+<mat-card class="product-card">
+  
+  <!-- Product Image -->
+  <img 
+    mat-card-image 
+    [src]="product.thumbnailUrl" 
+    [alt]="product.title"
+    class="product-image">
+  
+  <!-- Product Info -->
+  <mat-card-content class="product-content">
+    <!-- Title -->
+    <h3 class="product-title">{{ product.title }}</h3>
+    
+    <!-- Price with discount if available -->
+    <div class="product-price">
+      <span class="current-price">
+        {{ product.price | currency }}
+      </span>
+      @if (product.discountPercentage > 0) {
+        <span class="discount">
+          -{{ product.discountPercentage }}%
+        </span>
+      }
+    </div>
+    
+    <!-- Rating -->
+    <div class="product-rating">
+      <mat-icon>star</mat-icon>
+      <span>{{ product.rating }}</span>
+    </div>
+  </mat-card-content>
+  
+  <!-- Action Buttons -->
+  <mat-card-actions class="product-actions">
+    <!-- Add to Cart Button -->
+    <button 
+      mat-raised-button 
+      color="primary"
+      (click)="onAddToCart()"
+      class="add-to-cart-btn">
+      <mat-icon>shopping_cart</mat-icon>
+      Add to Cart
+    </button>
+    
+    <!-- Wishlist Button -->
+    <button 
+      mat-icon-button 
+      color="warn"
+      (click)="onAddToWishlist()"
+      class="wishlist-btn">
+      <mat-icon>favorite</mat-icon>
+    </button>
+  </mat-card-actions>
+  
+</mat-card>
