@@ -122,14 +122,36 @@ export class ProfileComponent {
     });
   }
 
+  // registerFace() {
+  //   const dialogRef = this.dialog.open(FaceCaptureComponent, { width: '350px' });
+
+  //   dialogRef.afterClosed().subscribe(file => {
+  //     if (file) {
+  //       this.isLoading.set(true);
+  //       this.faceService.registerFace(file).subscribe({
+  //         next: () => this.isLoading.set(false),
+  //         error: () => this.isLoading.set(false)
+  //       });
+  //     }
+  //   });
+  // }
+
   registerFace() {
     const dialogRef = this.dialog.open(FaceCaptureComponent, { width: '350px' });
 
     dialogRef.afterClosed().subscribe(file => {
       if (file) {
         this.isLoading.set(true);
-        this.faceService.registerFace(file).subscribe({
-          next: () => this.isLoading.set(false),
+        // Call register or update based on current status
+        const action$ = this.hasFaceId()
+          ? this.faceService.registerFace(file) // Or updateFace if you have a distinct endpoint
+          : this.faceService.registerFace(file);
+
+        action$.subscribe({
+          next: () => {
+            this.isLoading.set(false);
+            this.hasFaceId.set(true); // Update UI state immediately
+          },
           error: () => this.isLoading.set(false)
         });
       }
@@ -138,11 +160,21 @@ export class ProfileComponent {
 
   checkFaceStatus(userId: string) {
     this.faceService.checkFaceIdStatus(userId).subscribe({
-      next: () => this.hasFaceId.set(true),
-      error: () => this.hasFaceId.set(false)
-      // Note: If your backend returns 404 for "Not Found", 
-      // your ErrorInterceptor might show a popup. 
-      // Ideally, the backend should return 200 with { hasFace: false } to avoid the error popup.
+      next: (response: any) => {
+        // 1. Check if the response is your standard ResponseResult (Success)
+        // Your ResponseResult object has an 'isSuccess' property.
+        // The anonymous object { hasFace: false } DOES NOT have 'isSuccess'.
+        if (response && response.isSuccess) {
+          this.hasFaceId.set(true);
+        } else {
+          // This catches { hasFace: false } or any failed ResponseResult
+          this.hasFaceId.set(false);
+        }
+      },
+      error: () => {
+        // This handles actual network errors (500 Server Error, offline, etc.)
+        this.hasFaceId.set(false);
+      }
     });
   }
 

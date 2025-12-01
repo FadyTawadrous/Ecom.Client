@@ -21,15 +21,28 @@
             <h2 class="text-xl font-semibold">{{ authService.currentUser()?.displayName }}</h2>
             <p class="text-gray-500 text-sm">{{ authService.currentUser()?.email }}</p>
 
-            <div class="mt-4 w-full">
+            <div class="mt-4 w-full flex flex-col gap-2 items-center">
                 <span class="px-3 py-1 bg-green-100 text-green-800 rounded-full text-xs font-medium">
                     Customer
                 </span>
+
+                <!-- Face ID Status Badge -->
+                @if (hasFaceId()) {
+                <div
+                    class="flex items-center gap-1 text-green-600 text-sm font-medium bg-green-50 px-3 py-1 rounded-full border border-green-200">
+                    <mat-icon
+                        class="!w-4 !h-4 text-[16px] leading-none flex items-center justify-center">check_circle</mat-icon>
+                    <span>Face ID Active</span>
+                </div>
+                }
             </div>
 
-            <!-- Register Face ID Button -->
-            <button mat-stroked-button color="accent" class="mt-4 w-full" (click)="registerFace()">
-                <mat-icon>face</mat-icon> Register Face ID
+            <mat-divider class="w-full !my-4"></mat-divider>
+
+            <!-- Face ID Action Button -->
+            <button mat-stroked-button color="accent" class="w-full" (click)="registerFace()">
+                <mat-icon>face</mat-icon>
+                {{ hasFaceId() ? 'Update Face ID' : 'Enable Face ID' }}
             </button>
         </mat-card>
 
