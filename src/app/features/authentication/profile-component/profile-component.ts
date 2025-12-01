@@ -8,6 +8,10 @@ import { AuthService } from '../../../core/services/auth-service';
 
 import { MaterialModule } from '../../../shared/material/material-module';
 
+import { MatDialog } from '@angular/material/dialog';
+import { FaceCaptureComponent } from '../../../shared/components/face-capture-component/face-capture-component';
+import { FaceIdService } from '../../../core/services/face-id-service';
+
 @Component({
   selector: 'app-profile-component',
   imports: [
@@ -24,12 +28,15 @@ export class ProfileComponent {
   // Inject dependencies
   authService = inject(AuthService); // Public so template can access currentUser signal
   private fb = inject(FormBuilder);
+  private faceService = inject(FaceIdService);
+  private dialog = inject(MatDialog);
 
   // State Signals
   isLoading = signal(false);
   currentImage = signal<string | undefined>(undefined);
-
+  hasFaceId = signal(false); // Signal to track status
   selectedFile: File | null = null;
+
 
   profileForm: FormGroup = this.fb.group({
     email: [{ value: '', disabled: true }], // Read-only
@@ -52,7 +59,8 @@ export class ProfileComponent {
         // Handle Image URL (Assuming backend returns full URL or relative path)
         // If relative, prepend API URL here or in a pipe
         this.currentImage.set(user.profileImageUrl);
-        
+        this.checkFaceStatus(user.id);
+
         // if (user.profileImageUrl) {
         //    const fullUrl = `${environment.apiURL}/Files/Images/UserImages/${user.profileImageUrl}`;
         //    this.currentImage.set(fullUrl);
@@ -61,7 +69,7 @@ export class ProfileComponent {
         //   //this.currentImage.set(undefined);
         //   this.currentImage.set(`${environment.apiURL}/Files/Images/UserImages/default-profile.png`);
         // }
-        
+
       }
     });
   }
@@ -111,6 +119,30 @@ export class ProfileComponent {
       error: () => {
         this.isLoading.set(false);
       }
+    });
+  }
+
+  registerFace() {
+    const dialogRef = this.dialog.open(FaceCaptureComponent, { width: '350px' });
+
+    dialogRef.afterClosed().subscribe(file => {
+      if (file) {
+        this.isLoading.set(true);
+        this.faceService.registerFace(file).subscribe({
+          next: () => this.isLoading.set(false),
+          error: () => this.isLoading.set(false)
+        });
+      }
+    });
+  }
+
+  checkFaceStatus(userId: string) {
+    this.faceService.checkFaceIdStatus(userId).subscribe({
+      next: () => this.hasFaceId.set(true),
+      error: () => this.hasFaceId.set(false)
+      // Note: If your backend returns 404 for "Not Found", 
+      // your ErrorInterceptor might show a popup. 
+      // Ideally, the backend should return 200 with { hasFace: false } to avoid the error popup.
     });
   }
 

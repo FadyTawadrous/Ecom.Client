@@ -1,0 +1,35 @@
+<div class="p-4 text-center">
+    <h2 mat-dialog-title class="text-xl font-bold mb-4">Face ID Scanner</h2>
+
+    <div class="relative bg-black rounded-lg overflow-hidden w-[320px] h-[240px] mx-auto mb-4">
+        <!-- Webcam View -->
+        @if (!capturedImage()) {
+        <webcam [height]="240" [width]="320" [trigger]="triggerObservable" (imageCapture)="handleImage($event)"
+            (initError)="handleInitError($event)"></webcam>
+        } @else {
+        <!-- Preview Captured Image -->
+        <img [src]="capturedImage()!.imageAsDataUrl" class="w-full h-full object-cover">
+        }
+
+        <!-- Error State -->
+        @if (errorMsg()) {
+        <div class="absolute inset-0 flex items-center justify-center bg-gray-900 bg-opacity-90 text-white p-4">
+            <p>{{ errorMsg() }}</p>
+        </div>
+        }
+    </div>
+
+    <div class="flex justify-center gap-3">
+        @if (!capturedImage()) {
+        <button mat-button mat-dialog-close color="warn">Cancel</button>
+        <button mat-flat-button color="primary" (click)="triggerSnapshot()">
+            <mat-icon>camera</mat-icon> Capture
+        </button>
+        } @else {
+        <button mat-stroked-button (click)="retake()">Retake</button>
+        <button mat-flat-button color="accent" (click)="confirm()">
+            <mat-icon>check</mat-icon> Use Photo
+        </button>
+        }
+    </div>
+</div>
