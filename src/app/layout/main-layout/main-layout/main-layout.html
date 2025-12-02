@@ -1,16 +1,12 @@
-<div class="min-h-screen flex flex-col bg-gray-50">
-    <!-- Header / Navbar -->
-        <app-test-navbar></app-test-navbar>
+<div class="min-h-screen flex flex-col bg-gradient-to-br from-gray-50 to-gray-100">
+  <!-- Navbar -->
+  <app-navbar></app-navbar>
 
-    <!-- Main Content -->
-    <main class="flex-grow container mx-auto px-4 py-6">
-        <router-outlet></router-outlet>
-      </main>
+  <!-- Main Content -->
+  <main class="flex-grow container mx-auto px-4 py-8 md:py-10">
+    <router-outlet></router-outlet>
+  </main>
 
-    <!-- Footer -->
-    <footer class="bg-gray-800 text-blue-600 py-6 mt-auto">
-        <div class="container mx-auto px-4 text-center">
-            <p>&copy; 2025 E-Com Store. All rights reserved.</p>
-        </div>
-    </footer>
+  <!-- Footer -->
+  <app-footer></app-footer>
 </div>

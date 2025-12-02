@@ -1,0 +1,49 @@
+<div class="flex flex-col sm:flex-row items-center justify-between gap-4 py-6 px-4 bg-white rounded-xl shadow-sm border border-gray-200">
+
+  <!-- Page Info & Navigation -->
+  <div class="flex items-center gap-3">
+    <!-- Previous Button -->
+    <button 
+      (click)="changePage(pageNum - 1)" 
+      [disabled]="pageNum <= 1"
+      class="flex items-center gap-1.5 px-4 py-2.5 rounded-lg font-medium transition-all disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-transparent bg-white border-2 border-gray-300 text-gray-700 hover:border-blue-500 hover:text-blue-600 hover:bg-blue-50"
+    >
+      <span class="material-icons text-xl">chevron_left</span>
+      <span class="hidden sm:inline">Previous</span>
+    </button>
+
+    <!-- Page Counter -->
+    <div class="px-4 py-2.5 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border border-blue-200">
+      <span class="text-sm font-semibold text-gray-700">
+        Page <span class="text-blue-600">{{ pageNum }}</span> of <span class="text-blue-600">{{ totalPages }}</span>
+      </span>
+    </div>
+
+    <!-- Next Button -->
+    <button 
+      (click)="changePage(pageNum + 1)" 
+      [disabled]="pageNum >= totalPages"
+      class="flex items-center gap-1.5 px-4 py-2.5 rounded-lg font-medium transition-all disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-transparent bg-white border-2 border-gray-300 text-gray-700 hover:border-blue-500 hover:text-blue-600 hover:bg-blue-50"
+    >
+      <span class="hidden sm:inline">Next</span>
+      <span class="material-icons text-xl">chevron_right</span>
+    </button>
+  </div>
+
+  <!-- Page Size Dropdown -->
+  <div class="flex items-center gap-3">
+    <label class="text-sm font-medium text-gray-700 whitespace-nowrap">
+      Items per page:
+    </label>
+    <select 
+      [ngModel]="pageSize" 
+      (ngModelChange)="onPageSizeChange($event)"
+      class="px-4 py-2.5 bg-white border-2 border-gray-300 rounded-lg text-gray-700 font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-gray-400 transition-all cursor-pointer"
+    >
+      @for (size of pageSizeOptions; track size) {
+        <option [value]="size">{{ size }}</option>
+      }
+    </select>
+  </div>
+
+</div>

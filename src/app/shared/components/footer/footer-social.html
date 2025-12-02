@@ -1,0 +1,24 @@
+<div>
+  <h3 class="text-lg font-semibold mb-4 text-white">Follow Us</h3>
+
+  <div class="flex gap-3">
+    @for (s of socialLinks; track s.icon) {
+      <a
+        [href]="s.url"
+        target="_blank"
+        class="relative w-11 h-11 flex items-center justify-center rounded-xl bg-gray-800 text-gray-400 hover:text-white hover:bg-gradient-to-br hover:from-blue-600 hover:to-indigo-600 transition-all duration-300 group shadow-md hover:shadow-xl hover:scale-110"
+      >
+        <!-- Icon -->
+        <span class="material-icons text-xl">{{ s.icon }}</span>
+
+        <!-- Tooltip -->
+        <span
+          class="absolute -top-10 left-1/2 -translate-x-1/2 hidden group-hover:block bg-gray-700 text-white text-xs px-3 py-1.5 rounded-lg whitespace-nowrap shadow-lg"
+        >
+          {{ s.label }}
+          <span class="absolute top-full left-1/2 -translate-x-1/2 -mt-px w-2 h-2 bg-gray-700 rotate-45"></span>
+        </span>
+      </a>
+    }
+  </div>
+</div>

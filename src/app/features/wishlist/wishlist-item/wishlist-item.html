@@ -1,0 +1,77 @@
+<div class="group relative bg-white border-2 border-gray-200 rounded-2xl p-5 shadow-sm hover:shadow-xl hover:border-blue-300 transition-all duration-300">
+  
+  <!-- Remove Button (Top Right) -->
+  <button
+    (click)="onRemove()"
+    class="absolute top-3 right-3 w-9 h-9 bg-red-500 text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 hover:bg-red-600 hover:scale-110 transition-all shadow-md z-10"
+    title="Remove from wishlist"
+  >
+    <span class="material-icons text-lg">close</span>
+  </button>
+
+  <!-- Thumbnail -->
+  <div class="relative mb-4 overflow-hidden rounded-xl bg-gray-100">
+    <img 
+      [src]="item.thumbnailUrl" 
+      class="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-300"
+      [alt]="item.productTitle"
+    />
+    <!-- Wishlist Badge -->
+    <div class="absolute top-2 left-2 bg-red-500 text-white px-2.5 py-1 rounded-full text-xs font-semibold flex items-center gap-1 shadow-md">
+      <span class="material-icons text-sm">favorite</span>
+      Saved
+    </div>
+  </div>
+
+  <!-- Content -->
+  <div class="space-y-3">
+    <!-- Title -->
+    <h3 class="font-semibold text-gray-800 text-base line-clamp-2 min-h-[3rem]">
+      {{ item.productTitle }}
+    </h3>
+
+    <!-- Price -->
+    <p class="text-2xl font-bold text-blue-600">
+      {{ item.price | currency }}
+    </p>
+
+    <!-- Action Buttons -->
+    <div class="flex flex-col gap-2 pt-2">
+      <!-- If not in cart → show Add button -->
+      @if (!cartItem()) {
+        <button 
+          class="w-full px-4 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl font-medium hover:from-blue-700 hover:to-indigo-700 transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2" 
+          (click)="addToCart()"
+        >
+          <span class="material-icons text-xl">shopping_cart</span>
+          Add to Cart
+        </button>
+      }
+
+      <!-- If in cart → show quantity controls -->
+      @if (cartItem()) {
+        <div class="flex items-center justify-between bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-200 rounded-xl px-4 py-3">
+          <button 
+            (click)="decrement()"
+            class="w-9 h-9 bg-white border-2 border-gray-300 text-gray-700 rounded-lg hover:border-red-500 hover:text-red-600 hover:bg-red-50 transition-all flex items-center justify-center font-bold"
+          >
+            <span class="material-icons text-xl">remove</span>
+          </button>
+          
+          <div class="flex flex-col items-center">
+            <span class="text-xs text-green-700 font-medium">In Cart</span>
+            <span class="text-xl font-bold text-gray-800">{{ cartItem()!.quantity }}</span>
+          </div>
+          
+          <button 
+            (click)="increment()"
+            class="w-9 h-9 bg-white border-2 border-gray-300 text-gray-700 rounded-lg hover:border-green-500 hover:text-green-600 hover:bg-green-50 transition-all flex items-center justify-center font-bold"
+          >
+            <span class="material-icons text-xl">add</span>
+          </button>
+        </div>
+      }
+    </div>
+  </div>
+
+</div>
