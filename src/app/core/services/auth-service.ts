@@ -6,6 +6,7 @@ import { of, Observable } from 'rxjs';
 import { ApiService } from './api-service'; // Custom ApiService for HTTP calls, so we don't need HttpClient or environment
 import { AuthResponse, LoginReq, User } from '../models/auth.models';
 import { environment } from '../../../environments/environment';
+import { HttpParams } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
@@ -60,11 +61,20 @@ export class AuthService {
   register(formData: FormData): Observable<boolean> {
     return this.apiService.post<AuthResponse>('api/account/register', formData).pipe(
       tap((response) => {
-        this.setSession(response);
-        this.snackBar.open('Registration successful!', 'Close', { duration: 3000 });
+        //this.setSession(response);
+        this.snackBar.open('Registration successful! Please check your email to confirm your account.', 'Close', { duration: 3000 });
       }),
       map(() => true)
     );
+  }
+
+  confirmEmail(userId: string, code: string): Observable<any> {
+    const params = new HttpParams()
+      .set('userId', userId)
+      .set('code', code);
+
+    // This calls GET /api/account/confirm-email?userId=...&code=...
+    return this.apiService.get('api/account/confirm-email', params);
   }
 
   logout(): void {

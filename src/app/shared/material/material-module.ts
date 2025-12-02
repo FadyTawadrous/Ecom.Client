@@ -11,12 +11,13 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
-import { MatDialogModule } from '@angular/material/dialog';
+import { MatDialogModule} from '@angular/material/dialog';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatBadgeModule } from '@angular/material/badge';
+
 
 
 @NgModule({
@@ -38,7 +39,7 @@ import { MatBadgeModule } from '@angular/material/badge';
     MatProgressSpinnerModule,
     MatDividerModule,
     MatMenuModule,
-    MatBadgeModule
+    MatBadgeModule,
   ],
   exports: [
     // Export so other modules can use them
