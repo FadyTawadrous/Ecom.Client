@@ -4,6 +4,8 @@ export interface Address {
     city: string;
     country: string;
     postalCode?: string;
+    latitude?: number;
+    longitude?: number;
 }
 
 export interface CreateAddressReq {
@@ -11,6 +13,8 @@ export interface CreateAddressReq {
     city: string;
     country: string;
     postalCode?: string;
+    latitude?: number;
+    longitude?: number;
 }
 
 export interface UpdateAddressReq {
@@ -19,4 +23,6 @@ export interface UpdateAddressReq {
     city: string;
     country: string;
     postalCode?: string;
+    latitude?: number;
+    longitude?: number;
 }

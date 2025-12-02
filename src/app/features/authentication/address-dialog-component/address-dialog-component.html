@@ -2,6 +2,13 @@
 <mat-dialog-content>
     <form [formGroup]="addressForm" class="flex flex-col gap-3 pt-2">
 
+        <!-- MAP SECTION -->
+        <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700 mb-2">Pin Location</label>
+            <app-map-picker-component (locationPicked)="onLocationPicked($event)"></app-map-picker-component>
+        </div>
+
+        <!-- FORM FIELDS (Auto-filled) -->
         <mat-form-field appearance="outline" class="w-full">
             <mat-label>Street Address</mat-label>
             <input matInput formControlName="street" placeholder="123 Main St">
@@ -29,6 +36,7 @@
 
     </form>
 </mat-dialog-content>
+
 <mat-dialog-actions align="end">
     <button mat-button mat-dialog-close>Cancel</button>
     <button mat-flat-button color="primary" [disabled]="addressForm.invalid || isLoading" (click)="save()">
