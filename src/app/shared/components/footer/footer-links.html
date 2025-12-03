@@ -1,0 +1,37 @@
+<div>
+  <h3 class="text-lg font-semibold mb-4 text-white">
+    @if (type === 'company') {
+      Company
+    } @else {
+      Customer Service
+    }
+  </h3>
+
+  <ul class="space-y-3">
+    @if (type === 'company') {
+      @for (item of companyLinks; track item.label) {
+        <li>
+          <a 
+            [routerLink]="item.url" 
+            class="text-gray-400 hover:text-white transition-colors flex items-center gap-2 group"
+          >
+            <span class="w-0 h-0.5 bg-blue-500 group-hover:w-4 transition-all duration-300"></span>
+            {{ item.label }}
+          </a>
+        </li>
+      }
+    } @else {
+      @for (item of customerServiceLinks; track item.label) {
+        <li>
+          <a 
+            [routerLink]="item.url" 
+            class="text-gray-400 hover:text-white transition-colors flex items-center gap-2 group"
+          >
+            <span class="w-0 h-0.5 bg-blue-500 group-hover:w-4 transition-all duration-300"></span>
+            {{ item.label }}
+          </a>
+        </li>
+      }
+    }
+  </ul>
+</div>

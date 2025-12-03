@@ -1,0 +1,105 @@
+<div class="product-list">
+  <!-- Header Section -->
+  <header class="list-header">
+    <h1 class="page-title">{{ pageTitle }}</h1>
+    
+    @if (hasActiveFilters) {
+      <button mat-stroked-button (click)="clearFilters()" class="clear-filters-btn">
+        <mat-icon>clear_all</mat-icon>
+        Clear Filters
+      </button>
+    }
+  </header>
+
+  <!-- Category Slider -->
+  <div class="slider-section">
+    <app-category-slider 
+      [categories]="categories"
+      [selectedCategoryId]="selectedCategoryId"
+      (categorySelected)="onCategorySelected($event)">
+    </app-category-slider>
+  </div>
+
+  <!-- Brand Slider -->
+  <div class="slider-section">
+    <app-brand-slider 
+      [brands]="brands"
+      [selectedBrandId]="selectedBrandId"
+      (brandSelected)="onBrandSelected($event)">
+    </app-brand-slider>
+  </div>
+
+  <!-- Main Content -->
+  <div class="content-wrapper">
+    <!-- Filters Sidebar -->
+    <aside class="sidebar">
+      <app-search-filter
+        [currentFilter]="currentFilter"
+        (filterChange)="onFilterChange($event)">
+      </app-search-filter>
+    </aside>
+
+    <!-- Products Grid -->
+    <main class="products-main">
+      <!-- Loading State -->
+      @if (isLoading) {
+        <div class="loading-state">
+          <mat-spinner diameter="50"></mat-spinner>
+          <p>Loading products...</p>
+        </div>
+      }
+
+      <!-- Error State -->
+      @if (error && !isLoading) {
+        <div class="error-state">
+          <mat-icon class="error-icon">error_outline</mat-icon>
+          <h3>Oops! Something went wrong</h3>
+          <p>{{ error }}</p>
+          <button mat-raised-button color="primary" (click)="loadProducts()">
+            <mat-icon>refresh</mat-icon>
+            Try Again
+          </button>
+        </div>
+      }
+
+      <!-- Empty State -->
+      @if (!isLoading && !error && products.length === 0) {
+        <div class="empty-state">
+          <mat-icon class="empty-icon">inventory_2</mat-icon>
+          <h3>No products found</h3>
+          <p>Try adjusting your filters or search terms</p>
+          <button mat-raised-button color="primary" (click)="clearFilters()">
+            View All Products
+          </button>
+        </div>
+      }
+
+      <!-- Products Grid -->
+      @if (!isLoading && !error && products.length > 0) {
+        <div class="products-grid">
+          @for (product of paginatedProducts; track product.id) {
+            <div class="product-card-wrapper">
+              <app-product-card 
+                [product]="product"
+                (addToCart)="onAddToCart($event)"
+                (addToWishlist)="onAddToWishlist($event)">
+              </app-product-card>
+            </div>
+          }
+        </div>
+
+        <!-- Pagination -->
+        @if (totalProducts > pageSize) {
+          <mat-paginator 
+            [length]="totalProducts"
+            [pageSize]="pageSize"
+            [pageIndex]="currentPage"
+            [pageSizeOptions]="pageSizeOptions"
+            (page)="onPageChange($event)"
+            aria-label="Select page">
+          </mat-paginator>
+        }
+      }
+    </main>
+  </div>
+</div>

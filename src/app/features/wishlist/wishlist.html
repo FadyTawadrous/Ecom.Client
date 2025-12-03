@@ -1,0 +1,53 @@
+<div class="max-w-7xl mx-auto">
+  <!-- Header -->
+  <div class="mb-8">
+    <h2 class="text-3xl md:text-4xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent mb-2">
+      My Wishlist
+    </h2>
+    <p class="text-gray-600">Save your favorite items for later</p>
+  </div>
+
+  @if (loading()) {
+    <!-- Loading State -->
+    <div class="flex flex-col items-center justify-center py-20">
+      <div class="w-16 h-16 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin mb-4"></div>
+      <p class="text-gray-600 font-medium">Loading your wishlist...</p>
+    </div>
+  } @else {
+    @if (wishlist().length === 0) {
+      <!-- Empty State -->
+      <div class="flex flex-col items-center justify-center py-20 bg-white rounded-2xl shadow-sm border border-gray-200">
+        <div class="w-24 h-24 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-full flex items-center justify-center mb-6">
+          <span class="material-icons text-5xl text-blue-600">favorite_border</span>
+        </div>
+        <h3 class="text-xl font-semibold text-gray-800 mb-2">Your wishlist is empty</h3>
+        <p class="text-gray-500 mb-6">Start adding items you love!</p>
+        <a 
+          routerLink="/shop" 
+          class="px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl font-medium hover:from-blue-700 hover:to-indigo-700 transition-all shadow-md hover:shadow-lg"
+        >
+          Browse Products
+        </a>
+      </div>
+    } @else {
+      <!-- Wishlist Grid -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8">
+        @for (item of wishlist(); track item.id) {
+          <app-wishlist-item 
+            [item]="item"
+            (remove)="removeItem($event)">
+          </app-wishlist-item>
+        }
+      </div>
+
+      <!-- Paginator -->
+      <app-paginator
+        [totalItems]="totalItems()"
+        [pageSize]="pageSize()"
+        [pageNum]="pageNum()"
+        (pageChange)="loadPage($event)"
+        (pageSizeChanged)="changePageSize($event)"
+      ></app-paginator>
+    }
+  }
+</div>

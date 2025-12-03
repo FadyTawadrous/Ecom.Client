@@ -18,6 +18,11 @@ export const routes: Routes = [
       import('./features/shopping/shopping-module').then(m => m.ShoppingModule)
   },
   {
+    path: 'wishlist',
+    loadChildren: () =>
+      import('./features/wishlist/wishlist-module').then(m => m.WishlistModule)
+  },
+  {
     path: 'cart',
     loadChildren: () =>
       import('./features/cart/cart-module').then(m => m.CartModule)

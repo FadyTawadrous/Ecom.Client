@@ -1,17 +1,38 @@
+
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-
-// Example route configurations for shopping feature
-// import { ProductListComponent } from './pages/product-list/product-list.component';
-// import { ProductDetailComponent } from './pages/product-detail/product-detail.component';
-
-// const routes: Routes = [
-//   { path: '', component: ProductListComponent },
-//   { path: ':id', component: ProductDetailComponent }
-// ];
+import { ProductListComponent } from './product-list-component/product-list-component';
+import { ProductDetailsComponent } from './product-details-component/product-details-component';
+import { TestinComponent } from './testin.component/testin.component';
 
 
-const routes: Routes = [];
+const routes: Routes = [
+  { 
+    path: '', 
+    component: ProductListComponent 
+  },
+  { 
+    path: 'category/:categoryId', 
+    component: ProductListComponent 
+  },
+  { 
+    path: 'brand/:brandId', 
+    component: ProductListComponent 
+  },
+  { 
+    path: 'search', 
+    component: ProductListComponent 
+  },
+  { 
+    path: 'product/:id', 
+    component: ProductDetailsComponent 
+  },
+  { path: 'testing', component: TestinComponent },
+  { 
+    path: '**', 
+    redirectTo: '' 
+  }
+];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],

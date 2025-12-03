@@ -1,0 +1,196 @@
+<div class="product-details">
+  <!-- Back Button (added at the top) -->
+  <div class="back-navigation">
+    <button mat-button (click)="goBackToShopping()" class="back-button">
+      <mat-icon>arrow_back</mat-icon>
+      Back to Shopping
+    </button>
+  </div>
+
+  <!-- Loading State -->
+  @if (isLoading) {
+    <div class="loading">
+      <mat-spinner diameter="50"></mat-spinner>
+      <p>Loading product details...</p>
+    </div>
+  }
+
+  <!-- Error State -->
+  @if (error && !isLoading) {
+    <div class="error">
+      <mat-icon>error</mat-icon>
+      <h3>Oops!</h3>
+      <p>{{ error }}</p>
+      <button mat-button (click)="loadProduct()">Try Again</button>
+    </div>
+  }
+
+  <!-- Product Details -->
+  @if (product && !isLoading) {
+    <div class="product-container">
+      <!-- Left Column: Images -->
+      <div class="images-column">
+        <!-- Main Image -->
+        <div class="main-image">
+          <img 
+            [src]="getSelectedImage()" 
+            [alt]="product.title"
+            (error)="onImageError()">
+        </div>
+
+        <!-- Thumbnail Gallery -->
+        @if (getAllImages().length > 1) {
+          <div class="thumbnail-gallery">
+            @for (image of getAllImages(); track $index) {
+              <div 
+                class="thumbnail"
+                [class.active]="selectedImageIndex === $index"
+                (click)="selectImage($index)">
+                <img 
+                  [src]="image" 
+                  [alt]="product.title + ' image ' + ($index + 1)">
+              </div>
+            }
+          </div>
+        }
+      </div>
+
+      <!-- Right Column: Details -->
+      <div class="details-column">
+        <!-- Product Title -->
+        <h1 class="product-title">{{ product.title }}</h1>
+        
+        <!-- Rating and Reviews -->
+        <div class="rating-section">
+          <div class="stars">
+            @for (star of [1,2,3,4,5]; track star) {
+              <mat-icon class="star">
+                {{ star <= product.rating ? 'star' : 'star_border' }}
+              </mat-icon>
+            }
+            <span class="rating-value">{{ product.rating }}</span>
+          </div>
+          @if (product.reviews?.length) {
+            <span class="review-count">
+              ({{ product.reviews!.length }} reviews)
+            </span>
+          }
+        </div>
+
+        <!-- Price -->
+        <div class="price-section">
+          <span class="current-price">
+            {{ getFinalPrice() | currency }}
+          </span>
+          
+          @if (product.discountPercentage > 0) {
+            <span class="original-price">
+              {{ product.price | currency }}
+            </span>
+            <span class="discount-badge">
+              Save {{ product.discountPercentage }}%
+            </span>
+          }
+        </div>
+
+        <!-- Stock Status -->
+        <div class="stock-section">
+          <mat-icon [class.in-stock]="isInStock()" [class.out-of-stock]="!isInStock()">
+            {{ isInStock() ? 'check_circle' : 'cancel' }}
+          </mat-icon>
+          <span>
+            {{ isInStock() ? 'In Stock' : 'Out of Stock' }}
+            @if (isInStock()) {
+              - {{ product.stock }} available
+            }
+          </span>
+        </div>
+
+        <!-- Description -->
+        <div class="description-section">
+          <h3>Description</h3>
+          <p>{{ product.description }}</p>
+        </div>
+
+        <!-- Quantity Selector -->
+        <div class="quantity-section">
+          <h4>Quantity</h4>
+          <div class="quantity-selector">
+            <button mat-icon-button (click)="decreaseQuantity()" [disabled]="quantity <= 1">
+              <mat-icon>remove</mat-icon>
+            </button>
+            <span class="quantity-value">{{ quantity }}</span>
+            <button mat-icon-button (click)="increaseQuantity()" 
+                    [disabled]="!isInStock() || quantity >= product.stock">
+              <mat-icon>add</mat-icon>
+            </button>
+          </div>
+        </div>
+
+        <!-- Action Buttons (REMOVED Buy Now) -->
+        <div class="action-buttons">
+          <button 
+            mat-raised-button 
+            color="primary" 
+            class="add-to-cart-btn"
+            (click)="addToCart()"
+            [disabled]="!isInStock()">
+            <mat-icon>shopping_cart</mat-icon>
+            Add to Cart
+          </button>
+          
+          <!-- REMOVED: Buy Now Button -->
+        </div>
+
+        <!-- Product Specs -->
+        <div class="specs-section">
+          <h3>Product Details</h3>
+          <div class="specs-grid">
+            <div class="spec-item">
+              <span class="spec-label">Brand:</span>
+              <span class="spec-value">{{ product.brandName || 'Unknown' }}</span>
+            </div>
+            <div class="spec-item">
+              <span class="spec-label">Category:</span>
+              <span class="spec-value">{{ product.categoryName || 'Unknown' }}</span>
+            </div>
+            @if (product.quantitySold > 0) {
+              <div class="spec-item">
+                <span class="spec-label">Sold:</span>
+                <span class="spec-value">{{ product.quantitySold }} units</span>
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Reviews Section -->
+    <div class="reviews-section">
+      <h3>Customer Reviews</h3>
+      @if (product.reviews?.length) {
+        <div class="reviews-list">
+          @for (review of product.reviews; track review.id) {
+            <div class="review-item">
+              <div class="review-header">
+                <span class="reviewer">{{ review.appUserDisplayName || 'Anonymous' }}</span>
+                <div class="review-rating">
+                  @for (star of [1,2,3,4,5]; track star) {
+                    <mat-icon class="star small">
+                      {{ star <= review.rating ? 'star' : 'star_border' }}
+                    </mat-icon>
+                  }
+                </div>
+              </div>
+              <h4 class="review-title">{{ review.title }}</h4>
+              <p class="review-description">{{ review.description }}</p>
+              <span class="review-date">{{ review.createdOn | date }}</span>
+            </div>
+          }
+        </div>
+      } @else {
+        <p class="no-reviews">No reviews yet. Be the first to review!</p>
+      }
+    </div>
+  }
+</div>

@@ -1,0 +1,61 @@
+<!-- product-card.component.html - UPDATED -->
+<mat-card class="product-card" (click)="navigateToProductDetails()">
+  
+  <!-- Product Image -->
+  <img 
+    mat-card-image 
+    [src]="getThumbnail(product)"
+    [alt]="product.title"
+    class="product-image"
+    (click)="navigateToProductDetails()"
+    style="cursor: pointer">
+  
+  <!-- Product Info -->
+  <mat-card-content class="product-content" style="cursor: pointer">
+    <!-- Title -->
+    <h3 class="product-title" (click)="navigateToProductDetails()">
+      {{ product.title }}
+    </h3>
+    
+    <!-- Price with discount if available -->
+    <div class="product-price">
+      <span class="current-price">
+        {{ product.price | currency }}
+      </span>
+      @if (product.discountPercentage > 0) {
+        <span class="discount">
+          -{{ product.discountPercentage }}%
+        </span>
+      }
+    </div>
+    
+    <!-- Rating -->
+    <div class="product-rating">
+      <mat-icon>star</mat-icon>
+      <span>{{ product.rating }}</span>
+    </div>
+  </mat-card-content>
+  
+  <!-- Action Buttons - Don't make these navigate -->
+  <mat-card-actions class="product-actions">
+    <!-- Add to Cart Button -->
+    <button
+      mat-raised-button 
+      color="primary"
+      (click)="onAddToCart(); $event.stopPropagation()" 
+      class="add-to-cart-btn">
+      <mat-icon>shopping_cart</mat-icon>
+      Add to Cart
+    </button>
+    
+    <!-- Wishlist Button -->
+    <button 
+      mat-icon-button 
+      color="warn"
+      (click)="onAddToWishlist(); $event.stopPropagation()" 
+      class="wishlist-btn">
+      <mat-icon>favorite</mat-icon>
+    </button>
+  </mat-card-actions>
+  
+</mat-card>

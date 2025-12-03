@@ -7,7 +7,7 @@
 
         <mat-card-content>
             <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="flex flex-col gap-4">
-                
+
                 <!-- Email Input -->
                 <mat-form-field appearance="outline" class="w-full">
                     <mat-label>Email Address</mat-label>
@@ -37,18 +37,43 @@
                 <button mat-flat-button color="primary" type="submit" [disabled]="loginForm.invalid || isLoading()"
                     class="w-full h-12 text-lg">
                     @if (isLoading()) {
-                    <mat-spinner diameter="24" class="mr-2 inline-block"></mat-spinner>
+                    <mat-spinner diameter="24" class="inline-block ml-2"></mat-spinner>
                     Signing in...
                     } @else {
                     Sign In
                     }
                 </button>
 
+                <!-- 1. Add the "OR" divider -->
+                <div class="relative my-4">
+                    <div class="absolute inset-0 flex items-center">
+                        <span class="w-full border-t border-gray-300"></span>
+                    </div>
+                    <div class="relative flex justify-center text-sm">
+                        <span class="px-2 bg-white text-gray-500">Or continue with</span>
+                    </div>
+                </div>
+
+                <!-- 2. Add the Google Button -->
+                <button type="button" (click)="loginWithGoogle()"
+                    class="w-full cursor-pointer flex items-center justify-center gap-2 bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 font-medium py-2 px-4 rounded shadow-sm transition-all">
+                    <img src="https://www.svgrepo.com/show/475656/google-color.svg" class="w-5 h-5" alt="Google">
+                    Sign in with Google
+                </button>
+
+                <!-- Login with face Id button -->
+                <button type="button" (click)="loginWithFace()"
+                    class="w-full cursor-pointer flex items-center justify-center gap-2 bg-indigo-50 border border-indigo-200 text-indigo-700 hover:bg-indigo-100 font-medium py-2 px-4 rounded shadow-sm transition-all mt-3">
+                    <mat-icon>face</mat-icon>
+                    Login with Face ID
+                </button>
+
                 <!-- Register Link -->
                 <div class="text-center mt-4">
                     <p class="text-gray-600 text-sm">
                         Don't have an account?
-                        <a routerLink="/account/register" class="text-blue-600 hover:underline font-medium">Create one</a>
+                        <a routerLink="/account/register" class="text-blue-600 hover:underline font-medium">Create
+                            one</a>
                     </p>
                 </div>
             </form>

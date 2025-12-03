@@ -1,0 +1,42 @@
+<!-- Your exact HTML with just styling enhancements -->
+<div class="brand-slider">
+  <!-- "All Brands" Button -->
+  <button 
+    mat-stroked-button 
+    class="brand-button"
+    [class.active]="!selectedBrandId"
+    (click)="selectAllBrands()">
+    <mat-icon>apps</mat-icon>
+    <span class="brand-name">All Brands</span>
+  </button>
+  
+  <!-- Loop through each brand -->
+  @for (brand of brands; track brand.id) {
+    <button 
+      mat-stroked-button 
+      class="brand-button"
+      [class.active]="isBrandSelected(brand.id)"
+      (click)="selectBrand(brand.id)">
+      <span class="brand-name">
+        {{ brand.name || 'Brand ' + brand.id }}
+      </span>
+    </button>
+  }
+  
+  <!-- Loading state -->
+  @if ( brands.length === 0) {
+    <div class="loading">
+      @for (item of [1,2,3,4,5]; track $index) {
+        <div class="skeleton"></div>
+      }
+    </div>
+  }
+  
+  <!-- Empty state -->
+  @if   (brands.length === 0) {
+    <div class="empty-state">
+      <mat-icon>inventory_2</mat-icon>
+      <span>No brands found</span>
+    </div>
+  }
+</div>

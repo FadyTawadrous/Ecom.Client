@@ -1,0 +1,24 @@
+<div class="category-slider">
+  <!-- "All Categories" Button -->
+  <button 
+    mat-stroked-button 
+    class="category-button"
+    [class.active]="!selectedCategoryId"
+    (click)="selectAllCategories()">
+    <mat-icon>apps</mat-icon>
+    <span>All</span>
+  </button>
+  
+  <!-- Loop through each category -->
+  @for (category of categories; track category.id) {
+    <button 
+      mat-stroked-button 
+      class="category-button"
+      [class.active]="isCategorySelected(category.id)"
+      (click)="selectCategory(category.id)">
+      
+      <!-- Category Name -->
+      <span class="category-name">{{ category.name }}</span>
+    </button>
+  }
+</div>

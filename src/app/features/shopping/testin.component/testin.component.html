@@ -1,0 +1,69 @@
+<!-- testin.component.html -->
+<div class="testing-container">
+  <h1>🧪 Comprehensive Angular Testing</h1>
+  
+  <!-- Test Controls -->
+  <div class="test-controls">
+    <button mat-raised-button color="primary" (click)="rerunTests()">
+      🔄 Re-run Tests
+    </button>
+    
+    <button mat-raised-button color="accent" (click)="testApiConnection()" [disabled]="isLoading">
+      🌐 Test API Connection
+    </button>
+
+    <mat-progress-spinner *ngIf="isLoading" diameter="30"></mat-progress-spinner>
+  </div>
+
+  <!-- Test Results -->
+  <div class="test-results">
+    <h2>Test Results:</h2>
+    <div class="result-item" *ngFor="let result of testResults" [class.success]="result.includes('✅')" [class.error]="result.includes('❌')">
+      {{ result }}
+    </div>
+  </div>
+
+  <!-- Material UI Test Section -->
+  <div class="material-test">
+    <h2>🎨 Material UI Components Test</h2>
+    
+    <mat-card class="test-card">
+      <mat-card-header>
+        <mat-card-title>Material Card Test</mat-card-title>
+        <mat-card-subtitle>If you see this styled card, Material is working!</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <p>This card demonstrates Material Design components are properly imported and styled.</p>
+        
+        <div class="button-test">
+          <button mat-button>Basic Button</button>
+          <button mat-raised-button color="primary">Primary Button</button>
+          <button mat-stroked-button color="accent">Accent Button</button>
+        </div>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Material Input Test</mat-label>
+          <input matInput placeholder="Type something...">
+        </mat-form-field>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <!-- Navigation Test Section -->
+  <div class="navigation-test">
+    <h2>🛣️ Navigation Test</h2>
+    <p>Click these links to test routing:</p>
+    <div class="nav-links">
+      <a mat-button routerLink="/shopping">➡️ Product List</a>
+      <a mat-button routerLink="/shopping/category/1">➡️ Category Test</a>
+      <a mat-button routerLink="/shopping/brand/1">➡️ Brand Test</a>
+      <a mat-button routerLink="/shopping/product/1">➡️ Product Details Test</a>
+    </div>
+  </div>
+
+  <!-- Service Data Test -->
+  <div class="service-test" *ngIf="!isLoading">
+    <h2>🔧 Service Data Test</h2>
+    <p>Service methods are tested above. Check console for detailed logs.</p>
+  </div>
+</div>
