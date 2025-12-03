@@ -1,7 +1,7 @@
 import { Injectable, signal, computed, inject } from '@angular/core';
 import { ApiService } from './api-service';
 import { WishlistItem } from '../models/wishlist.models'; // create this model
-import { Observable, tap } from 'rxjs';
+import { Observable, tap, catchError, of } from 'rxjs';
 import { HttpParams } from '@angular/common/http';
 import { PaginatedResponse} from '../models/pagination.models'; // for pagination
 
@@ -22,7 +22,7 @@ export class WishlistService {
   readonly pageNum = this.pageNumSignal.asReadonly();
   readonly pageSize = this.pageSizeSignal; // allow setting page size
 
-  loading = signal(false);
+  loading = signal<boolean>(false);
 
   // --- API METHODS ---
   // Load wishlist from backend as "PaginatedResponse<WishlistItem>" instead of just WishlistItem[]
@@ -43,7 +43,18 @@ export class WishlistService {
           this.pageSizeSignal.set(res.pageSize);
           this.loading.set(false);
         }
-      ));
+      ),
+      catchError(error => {
+        console.error('Error loading wishlist:', error);
+        this.loading.set(false);
+        // Return empty response on error
+        return of({
+          items: [],
+          totalCount: 0,
+          pageNumber: 1,
+          pageSize: pageSize
+        } as PaginatedResponse<WishlistItem>);
+      }));
   }
 
   // Add a product to wishlist
@@ -91,5 +102,12 @@ export class WishlistService {
     } else {
       return this.addToWishlist(productId) as Observable<WishlistItem>;
     }
+  }
+
+  // Method to clear wishlist state (useful on logout)
+  clearWishlist(): void {
+    this.wishlistSignal.set([]);
+    this.totalItemsSignal.set(0);
+    this.pageNumSignal.set(1);
   }
 }
