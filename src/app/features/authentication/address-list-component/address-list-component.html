@@ -1,0 +1,41 @@
+<div class="container mx-auto p-4 md:p-8 max-w-4xl">
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-3xl font-bold text-gray-800">My Addresses</h1>
+        <button mat-flat-button color="primary" (click)="openDialog()">
+            <mat-icon>add</mat-icon> Add New
+        </button>
+    </div>
+
+    @if (addressService.addresses().length === 0) {
+    <div class="text-center py-12 bg-gray-50 rounded-lg border border-dashed border-gray-300">
+        <mat-icon class="text-gray-400 text-6xl !w-16 !h-16">location_off</mat-icon>
+        <p class="text-gray-500 mt-2">No addresses saved yet.</p>
+    </div>
+    }
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        @for (addr of addressService.addresses(); track addr.id) {
+        <mat-card class="p-4 relative hover:shadow-md transition border border-gray-100">
+            <div class="flex items-start justify-between">
+                <div>
+                    <h3 class="font-bold text-gray-800 flex items-center gap-2">
+                        <mat-icon class="text-gray-500 text-sm">home</mat-icon>
+                        {{ addr.city }}, {{ addr.country }}
+                    </h3>
+                    <p class="text-gray-600 mt-1">{{ addr.street }}</p>
+                    <p class="text-gray-500 text-sm" *ngIf="addr.postalCode">{{ addr.postalCode }}</p>
+                </div>
+
+                <div class="flex gap-1">
+                    <button mat-icon-button color="primary" (click)="openDialog(addr)">
+                        <mat-icon>edit</mat-icon>
+                    </button>
+                    <button mat-icon-button color="warn" (click)="deleteAddress(addr.id)">
+                        <mat-icon>delete_outline</mat-icon>
+                    </button>
+                </div>
+            </div>
+        </mat-card>
+        }
+    </div>
+</div>

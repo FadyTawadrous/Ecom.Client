@@ -6,6 +6,11 @@ import { Router, ActivatedRoute, RouterModule } from '@angular/router';
 import { AuthService } from '../../../core/services/auth-service';
 
 import { MaterialModule } from '../../../shared/material/material-module';
+import { environment } from '../../../../environments/environment.development';
+
+import { MatDialog } from '@angular/material/dialog';
+import { FaceCaptureComponent } from '../../../shared/components/face-capture-component/face-capture-component';
+import { FaceIdService } from '../../../core/services/face-id-service';
 
 @Component({
   selector: 'app-login',
@@ -13,7 +18,7 @@ import { MaterialModule } from '../../../shared/material/material-module';
     CommonModule,
     ReactiveFormsModule,
     RouterModule,
-    MaterialModule
+    MaterialModule,
   ],
   templateUrl: './login.html',
   styleUrl: './login.scss',
@@ -24,6 +29,8 @@ export class Login {
   private authService = inject(AuthService);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
+  private dialog = inject(MatDialog);
+  private faceIdService = inject(FaceIdService);
 
   // UI State Signals
   hidePassword = signal(true);
@@ -61,5 +68,36 @@ export class Login {
       }
     });
   }
+
+  loginWithGoogle() {
+    // The URL we want the backend to return us to after Google is done
+    // Note: This must match the route we created in Step 3
+    const returnUrl = `${window.location.origin}/account/callback`;
+
+    // Redirect the browser to the .NET Backend endpoint
+    window.location.href = `${environment.apiURL}/api/account/external-login?provider=Google&returnUrl=${returnUrl}`;
+  }
+
+  loginWithFace() {
+    const dialogRef = this.dialog.open(FaceCaptureComponent, {
+      width: '350px',
+      disableClose: true
+    });
+
+    dialogRef.afterClosed().subscribe(resultFile => {
+      if (resultFile) {
+        this.isLoading.set(true);
+        this.faceIdService.loginWithFace(resultFile).subscribe({
+          next: () => {
+            this.isLoading.set(false);
+            // Redirect happens in service or here
+            this.router.navigateByUrl('/');
+          },
+          error: () => this.isLoading.set(false)
+        });
+      }
+    });
+  }
+
 
 }

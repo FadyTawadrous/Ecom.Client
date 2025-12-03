@@ -34,6 +34,8 @@
     "@fortawesome/angular-fontawesome": "^3.0.0",
     "@fortawesome/fontawesome-svg-core": "^7.1.0",
     "@fortawesome/free-solid-svg-icons": "^7.1.0",
+    "leaflet": "^1.9.4",
+    "ngx-webcam": "^0.4.1",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.15.0"
@@ -44,6 +46,7 @@
     "@angular/compiler-cli": "^20.3.0",
     "@tailwindcss/postcss": "^4.1.17",
     "@types/jasmine": "~5.1.0",
+    "@types/leaflet": "^1.9.21",
     "autoprefixer": "^10.4.22",
     "jasmine-core": "~5.9.0",
     "karma": "~6.4.0",

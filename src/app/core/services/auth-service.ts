@@ -5,6 +5,8 @@ import { map, tap, catchError } from 'rxjs/operators';
 import { of, Observable } from 'rxjs';
 import { ApiService } from './api-service'; // Custom ApiService for HTTP calls, so we don't need HttpClient or environment
 import { AuthResponse, LoginReq, User } from '../models/auth.models';
+import { environment } from '../../../environments/environment';
+import { HttpParams } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
@@ -49,14 +51,30 @@ export class AuthService {
     );
   }
 
+  // --- NEW METHOD FOR EXTERNAL LOGIN ---
+  // Called by the Callback Component to finalize the login
+  setExternalSession(token: string, user: User) {
+    this.setSession({ token, user, tokenExpiration: '' }); // Expiration handling optional here
+    this.snackBar.open(`Welcome back, ${user.displayName}!`, 'Close', { duration: 3000 });
+  }
+
   register(formData: FormData): Observable<boolean> {
     return this.apiService.post<AuthResponse>('api/account/register', formData).pipe(
       tap((response) => {
-        this.setSession(response);
-        this.snackBar.open('Registration successful!', 'Close', { duration: 3000 });
+        //this.setSession(response);
+        this.snackBar.open('Registration successful! Please check your email to confirm your account.', 'Close', { duration: 3000 });
       }),
       map(() => true)
     );
+  }
+
+  confirmEmail(userId: string, code: string): Observable<any> {
+    const params = new HttpParams()
+      .set('userId', userId)
+      .set('code', code);
+
+    // This calls GET /api/account/confirm-email?userId=...&code=...
+    return this.apiService.get('api/account/confirm-email', params);
   }
 
   logout(): void {
@@ -67,14 +85,18 @@ export class AuthService {
     this.currentUserSignal.set(null);
 
     // 3. Navigate away
-    this.router.navigate(['/auth/login']);
+    this.router.navigate(['/account/login']);
     this.snackBar.open('Logged out successfully', 'Close', { duration: 3000 });
   }
 
   getProfile(): Observable<User | null> {
     // Uses ApiService.get
     return this.apiService.get<User>('api/account/me').pipe(
-      tap(user => this.currentUserSignal.set(user)),
+      tap(user => {
+        // Process image before setting signal
+        const processedUser = this.processUserImage(user);
+        this.currentUserSignal.set(processedUser);
+      }),
       catchError(() => {
         // If 'me' fails (e.g. token expired), log out
         this.logout();
@@ -86,7 +108,9 @@ export class AuthService {
   updateProfile(formData: FormData): Observable<User | null> {
     return this.apiService.put<User>('api/account/profile', formData).pipe(
       tap(updatedUser => {
-        this.currentUserSignal.set(updatedUser);
+        // Process image before setting signal
+        const processedUser = this.processUserImage(updatedUser);
+        this.currentUserSignal.set(processedUser);
         this.snackBar.open('Profile updated!', 'Close', { duration: 3000 });
       })
     );
@@ -95,11 +119,14 @@ export class AuthService {
   // --- INTERNAL HELPER METHODS ---
 
   private setSession(authResponse: AuthResponse) {
-    // 1. Save JWT to LocalStorage (for the Interceptor to pick up)
+    // 1. Process image before setting signal
+    const processedUser = this.processUserImage(authResponse.user);
+
+    // 2. Save JWT to LocalStorage (for the Interceptor to pick up)
     localStorage.setItem('token', authResponse.token);
 
-    // 2. Update Signal State
-    this.currentUserSignal.set(authResponse.user);
+    // 3. Update Signal State
+    this.currentUserSignal.set(processedUser);
   }
 
   private loadCurrentUserFromStorage() {
@@ -110,6 +137,22 @@ export class AuthService {
       // Ideally, decode the token payload here to set immediate state if needed.
       this.getProfile().subscribe();
     }
+  }
+
+  private processUserImage(user: User): User {
+    if (user.profileImageUrl) {
+      // Check if it's already a full URL (e.g. Google Image) or a local filename
+      if (!user.profileImageUrl.startsWith('http')) {
+        // Construct the full backend URL
+        const baseUrl = environment.apiURL.replace('/api', '').replace(/\/$/, '');
+        user.profileImageUrl = `${baseUrl}/Files/Images/UserImages/${user.profileImageUrl}`;
+      }
+    } else {
+      // Fallback if null (optional, or handle in UI)
+      // user.profileImageUrl = 'assets/default-user.png';
+      user.profileImageUrl = `${environment.apiURL}/Files/Images/UserImages/default-profile.png`;
+    }
+    return user;
   }
 
 }
