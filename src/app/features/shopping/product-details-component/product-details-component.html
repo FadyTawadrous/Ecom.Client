@@ -127,7 +127,7 @@
           </div>
         </div>
 
-        <!-- Action Buttons (REMOVED Buy Now) -->
+        <!-- Action Buttons -->
         <div class="action-buttons">
           <button 
             mat-raised-button 
@@ -139,7 +139,15 @@
             Add to Cart
           </button>
           
-          <!-- REMOVED: Buy Now Button -->
+          <!-- NEW: Add to Wishlist Button -->
+          <button 
+            mat-raised-button 
+            color="accent" 
+            class="add-to-wishlist-btn"
+            (click)="addToWishlist()">
+            <mat-icon>favorite</mat-icon>
+            Add to Wishlist
+          </button>
         </div>
 
         <!-- Product Specs -->
