@@ -7,6 +7,7 @@ import { ApiService } from './api-service'; // Custom ApiService for HTTP calls,
 import { AuthResponse, LoginReq, User } from '../models/auth.models';
 import { environment } from '../../../environments/environment';
 import { HttpParams } from '@angular/common/http';
+import { jwtDecode } from 'jwt-decode'
 
 @Injectable({
   providedIn: 'root',
@@ -26,6 +27,12 @@ export class AuthService {
   // Read-only signals for components to use
   readonly currentUser = this.currentUserSignal.asReadonly();
   readonly isAuthenticated = computed(() => !!this.currentUserSignal());
+
+  // Computed signal to easily check for Admin role
+  readonly isAdmin = computed(() => {
+    const user = this.currentUserSignal();
+    return user?.roles?.includes('Admin') ?? false;
+  });
 
   constructor() {
     // On app startup, try to load the user if a token exists
@@ -95,7 +102,14 @@ export class AuthService {
       tap(user => {
         // Process image before setting signal
         const processedUser = this.processUserImage(user);
-        this.currentUserSignal.set(processedUser);
+        // 3. Re-attach roles from token (because /me endpoint might not return roles)
+        const token = localStorage.getItem('token');
+        if (token) {
+          const userWithRoles = this.getUserRolesFromToken(token, processedUser);
+          this.currentUserSignal.set(userWithRoles);
+        } else {
+          this.currentUserSignal.set(processedUser);
+        }
       }),
       catchError(() => {
         // If 'me' fails (e.g. token expired), log out
@@ -110,6 +124,9 @@ export class AuthService {
       tap(updatedUser => {
         // Process image before setting signal
         const processedUser = this.processUserImage(updatedUser);
+        // Preserve existing roles when updating profile
+        const currentRoles = this.currentUser()?.roles || [];
+        processedUser.roles = currentRoles;
         this.currentUserSignal.set(processedUser);
         this.snackBar.open('Profile updated!', 'Close', { duration: 3000 });
       })
@@ -153,6 +170,28 @@ export class AuthService {
       user.profileImageUrl = `${environment.apiURL}/Files/Images/UserImages/default-profile.png`;
     }
     return user;
+  }
+
+  private getUserRolesFromToken(token: string, user: User): User {
+    try {
+      const decodedToken: any = jwtDecode(token);
+
+      // .NET Identity uses this long URL for the role claim
+      const roleKey = 'http://schemas.microsoft.com/ws/2008/06/identity/claims/role';
+      const roleClaim = decodedToken[roleKey] || decodedToken['role'];
+
+      if (roleClaim) {
+        // Ensure it's always an array (if single role, wrap it)
+        user.roles = Array.isArray(roleClaim) ? roleClaim : [roleClaim];
+      } else {
+        user.roles = [];
+      }
+
+      return user;
+    } catch (error) {
+      console.error('Failed to decode token', error);
+      return user;
+    }
   }
 
 }
