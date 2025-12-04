@@ -1,7 +1,9 @@
-import { Injectable, signal } from '@angular/core';
-
+import { Injectable, signal,inject } from '@angular/core';
+import { ApiService } from '../../core/services/api-service';
 @Injectable({ providedIn: 'root' })
 export class PaymentService {
+
+  api = inject(ApiService);
 
   // Address entered in Step 1
   addressData = signal<any>(null);

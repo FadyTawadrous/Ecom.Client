@@ -14,6 +14,7 @@ import {
 import { MaterialModule } from '../../../../shared/material/material-module';
 import { SharedModule } from '../../../../shared/shared-module';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { AuthService } from '../../../../core/services/auth-service';
 @Component({
   standalone: true,
   selector: 'app-cart',
@@ -39,7 +40,8 @@ export class Cart implements OnInit {
   private paymentState = inject(PaymentStateService);
   private dialog = inject(MatDialog);
   private ui = inject(UiService);
-  userId = '081d0d65-8f7b-4375-afd2-81cf2664fe6e';
+  private auth = inject(AuthService);
+  // userId = '081d0d65-8f7b-4375-afd2-81cf2664fe6e';
 
   ngOnInit() {
     this.loadCart();
@@ -50,7 +52,7 @@ export class Cart implements OnInit {
     this.loading.set(true);
 
     this.api
-      .get<{ result: GetCartDTO; isSuccess: boolean }>(`api/cart/user/${this.userId}`)
+      .get<{ result: GetCartDTO; isSuccess: boolean }>(`api/cart/user/`)
       .subscribe({
         next: (res) => {
           if (res.isSuccess) {
@@ -83,21 +85,27 @@ export class Cart implements OnInit {
 
   /** Update Quantity */
   updateQuantity(item: GetCartItemDTO, qty: number) {
-    if (qty < 1) return;
+    const userId= this.auth.currentUser()?.id;
+    
+  if (qty < 1) return;
 
-    const dto: UpdateCartItemDTO = {
-      id: item.id,
-      quantity: qty,
-      unitPrice: item.unitPrice,
-      cartId: item.cartId,
-      productId: item.productId,
-      updatedBy: this.userId
-    };
+  const dto: UpdateCartItemDTO = {
+    id: item.id,
+    quantity: qty,
+    unitPrice: item.unitPrice,
+    cartId: item.cartId,
+    productId: item.productId,
+    updatedBy:userId ? userId : ''
+  };
+  console.log(dto)
+  this.api
+    .put<{ isSuccess: boolean }>('api/CartItem', dto)
+    .subscribe({
+      next: () => this.loadCart(),
+      error: err => console.error("updateQuantity FAILED:", err)
+    });
+}
 
-    this.api
-      .put<{ isSuccess: boolean }>(`api/cartitem`, dto)
-      .subscribe(() => this.loadCart());
-  }
 
   /** Remove item */
   removeItem(itemId: number) {

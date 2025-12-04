@@ -33,6 +33,7 @@ export class AddressService {
 
   addAddress(data: CreateAddressReq): Observable<any> {
     // Matches Controller: [HttpPost("Addresses")]
+    console.log('Adding address:', data);
     return this.api.post('api/Address/Addresses', data).pipe(
       tap(() => {
         this.snackBar.open('Address added successfully', 'Close', { duration: 3000 });

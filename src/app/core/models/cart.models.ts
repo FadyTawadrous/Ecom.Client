@@ -33,6 +33,7 @@ export interface AddCartItemDTO {
   quantity: number;
   unitPrice: number;
   createdBy: string;
+  appUserId: string ;
 }
 
 // UpdateCartItemVM

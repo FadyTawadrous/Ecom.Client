@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router'; // ← ADD Router
 import { ProductService } from '../../../core/services/product-service';
-import { Product } from '../../../core/models/Product.models';
+import { Product } from '../../../core/models/product.models';
 import { CurrencyPipe, DatePipe } from '@angular/common';
 import { MaterialModule } from '../../../shared/material/material-module';
-
+import { CartService } from '../../../core/services/cart-service';
 @Component({
   selector: 'app-product-details',
   templateUrl: './product-details-component.html',
@@ -22,7 +22,8 @@ export class ProductDetailsComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private productService: ProductService,
-    private router: Router // ← ADD THIS
+    private router: Router, // ← ADD THIS
+    private cartService: CartService
   ) {}
 
   ngOnInit(): void {
@@ -105,7 +106,7 @@ export class ProductDetailsComponent implements OnInit {
     
     // TODO: Implement cart service
     console.log('Add to cart:', this.product, 'Quantity:', this.quantity);
-    
+    this.cartService.addToCart(this.product.id, this.quantity, this.getFinalPrice()).subscribe();
     // Show success message
     alert(`Added ${this.quantity} ${this.product.title}(s) to cart!`);
   }
