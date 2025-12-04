@@ -1,6 +1,8 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { adminGuard } from './core/guards/admin.guard';
+import { About } from './shared/components/about/about';
+import { Contact } from './shared/components/contact/contact';
 
 
 // export const routes: Routes = [];
@@ -44,6 +46,8 @@ export const routes: Routes = [
     loadChildren: () =>
       import('./features/orders/orders-module').then(m => m.OrdersModule)
   },
+  { path: 'about', component: About },
+  { path: 'contact', component: Contact },
   {
     path: '',
     redirectTo: 'shopping',
