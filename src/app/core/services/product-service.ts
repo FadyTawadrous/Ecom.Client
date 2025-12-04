@@ -13,8 +13,7 @@ import {
   Category,
   Brand,
   ProductImageUrl
-} from '../models/Product.models';
-import { environment } from '../../../environments/environment';
+  } from '../models/product.models';
 
 // Helper interface for API response
 interface ApiResponse<T> {
@@ -52,7 +51,7 @@ export class ProductService {
       });
     }
 
-    return this.apiService.get<ApiResponse<Product[]>>('Product/all', params).pipe(
+    return this.apiService.get<ApiResponse<Product[]>>('api/Product/all', params).pipe(
       map(response => this.extractData(response))
     );
   }
@@ -60,19 +59,19 @@ export class ProductService {
 
 
   getProductById(id: number): Observable<Product> {
-    return this.apiService.get<ApiResponse<Product>>(`Product/${id}`).pipe(
+    return this.apiService.get<ApiResponse<Product>>(`api/Product/${id}`).pipe(
       map(response => this.extractData(response))
     );
   }
 
   getProductsByBrand(brandId: number): Observable<Product[]> {
-    return this.apiService.get<ApiResponse<Product[]>>(`Product/brand/${brandId}`).pipe(
+    return this.apiService.get<ApiResponse<Product[]>>(`api/Product/brand/${brandId}`).pipe(
       map(response => this.extractData(response))
     );
   }
 
   getProductsByCategory(categoryId: number): Observable<Product[]> {
-    return this.apiService.get<ApiResponse<Product[]>>(`Product/category/${categoryId}`).pipe(
+    return this.apiService.get<ApiResponse<Product[]>>(`api/Product/category/${categoryId}`).pipe(
       map(response => this.extractData(response))
     );
   }
@@ -81,7 +80,7 @@ export class ProductService {
     const params = new HttpParams().set('title', title);
     console.log("search by title");
     
-    return this.apiService.get<ApiResponse<Product[]>>('Product/search/title', params).pipe(
+    return this.apiService.get<ApiResponse<Product[]>>('api/Product/search/title', params).pipe(
       map(response => this.extractData(response))
     );
     
@@ -101,7 +100,7 @@ export class ProductService {
     params = params.set('max', maxPrice.toString());   // FIXED
   }
 
-  return this.apiService.get<ApiResponse<Product[]>>('Product/search/price', params).pipe(
+  return this.apiService.get<ApiResponse<Product[]>>('api/Product/search/price', params).pipe(
     map(response => this.extractData(response))
   );
 }
@@ -109,7 +108,7 @@ export class ProductService {
 
   searchProductsByRating(minRating: number): Observable<Product[]> {
     const params = new HttpParams().set('minRating', minRating.toString());
-    return this.apiService.get<ApiResponse<Product[]>>('Product/search/rating', params).pipe(
+    return this.apiService.get<ApiResponse<Product[]>>('api/Product/search/rating', params).pipe(
       map(response => this.extractData(response))
     );
   }
@@ -117,13 +116,13 @@ export class ProductService {
   // ==================== PRODUCT IMAGE ENDPOINTS ====================
 
   getAllProductImages(): Observable<ProductImageUrl[]> {
-    return this.apiService.get<ApiResponse<ProductImageUrl[]>>('ProductImageUrl').pipe(
+    return this.apiService.get<ApiResponse<ProductImageUrl[]>>('api/ProductImageUrl').pipe(
       map(response => this.extractData(response))
     );
   }
 
   getProductImageById(id: number): Observable<ProductImageUrl> {
-    return this.apiService.get<ApiResponse<ProductImageUrl>>(`ProductImageUrl/${id}`).pipe(
+    return this.apiService.get<ApiResponse<ProductImageUrl>>(`api/ProductImageUrl/${id}`).pipe(
       map(response => this.extractData(response))
     );
   }
@@ -131,13 +130,13 @@ export class ProductService {
   // ==================== PRODUCT REVIEW ENDPOINTS ====================
 
   getAllReviews(): Observable<ProductReview[]> {
-    return this.apiService.get<ApiResponse<ProductReview[]>>('ProductReview').pipe(
+    return this.apiService.get<ApiResponse<ProductReview[]>>('api/ProductReview').pipe(
       map(response => this.extractData(response))
     );
   }
 
   getReviewsByProduct(productId: number): Observable<ProductReview[]> {
-    return this.apiService.get<ApiResponse<ProductReview[]>>(`ProductReview/product/${productId}`).pipe(
+    return this.apiService.get<ApiResponse<ProductReview[]>>(`api/ProductReview/product/${productId}`).pipe(
       map(response => this.extractData(response))
       
       
@@ -145,37 +144,37 @@ export class ProductService {
   }
 
   getUserReviews(): Observable<ProductReview[]> {
-    return this.apiService.get<ApiResponse<ProductReview[]>>('ProductReview/user').pipe(
+    return this.apiService.get<ApiResponse<ProductReview[]>>('api/ProductReview/user').pipe(
       map(response => this.extractData(response))
     );
   }
 
   getReviewsByBrand(brandId: number): Observable<ProductReview[]> {
-    return this.apiService.get<ApiResponse<ProductReview[]>>(`ProductReview/brand/${brandId}`).pipe(
+    return this.apiService.get<ApiResponse<ProductReview[]>>(`api/ProductReview/brand/${brandId}`).pipe(
       map(response => this.extractData(response))
     );
   }
 
   getReviewById(id: number): Observable<ProductReview> {
-    return this.apiService.get<ApiResponse<ProductReview>>(`ProductReview/${id}`).pipe(
+    return this.apiService.get<ApiResponse<ProductReview>>(`api/ProductReview/${id}`).pipe(
       map(response => this.extractData(response))
     );
   }
 
   createReview(review: ProductReviewCreate): Observable<ProductReview> {
-    return this.apiService.post<ApiResponse<ProductReview>>('ProductReview', review).pipe(
+    return this.apiService.post<ApiResponse<ProductReview>>('api/ProductReview', review).pipe(
       map(response => this.extractData(response))
     );
   }
 
   updateReview(review: ProductReviewUpdate): Observable<ProductReview> {
-    return this.apiService.put<ApiResponse<ProductReview>>(`ProductReview/${review.id}`, review).pipe(
+    return this.apiService.put<ApiResponse<ProductReview>>(`api/ProductReview/${review.id}`, review).pipe(
       map(response => this.extractData(response))
     );
   }
 
   deleteReview(reviewId: number): Observable<void> {
-    return this.apiService.delete<ApiResponse<void>>(`ProductReview/${reviewId}`).pipe(
+    return this.apiService.delete<ApiResponse<void>>(`api/ProductReview/${reviewId}`).pipe(
       map(response => {
         // For delete, we just check if successful
         if (!response.isSuccess) {
@@ -188,13 +187,13 @@ export class ProductService {
   // ==================== CATEGORY ENDPOINTS ====================
 
   getAllCategories(): Observable<Category[]> {
-    return this.apiService.get<ApiResponse<Category[]>>('Category').pipe(
+    return this.apiService.get<ApiResponse<Category[]>>('api/Category').pipe(
       map(response => this.extractData(response))
     );
   }
 
   getCategoryById(id: number): Observable<Category> {
-    return this.apiService.get<ApiResponse<Category>>(`Category/${id}`).pipe(
+    return this.apiService.get<ApiResponse<Category>>(`api/Category/${id}`).pipe(
       map(response => this.extractData(response))
     );
   }
@@ -202,14 +201,14 @@ export class ProductService {
   // ==================== BRAND ENDPOINTS ====================
 
   getAllBrands(): Observable<Brand[]> {
-    return this.apiService.get<Brand[]>('Brand');
+    return this.apiService.get<Brand[]>('api/Brand');
       
       
    
   }
 
   getBrandById(id: number): Observable<Brand> {
-    return this.apiService.get<Brand>(`Brand/${id}`)
+    return this.apiService.get<Brand>(`api/Brand/${id}`)
     
   }
 

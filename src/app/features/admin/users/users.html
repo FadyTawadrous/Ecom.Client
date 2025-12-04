@@ -1,0 +1,79 @@
+<div class="p-6 space-y-4">
+
+  <div class="flex items-center justify-between">
+    <h2 class="text-2xl font-semibold">Admin Users</h2>
+  </div>
+
+  <mat-form-field appearance="outline" class="w-full max-w-md">
+    <mat-label>Search by name or email</mat-label>
+    <input matInput [(ngModel)]="searchText" (keyup)="applyFilter()">
+  </mat-form-field>
+
+  <div class="bg-white rounded-lg shadow-md overflow-hidden">
+    <table mat-table [dataSource]="dataSource" class="w-full">
+
+     <!-- <ng-container matColumnDef="image">
+        <th mat-header-cell *matHeaderCellDef class="px-4 py-2">Image</th>
+        <td mat-cell *matCellDef="let u" class="px-4 py-2">
+          <img
+            [src]="u.profileImageUrl || 'assets/default-user.png'"
+            class="w-10 h-10 rounded-full border object-cover"
+          />
+        </td>
+      </ng-container> -->
+
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef class="px-4 py-2">Name</th>
+        <td mat-cell *matCellDef="let u" class="px-4 py-2">
+          {{ u.displayName || u.userName }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="email">
+        <th mat-header-cell *matHeaderCellDef class="px-4 py-2">Email</th>
+        <td mat-cell *matCellDef="let u" class="px-4 py-2">
+          {{ u.email }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="roles">
+        <th mat-header-cell *matHeaderCellDef class="px-4 py-2">Roles</th>
+        <td mat-cell *matCellDef="let u" class="px-4 py-2">
+          <ng-container *ngIf="u.roles?.length; else noRoles">
+            <span
+              *ngFor="let r of u.roles"
+              class="inline-block px-2 py-0.5 mr-1 mb-1 rounded-full bg-slate-100 text-xs font-medium"
+            >
+              {{ r }}
+            </span>
+          </ng-container>
+          <ng-template #noRoles>
+            <span class="text-slate-400 text-xs">No roles</span>
+          </ng-template>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef class="px-4 py-2 text-right">Actions</th>
+        <td mat-cell *matCellDef="let u" class="px-4 py-2 text-right">
+          <button mat-stroked-button color="warn" (click)="deleteUser(u.id)">
+            Delete
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns" class="bg-gray-50"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"
+          class="hover:bg-gray-50">
+      </tr>
+
+    </table>
+
+    <mat-paginator
+      [pageSize]="5"
+      [pageSizeOptions]="[5, 10, 20]"
+      showFirstLastButtons>
+    </mat-paginator>
+  </div>
+
+</div>

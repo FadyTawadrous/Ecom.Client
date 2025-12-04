@@ -1,0 +1,11 @@
+{
+    "NAV": {
+        "HOME": "Home",
+        "SHOP": "Shop",
+        "LOGIN": "Login"
+    },
+    "ACCOUNT": {
+        "WELCOME": "Welcome Back",
+        "EMAIL_REQUIRED": "Email is required"
+    }
+}

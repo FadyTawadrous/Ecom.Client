@@ -7,6 +7,12 @@ import { authGuard } from './core/guards/auth.guard';
 
 export const routes: Routes = [
   {
+    path: 'admin',
+    loadChildren: () =>
+    import('./features/admin/admin.module')
+      .then(m => m.AdminModule)
+  },
+  {
     path: 'account',
     loadChildren: () =>
       import('./features/authentication/authentication-module').then(m => m.AuthenticationModule),
