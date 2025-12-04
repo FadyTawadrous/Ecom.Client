@@ -1,0 +1,95 @@
+<h2 class="text-2xl font-semibold mb-6">Categories Management</h2>
+
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+  <!-- ========== FORM ========== -->
+  <div class="bg-white rounded-xl shadow p-6 space-y-4">
+
+    <h3 class="text-lg font-semibold">
+      {{ editing ? 'Edit Category' : 'Add New Category' }}
+    </h3>
+
+    <mat-form-field appearance="outline" class="w-full">
+      <mat-label>Category Name</mat-label>
+      <input matInput [(ngModel)]="model.name" />
+    </mat-form-field>
+
+    <div>
+      <input type="file" (change)="onFileChange($event)" />
+    </div>
+
+    <div *ngIf="previewImage" class="flex items-center gap-3">
+      <img [src]="previewImage"
+           class="h-16 w-16 rounded border object-cover" />
+      <span class="text-xs text-slate-400">Preview</span>
+    </div>
+
+    <div class="flex flex-wrap gap-2 pt-2">
+      <button *ngIf="!editing"
+              mat-raised-button
+              color="primary"
+              (click)="createCategory()">
+        Create
+      </button>
+
+      <button *ngIf="editing"
+              mat-raised-button
+              color="accent"
+              (click)="updateCategory()">
+        Update
+      </button>
+
+      <button mat-stroked-button (click)="resetForm()">
+        Cancel
+      </button>
+    </div>
+
+  </div>
+
+  <!-- ========== TABLE ========== -->
+  <div class="lg:col-span-2 bg-white rounded-xl shadow p-4 overflow-auto">
+
+    <table mat-table [dataSource]="categories" class="w-full">
+
+      <!--<ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef>ID</th>
+        <td mat-cell *matCellDef="let c">{{ c.id }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="image">
+        <th mat-header-cell *matHeaderCellDef>Image</th>
+        <td mat-cell *matCellDef="let c">
+          <img [src]="c.imageFullUrl || 'assets/default-category.png'"
+               class="h-10 w-10 rounded object-cover border" />
+        </td>
+      </ng-container>-->
+
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef>Name</th>
+        <td mat-cell *matCellDef="let c" class="font-semibold">
+          {{ c.name }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Actions</th>
+        <td mat-cell *matCellDef="let c" class="space-x-1">
+          <button mat-icon-button color="primary" (click)="edit(c)">
+            <mat-icon>edit</mat-icon>
+          </button>
+
+          <button mat-icon-button color="warn" (click)="deleteCategory(c.id)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns" class="bg-slate-50"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"
+          class="hover:bg-slate-50"></tr>
+
+    </table>
+
+  </div>
+
+</div>

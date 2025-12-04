@@ -1,0 +1,137 @@
+<h2 class="text-2xl font-bold mb-6">Orders Management</h2>
+
+<!-- ================= FILTERS ================= -->
+<div class="bg-white shadow p-4 rounded mb-4 flex gap-4 items-center flex-wrap">
+
+  <input type="text" placeholder="Order Number"
+         class="border p-2 rounded w-48"
+         [(ngModel)]="filters.orderNumber"
+         (input)="applyFilters()"/>
+
+  <!--<input type="text" placeholder="User (email / id)"
+         class="border p-2 rounded w-48"
+         [(ngModel)]="filters.user"
+         (input)="applyFilters()"/>-->
+
+  <select class="border p-2 rounded w-44"
+          [(ngModel)]="filters.status"
+          (change)="applyFilters()">
+    <option value="">All Status</option>
+    <option *ngFor="let s of statusList" [value]="s">{{ s }}</option>
+  </select>
+
+  <button (click)="resetFilters()" class="bg-gray-500 text-white px-3 py-1 rounded">
+    Reset
+  </button>
+
+</div>
+
+
+<div class="grid grid-cols-3 gap-4">
+
+  <!-- ================= TABLE ================= -->
+  <div class="col-span-2 bg-white shadow rounded p-4">
+
+    <div *ngIf="loading" class="text-center p-6 text-gray-500">
+      Loading orders...
+    </div>
+
+    <table *ngIf="!loading" class="w-full border text-sm">
+
+      <thead class="bg-gray-200">
+        <tr>
+          <th class="p-2">#</th>
+          <!--<th>User</th>-->
+          <th>Total</th>
+          <th>Status</th>
+          <th class="text-center">Actions</th>
+        </tr>
+      </thead>
+
+      <tbody>
+
+        <tr *ngFor="let o of orders" class="border-b hover:bg-gray-50">
+
+          <td class="p-2">{{ o.id }}</td>
+
+          <!--<td>
+            {{ o.userName || o.email || o.appUserId || 'Guest' }}
+          </td>-->
+
+          <td>{{ o.totalAmount | currency }}</td>
+
+          <td>
+            <span class="font-semibold"
+              [ngClass]="{
+                'text-yellow-600': o.status === 'Pending',
+                'text-blue-600': o.status === 'Processing',
+                'text-purple-600': o.status === 'Shipped',
+                'text-green-600': o.status === 'Delivered',
+                'text-red-600': o.status === 'Cancelled'
+              }">
+              {{ o.status }}
+            </span>
+          </td>
+
+          <td class="flex gap-1 justify-center items-center">
+
+            <button (click)="viewOrder(o.id)"
+              class="bg-gray-300 px-2 rounded">
+              View
+            </button>
+
+            <select (change)="onStatusChange(o, $event)"
+                    class="border rounded">
+
+              <option value="">Change</option>
+              <option *ngFor="let s of statusList" [value]="s">{{ s }}</option>
+
+            </select>
+
+            <button (click)="cancelOrder(o.id)"
+              class="bg-red-500 text-white px-2 rounded">
+              Cancel
+            </button>
+
+          </td>
+        </tr>
+
+      </tbody>
+    </table>
+
+  </div>
+
+
+  <!-- ================= DETAILS ================= -->
+  <div class="bg-white shadow rounded p-4">
+
+    <h3 class="font-bold mb-3">Order Details</h3>
+
+    <div *ngIf="!selectedOrder" class="text-gray-400">
+      Click an order to view details
+    </div>
+
+    <div *ngIf="selectedOrder">
+
+      <p><strong>ID:</strong> {{ selectedOrder.id }}</p>
+      <p><strong>Number:</strong> {{ selectedOrder.orderNumber }}</p>
+      <!--<p><strong>User:</strong> {{ selectedOrder.userName || selectedOrder.email }}</p>-->
+      <p><strong>Status:</strong> {{ selectedOrder.status }}</p>
+      <p><strong>Total:</strong> {{ selectedOrder.totalAmount | currency }}</p>
+
+      <hr class="my-3">
+
+      <div *ngFor="let item of selectedOrder.items" class="text-sm">
+
+        {{ item.productTitle }} × {{ item.quantity }}
+        <span class="float-right text-gray-600">
+          {{ item.totalPrice | currency }}
+        </span>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

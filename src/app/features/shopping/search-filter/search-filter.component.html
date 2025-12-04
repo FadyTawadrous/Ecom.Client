@@ -1,11 +1,9 @@
-<!-- search-filter.component.html - ENHANCED TEXT LABELS -->
+<!-- search-filter.component.html - ADD CLEAR BUTTON -->
 <div class="search-filter">
   <!-- Header -->
   <div class="filter-header">
     <h3 class="filter-title">Filters</h3>
-    <button mat-button color="warn" (click)="clearFilters()">
-      Clear All
-    </button>
+    
   </div>
 
   <!-- Search Input -->
@@ -30,10 +28,10 @@
                 [class.active]="isPriceRangeSelected(range.min, range.max)"
                 (click)="selectPriceRange(range.min, range.max)">
           <!-- Better price labels -->
-          @if (range.min === 0 && range.max === 50) {
-            <span class="price-label">Under $50</span>
+          @if(range.min === 1 && range.max === 50) {
+            <span class="price-label">$1 - $50</span>
           }
-          @else if (range.min === 50 && range.max === 100) {
+           @else if (range.min === 50 && range.max === 100) {
             <span class="price-label">$50 - $100</span>
           }
           @else if (range.min === 100 && range.max === 200) {

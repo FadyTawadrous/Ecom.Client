@@ -1,0 +1,31 @@
+<h2 class="text-2xl font-bold mb-6">Roles Management</h2>
+
+<div class="bg-white shadow rounded p-6 mb-6 space-y-4">
+
+  <mat-form-field class="w-full">
+    <input matInput placeholder="New Role Name" [(ngModel)]="newRole" />
+  </mat-form-field>
+
+  <button mat-flat-button color="primary" (click)="createRole()">
+    Add Role
+  </button>
+
+</div>
+
+<div class="bg-white shadow rounded p-6">
+
+  <h3 class="text-lg font-semibold mb-3">Existing Roles</h3>
+
+  <div *ngFor="let role of roles" class="flex items-center justify-between border-b py-3">
+
+    <span class="font-semibold text-gray-800">{{ role.name }}</span>
+
+    <button mat-stroked-button color="warn"
+            [disabled]="role.name === 'Admin' || role.name === 'Customer'"
+            (click)="deleteRole(role.name)">
+      Delete
+    </button>
+
+  </div>
+
+</div>

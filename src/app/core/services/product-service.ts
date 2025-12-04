@@ -13,8 +13,7 @@ import {
   Category,
   Brand,
   ProductImageUrl
-} from '../models/Product.models';
-import { environment } from '../../../environments/environment';
+  } from '../models/product.models';
 
 // Helper interface for API response
 interface ApiResponse<T> {
@@ -56,6 +55,24 @@ export class ProductService {
       map(response => this.extractData(response))
     );
   }
+
+
+  filterProducts(filters: any) {
+    let params = new HttpParams();
+
+    if (filters) {
+      Object.keys(filters).forEach(key => {
+        const value = filters[key as keyof ProductFilter];
+        if (value !== undefined && value !== null && value !== '') {
+          params = params.append(key, value.toString());
+        }
+      });
+    }
+    
+  return this.apiService.get<ApiResponse<Product[]>>(`api/Product/filter`, params).pipe(
+   map(response => this.extractData(response))
+    );
+}
 
 
 

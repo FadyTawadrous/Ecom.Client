@@ -1,10 +1,10 @@
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProductService } from '../../../core/services/product-service';
-import { Product, ProductFilter, Category, Brand } from '../../../core/models/Product.models';
+import { Product, ProductFilter, Category, Brand } from '../../../core/models/product.models';
 import { PageEvent } from '@angular/material/paginator';
-
+import { SearchFilterComponent } from '../search-filter/search-filter.component';
 
 
 @Component({
@@ -15,6 +15,8 @@ import { PageEvent } from '@angular/material/paginator';
   
 })
 export class ProductListComponent implements OnInit {
+
+    @ViewChild(SearchFilterComponent) searchFilterComponent!: SearchFilterComponent;
   // Products data
   products: Product[] = [];
   categories: Category[] = [];
@@ -137,56 +139,20 @@ loadProducts(): void {
     return;
   }
 
-  // 3️⃣ Search by title
-  if (this.currentFilter.search) {
-    this.productService.searchProductsByTitle(this.currentFilter.search).subscribe({
+  if(this.currentFilter){
+    this.productService.filterProducts(this.currentFilter).subscribe({
       next: products => {
         this.products = products;
         this.totalProducts = products.length;
+        
+        
       },
       error: console.error
     });
-    return;
-  }
 
-  // 4️⃣ Price range filter
-  if (this.currentFilter.minPrice || this.currentFilter.maxPrice) {
-    this.productService.searchProductsByPrice(
-      this.currentFilter.minPrice,
-      this.currentFilter.maxPrice
 
-    ).subscribe({
-      next: products => {
-        this.products = products;
-        this.totalProducts = products.length;
-         console.log('price filter success');
-      },
-      error: console.error
-    });
-    return;
-  }
-
-  // 5️⃣ Rating filter
-  if (this.currentFilter.minRating) {
-    this.productService.searchProductsByRating(this.currentFilter.minRating).subscribe({
-      next: products => {
-        this.products = products;
-        this.totalProducts = products.length;
-      },
-      error: console.error
-    });
-    return;
-  }
-
-  // 6️⃣ Default → load all
-  this.productService.getAllProducts().subscribe({
-    next: products => {
-      this.products = products;
-      this.totalProducts = products.length;
-    },
-    error: console.error
-  });
-}
+  
+  }}
 
 
 
@@ -275,6 +241,7 @@ loadProducts(): void {
     this.loadProducts();
     console.log(this.currentFilter);
     
+   
     
   }
 
@@ -286,13 +253,17 @@ loadProducts(): void {
     this.pageSize = event.pageSize;
   }
 
-  // Clear all filters
-  clearFilters(): void {
+ clearFiltersList(): void {
     this.selectedCategoryId = null;
     this.selectedBrandId = null;
     this.searchQuery = '';
     this.currentFilter = {};
     this.currentPage = 0;
+    
+    // Clear the search filter component's form
+    if (this.searchFilterComponent) {
+      this.searchFilterComponent.clearFilters();
+    }
     
     // Reset URL
     this.router.navigate(['/shopping']);
@@ -307,8 +278,9 @@ loadProducts(): void {
 
   // Add to wishlist (to be implemented)
   onAddToWishlist(product: Product): void {
-    console.log('Add to wishlist:', product);
+    console.log('Add to wishlist:', product.id);
     // TODO: Implement wishlist service
+    //this.wishlistService.addToWishlist(product.id).subscribe();
   }
 
   // Get page title based on current filters
