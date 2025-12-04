@@ -78,13 +78,12 @@ export class ProductCardComponent {
   }
   
   onAddToCart(): void {
-     const productId = this.product.id;
-     console.log(productId);
-  
+    console.log(this.product.id);
+    this.addToCart.emit(this.product);  
   }
   
   onAddToWishlist(): void {
-    const productId = this.product.id;
-     console.log(productId);
+    console.log(this.product.id);
+    this.addToWishlist.emit(this.product);
   }
 }

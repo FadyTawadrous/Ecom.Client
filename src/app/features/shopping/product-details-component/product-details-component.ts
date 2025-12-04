@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProductService } from '../../../core/services/product-service';
 import { Product } from '../../../core/models/product.models';
 import { CurrencyPipe, DatePipe } from '@angular/common';
 import { MaterialModule } from '../../../shared/material/material-module';
+import { WishlistService } from '../../../core/services/wishlist-service';
 
 @Component({
   selector: 'app-product-details',
@@ -12,6 +13,8 @@ import { MaterialModule } from '../../../shared/material/material-module';
   standalone: false
 })
 export class ProductDetailsComponent implements OnInit {
+  private wishlistService = inject(WishlistService);
+  
   product: Product | null = null;
   isLoading = false;
   error: string | null = null;
@@ -121,7 +124,7 @@ export class ProductDetailsComponent implements OnInit {
     const productId = this.product.id;
     
     // TODO: Implement wishlist service - use this parameter:
-    // wishlistService.addToWishlist(productId);
+    this.wishlistService.addToWishlist(productId).subscribe();
     
     console.log('Add to wishlist - Product ID:', productId);
     

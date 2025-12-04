@@ -15,7 +15,7 @@ export class WishlistService {
   private wishlistSignal = signal<WishlistItem[]>([]);
   private totalItemsSignal = signal<number>(0);
   private pageNumSignal = signal<number>(1);
-  private pageSizeSignal = signal<number>(3); // default page size
+  private pageSizeSignal = signal<number>(5); // default page size
 
   readonly wishlist = this.wishlistSignal.asReadonly();
   readonly totalItems = this.totalItemsSignal.asReadonly();
@@ -60,10 +60,10 @@ export class WishlistService {
   // Add a product to wishlist
   addToWishlist(productId: number): Observable<WishlistItem> {
     return this.api.post<WishlistItem>(`api/WishlistItem/WishlistItems`, { productId }).pipe(
-      tap(item => {
+      tap((result) => {
         // avoid duplicates
-        if (!this.wishlistSignal().some(i => i.productId === item.productId)) {
-          this.wishlistSignal.set([...this.wishlistSignal(), item]);
+        console.log('Is Wishlist item added:', result);
+        if (result && !this.wishlistSignal().some(i => i.id === result.id)) {
           this.totalItemsSignal.set(this.totalItemsSignal() + 1); // update total items
         }
       })

@@ -22,9 +22,23 @@
             <p class="text-gray-500 text-sm">{{ authService.currentUser()?.email }}</p>
 
             <div class="mt-4 w-full flex flex-col gap-2 items-center">
-                <span class="px-3 py-1 bg-green-100 text-green-800 rounded-full text-xs font-medium">
-                    Customer
-                </span>
+                <div class="w-full flex flex-wrap justify-center gap-2 mb-2">
+                    <!-- DYNAMIC ROLES SECTION -->
+                    @if (authService.currentUser()?.roles?.length) {
+                    @for (role of authService.currentUser()?.roles; track role) {
+                    <!-- Different color for Admin role -->
+                    <span [class]="role === 'Admin' ? 'bg-purple-100 text-purple-800' : 'bg-green-100 text-green-800'"
+                        class="px-3 py-1 rounded-full text-xs font-medium">
+                        {{ role }}
+                    </span>
+                    }
+                    } @else {
+                    <!-- Fallback if no roles found -->
+                    <span class="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-xs font-medium">
+                        User
+                    </span>
+                    }
+                </div>
 
                 <!-- Face ID Status Badge -->
                 @if (hasFaceId()) {

@@ -36,7 +36,7 @@ export class Navbar implements OnInit{
     effect(() => {
       if (this.isAuthenticated()) {
         // Load some wishlist data when user is authenticated
-        this.wishlistService.loadWishlist(1, 3).subscribe();
+        this.wishlistService.loadWishlist(1, this.wishlistService.pageSize()).subscribe();
         // Load cart data as well
         //this.cartService.loadCart().subscribe();
       }
@@ -46,7 +46,7 @@ export class Navbar implements OnInit{
   ngOnInit() {
     // Load cart and some wishlist on component init if user is already authenticated
     if (this.isAuthenticated()) {
-      this.wishlistService.loadWishlist(1, 3).subscribe();
+      this.wishlistService.loadWishlist(1, this.wishlistService.pageSize()).subscribe();
       //this.cartService.loadCart().subscribe();
     }
   }

@@ -2,6 +2,7 @@ import { Component, Input, Output, EventEmitter, inject, computed } from '@angul
 import { CommonModule } from '@angular/common';
 import { WishlistItem } from '../../../core/models/wishlist.models';
 import { CartService } from '../../../core/services/cart-service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-wishlist-item',
@@ -14,6 +15,7 @@ export class WishlistItemComponent {
   @Input() item!: WishlistItem;
   @Output() remove = new EventEmitter<number>();
   private cartService = inject(CartService);
+  private router = inject(Router);
   
   onRemove() {
     this.remove.emit(this.item.id);
@@ -24,6 +26,12 @@ export class WishlistItemComponent {
   cartItem = computed(() =>
     this.cartService.cart()?.cartItems?.find(i => i.productId === this.item.productId)
   );
+
+  navigateToProductDetails(): void {
+    console.log(this.item.id);
+    // Navigate to product details page
+    this.router.navigate(['/shopping/product', this.item.productId]);
+  }
 
   addToCart() {
     this.cartService.addToCart(this.item.productId).subscribe();

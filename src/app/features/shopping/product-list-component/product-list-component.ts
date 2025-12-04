@@ -1,10 +1,11 @@
 
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProductService } from '../../../core/services/product-service';
 import { Product, ProductFilter, Category, Brand } from '../../../core/models/product.models';
 import { PageEvent } from '@angular/material/paginator';
 import { SearchFilterComponent } from '../search-filter/search-filter.component';
+import { WishlistService } from '../../../core/services/wishlist-service';
 
 
 @Component({
@@ -15,7 +16,8 @@ import { SearchFilterComponent } from '../search-filter/search-filter.component'
   
 })
 export class ProductListComponent implements OnInit {
-
+  private wishlistService = inject(WishlistService);
+  
     @ViewChild(SearchFilterComponent) searchFilterComponent!: SearchFilterComponent;
   // Products data
   products: Product[] = [];
@@ -280,6 +282,7 @@ loadProducts(): void {
   onAddToWishlist(product: Product): void {
     console.log('Add to wishlist:', product);
     // TODO: Implement wishlist service
+    this.wishlistService.addToWishlist(product.id).subscribe();
   }
 
   // Get page title based on current filters
