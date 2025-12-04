@@ -57,6 +57,24 @@ export class ProductService {
   }
 
 
+  filterProducts(filters: any) {
+    let params = new HttpParams();
+
+    if (filters) {
+      Object.keys(filters).forEach(key => {
+        const value = filters[key as keyof ProductFilter];
+        if (value !== undefined && value !== null && value !== '') {
+          params = params.append(key, value.toString());
+        }
+      });
+    }
+    
+  return this.apiService.get<ApiResponse<Product[]>>(`api/Product/filter`, params).pipe(
+   map(response => this.extractData(response))
+    );
+}
+
+
 
   getProductById(id: number): Observable<Product> {
     return this.apiService.get<ApiResponse<Product>>(`api/Product/${id}`).pipe(

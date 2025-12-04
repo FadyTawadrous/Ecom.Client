@@ -1,8 +1,6 @@
-
-// search-filter.component.ts - FIXED VERSION
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, FormControl,ReactiveFormsModule } from '@angular/forms'; // ← Add FormControl
-import { ProductFilter ,Product} from '../../../core/models/product.models';
+import { FormBuilder, FormGroup, FormControl, ReactiveFormsModule } from '@angular/forms';
+import { ProductFilter, Product } from '../../../core/models/product.models';
 import { CommonModule } from '@angular/common';
 import { MaterialModule } from '../../../shared/material/material-module';
 
@@ -10,9 +8,8 @@ import { MaterialModule } from '../../../shared/material/material-module';
   selector: 'app-search-filter',
   templateUrl: './search-filter.component.html',
   styleUrls: ['./search-filter.component.scss'],
-   standalone: false
-  
-    })
+  standalone: false
+})
 export class SearchFilterComponent implements OnInit {
   @Input() currentFilter: ProductFilter = {};
   @Output() filterChange = new EventEmitter<ProductFilter>();
@@ -40,9 +37,8 @@ export class SearchFilterComponent implements OnInit {
     return this.filterForm.get('sortBy') as FormControl;
   }
   
-  // ... rest of priceRanges, ratingOptions, sortOptions arrays ...
   priceRanges = [
-    { min: 0, max: 50, label: 'Under $50' },
+    { min: 1, max: 50, label: '$1 - $50' },
     { min: 50, max: 100, label: '$50 - $100' },
     { min: 100, max: 200, label: '$100 - $200' },
     { min: 200, max: 500, label: '$200 - $500' },
@@ -81,7 +77,6 @@ export class SearchFilterComponent implements OnInit {
     }
   }
 
-  // ... rest of methods (emitFilterChange, clearFilters, etc.) ...
   private emitFilterChange(): void {
     const formValue = this.filterForm.value;
     const filter: ProductFilter = {};
@@ -123,7 +118,9 @@ export class SearchFilterComponent implements OnInit {
     this.filterChange.emit(filter);
   }
 
+  // ADD THIS METHOD
   clearFilters(): void {
+    // Reset the form to default values
     this.filterForm.reset({
       search: '',
       minPrice: null,
@@ -131,6 +128,9 @@ export class SearchFilterComponent implements OnInit {
       minRating: null,
       sortBy: 'latest'
     });
+    
+    // Emit an empty filter to update the parent
+    this.filterChange.emit({});
   }
 
   selectPriceRange(min: number | null, max: number | null): void {

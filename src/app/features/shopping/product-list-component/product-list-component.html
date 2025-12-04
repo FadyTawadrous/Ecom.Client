@@ -4,7 +4,7 @@
     <h1 class="page-title">{{ pageTitle }}</h1>
     
     @if (hasActiveFilters) {
-      <button mat-stroked-button (click)="clearFilters()" class="clear-filters-btn">
+      <button mat-stroked-button (click)="clearFiltersList()" class="clear-filters-btn">
         <mat-icon>clear_all</mat-icon>
         Clear Filters
       </button>
@@ -32,7 +32,12 @@
   <!-- Main Content -->
   <div class="content-wrapper">
     <!-- Filters Sidebar -->
+     
     <aside class="sidebar">
+        <button mat-stroked-button (click)="clearFiltersList()" class="clear-filters-btn">
+        <mat-icon>clear_all</mat-icon>
+        Clear Filters
+      </button>
       <app-search-filter
         [currentFilter]="currentFilter"
         (filterChange)="onFilterChange($event)">
@@ -68,7 +73,7 @@
           <mat-icon class="empty-icon">inventory_2</mat-icon>
           <h3>No products found</h3>
           <p>Try adjusting your filters or search terms</p>
-          <button mat-raised-button color="primary" (click)="clearFilters()">
+          <button mat-raised-button color="primary" (click)="clearFiltersList()">
             View All Products
           </button>
         </div>
