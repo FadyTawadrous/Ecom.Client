@@ -12,11 +12,11 @@ import { FormsModule } from '@angular/forms';
 export class PaginatorComponent {
 
   @Input() pageNum = 1;
-  @Input() pageSize = 10;
+  @Input() pageSize = 5;
   @Input() totalItems = 0;
 
   // Predefined page size options
-  pageSizeOptions = [3, 4, 20, 50, 100];
+  pageSizeOptions = [5, 10, 20, 50, 100];
 
   @Output() pageChange = new EventEmitter<number>();
   @Output() pageSizeChanged = new EventEmitter<number>();
