@@ -17,7 +17,7 @@ import { MatButtonModule } from '@angular/material/button';
   ]
 })
 export class Contact {
-
+  
   model = {
     name: '',
     email: '',

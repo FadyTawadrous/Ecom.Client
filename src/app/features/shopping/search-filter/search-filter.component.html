@@ -3,7 +3,7 @@
   <!-- Header -->
   <div class="filter-header">
     <h3 class="filter-title">Filters</h3>
-    
+
   </div>
 
   <!-- Search Input -->
@@ -11,8 +11,7 @@
     <h4>Search Products</h4>
     <mat-form-field appearance="outline">
       <mat-label>Search by name</mat-label>
-      <input matInput [formControl]="searchControl" 
-             placeholder="">
+      <input matInput [formControl]="searchControl" placeholder="">
       <mat-icon matSuffix>search</mat-icon>
     </mat-form-field>
   </div>
@@ -20,57 +19,51 @@
   <!-- Price Range -->
   <div class="filter-section">
     <h4>Filter by Price</h4>
-    
+
     <div class="price-ranges">
       @for (range of priceRanges; track $index) {
-        <button mat-stroked-button 
-                class="price-range-btn"
-                [class.active]="isPriceRangeSelected(range.min, range.max)"
-                (click)="selectPriceRange(range.min, range.max)">
-          <!-- Better price labels -->
-          @if(range.min === 1 && range.max === 50) {
-            <span class="price-label">$1 - $50</span>
-          }
-           @else if (range.min === 50 && range.max === 100) {
-            <span class="price-label">$50 - $100</span>
-          }
-          @else if (range.min === 100 && range.max === 200) {
-            <span class="price-label">$100 - $200</span>
-          }
-          @else if (range.min === 200 && range.max === 500) {
-            <span class="price-label">$200 - $500</span>
-          }
-          @else if (range.min === 500 && range.max === 1000) {
-            <span class="price-label">$500 - $1K</span>
-          }
-          @else if (range.min === 1000 && range.max === null) {
-            <span class="price-label">$1K+</span>
-          }
-          @else {
-            <span class="price-label">{{ range.label }}</span>
-          }
-        </button>
+      <button mat-stroked-button class="price-range-btn" [class.active]="isPriceRangeSelected(range.min, range.max)"
+        (click)="selectPriceRange(range.min, range.max)">
+        <!-- Better price labels -->
+        @if(range.min === 1 && range.max === 50) {
+        <span class="price-label">$1 - $50</span>
+        }
+        @else if (range.min === 50 && range.max === 100) {
+        <span class="price-label">$50 - $100</span>
+        }
+        @else if (range.min === 100 && range.max === 200) {
+        <span class="price-label">$100 - $200</span>
+        }
+        @else if (range.min === 200 && range.max === 500) {
+        <span class="price-label">$200 - $500</span>
+        }
+        @else if (range.min === 500 && range.max === 1000) {
+        <span class="price-label">$500 - $1K</span>
+        }
+        @else if (range.min === 1000 && range.max === 1000000000) {
+        <span class="price-label">$1K+</span>
+        }
+        @else {
+        <span class="price-label">{{ range.label }}</span>
+        }
+      </button>
       }
     </div>
-    
+
     <div class="custom-price">
       <p class="custom-price-label">Or enter custom price range:</p>
       <div class="price-inputs">
         <mat-form-field appearance="outline" class="price-input">
           <mat-label>Min</mat-label>
-          <input matInput type="number" 
-                 [formControl]="minPriceControl"
-                 placeholder="">
+          <input matInput type="number" [formControl]="minPriceControl" placeholder="">
           <span matTextPrefix>$</span>
         </mat-form-field>
-        
+
         <span class="price-to">to</span>
-        
+
         <mat-form-field appearance="outline" class="price-input">
           <mat-label>Max</mat-label>
-          <input matInput type="number" 
-                 [formControl]="maxPriceControl"
-                 placeholder="">
+          <input matInput type="number" [formControl]="maxPriceControl" placeholder="">
           <span matTextPrefix>$</span>
         </mat-form-field>
       </div>
@@ -83,35 +76,32 @@
     <p class="rating-subtitle">Show products with minimum rating:</p>
     <div class="rating-buttons">
       @for (rating of ratingOptions; track rating) {
-        <button mat-stroked-button 
-                class="rating-btn"
-                [class.active]="isRatingSelected(rating)"
-                (click)="selectRating(rating)">
-          <div class="rating-content">
-            <div class="stars">
-              @for (star of [1,2,3,4,5]; track star) {
-                <mat-icon class="star">
-                  {{ star <= rating ? 'star' : 'star_border' }}
-                </mat-icon>
-              }
-            </div>
-            <!-- Better rating text -->
-            <span class="rating-text">
-              @if (rating === 4.5) {
-                {{ rating }}+ Stars
-              } @else if (rating === 4) {
-                {{ rating }}+ Stars
-              } @else if (rating === 3.5) {
-                {{ rating }}+ Stars
-              } @else if (rating === 3) {
-                {{ rating }}+ Stars
-              } @else {
-                {{ rating }}+ Stars
-              }
-            </span>
+      <button mat-stroked-button class="rating-btn" [class.active]="isRatingSelected(rating)"
+        (click)="selectRating(rating)">
+        <div class="rating-content">
+          <div class="stars">
+            @for (star of [1,2,3,4,5]; track star) {
+            <mat-icon class="star">
+              {{ star <= rating ? 'star' : 'star_border' }} </mat-icon>
+                }
           </div>
-          <span class="up-text">& above</span>
-        </button>
+          <!-- Better rating text -->
+          <span class="rating-text">
+            @if (rating === 4.5) {
+            {{ rating }}+ Stars
+            } @else if (rating === 4) {
+            {{ rating }}+ Stars
+            } @else if (rating === 3.5) {
+            {{ rating }}+ Stars
+            } @else if (rating === 3) {
+            {{ rating }}+ Stars
+            } @else {
+            {{ rating }}+ Stars
+            }
+          </span>
+        </div>
+
+      </button>
       }
     </div>
   </div>

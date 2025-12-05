@@ -417,3 +417,16 @@
     }
   }
 }
+
+.wishlist-btn {
+  transition: 0.3s ease;
+}
+
+.wishlist-btn.added {
+  background-color: #e91e63 !important;
+  color: white !important;
+}
+
+.wishlist-btn.added mat-icon {
+  color: white !important;
+}

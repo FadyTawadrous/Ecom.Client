@@ -90,10 +90,12 @@
                 <!-- Submit Button -->
                  <br>
                 <button mat-flat-button color="primary" type="submit" [disabled]="registerForm.invalid || isLoading()"
-                    class="w-full h-12 text-lg mt-4">
+                    class="w-full h-12 text-lg mt-4 !flex !items-center !justify-center">
                     @if (isLoading()) {
-                    <mat-spinner diameter="24" class="inline-block"></mat-spinner>
-                    Creating Account...
+                    <div class="flex items-center gap-2">
+                        <mat-spinner diameter="24"></mat-spinner>
+                        <span>Creating Account...</span>
+                    </div>
                     } @else {
                     Sign Up
                     }

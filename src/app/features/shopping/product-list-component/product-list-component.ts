@@ -19,24 +19,24 @@ export class ProductListComponent implements OnInit {
   private authService = inject(AuthService);
   private wishlistService = inject(WishlistService);
   private toast = inject(ToastService);
-  
+
   @ViewChild(SearchFilterComponent) searchFilterComponent!: SearchFilterComponent;
-  
+
   // Products data
   products: Product[] = [];
   categories: Category[] = [];
   brands: Brand[] = [];
-  
+
   // Loading and error states
   isLoading = signal<boolean>(false);
   error: string | null = null;
-  
+
   // Pagination
   totalProducts = 0;
   pageSize = 12;
   currentPage = 0;
   pageSizeOptions = [12, 24, 48];
-  
+
   // Filters
   currentFilter: ProductFilter = {};
   selectedCategoryId: number | null = null;
@@ -48,7 +48,7 @@ export class ProductListComponent implements OnInit {
     private route: ActivatedRoute,
     private cartService: CartService,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     // Load initial data
@@ -88,57 +88,43 @@ export class ProductListComponent implements OnInit {
 
   loadProducts(): void {
     this.isLoading.set(true);
-    console.log('loading products', this.isLoading());
-    // 1️⃣ Category has highest priority
-    if (this.selectedCategoryId) {
-      this.productService.getProductsByCategory(this.selectedCategoryId).subscribe({
-        next: products => {
-          this.products = products;
-          this.totalProducts = products.length;
-          this.isLoading.set(false);
-          console.log('stop loading', this.isLoading());
-        },
-        error: console.error
-      });
-      return;
-    }
+    this.error = null;
 
-    // 2️⃣ Brand second priority
-    if (this.selectedBrandId) {
-      this.productService.getProductsByBrand(this.selectedBrandId).subscribe({
-        next: products => {
-          this.products = products;
-          this.totalProducts = products.length;
-          this.isLoading.set(false);
-          console.log('stop loading', this.isLoading());
-        },
-        error: console.error
-      });
-      return;
-    }
+    console.log("Current filter:", this.currentFilter);
+    this.productService.filterProducts(this.currentFilter).subscribe({
+      next: products => {
+        this.products = products;
+        this.totalProducts = products.length;
+        this.isLoading.set(false);
+      },
+      error: err => {
+        this.error = "Failed to load products";
+        this.isLoading.set(false);
+      }
+    });
 
-    if (this.currentFilter) {
-      this.productService.filterProducts(this.currentFilter).subscribe({
-        next: products => {
-          this.products = products;
-          this.totalProducts = products.length;
-          this.isLoading.set(false);
-          console.log('stop loading', this.isLoading());        
-        },
-        error: console.error
-      });
-    }
   }
 
   // Load categories for the slider
   loadCategories(): void {
     this.productService.getAllCategories().subscribe({
       next: (categories) => {
-        this.categories = categories;
+        const filteredCategories: any[] = [];
+
+        categories.forEach(category => {
+          this.productService.getProductsByCategory(category.id).subscribe({
+            next: (products) => {
+              // Keep only categories that actually have products
+              if (products && products.length > 0) {
+                filteredCategories.push(category);
+              }
+              // Update list only after finishing
+              this.categories = filteredCategories;
+            }
+          });
+        });
       },
-      error: (err) => {
-        console.error('Failed to load categories:', err);
-      }
+      error: (err) => console.error("Failed to load categories:", err)
     });
   }
 
@@ -146,11 +132,22 @@ export class ProductListComponent implements OnInit {
   loadBrands(): void {
     this.productService.getAllBrands().subscribe({
       next: (brands) => {
-        this.brands = brands;
+        const filteredBrands: any[] = [];
+
+        brands.forEach(brand => {
+          this.productService.getProductsByBrand(brand.id).subscribe({
+            next: (products) => {
+              // Keep only brands with products
+              if (products && products.length > 0) {
+                filteredBrands.push(brand);
+              }
+              // Update result list
+              this.brands = filteredBrands;
+            }
+          });
+        });
       },
-      error: (err) => {
-        console.error('Failed to load brands:', err);
-      }
+      error: (err) => console.error("Failed to load brands:", err)
     });
   }
 
@@ -167,14 +164,9 @@ export class ProductListComponent implements OnInit {
     }
 
     this.selectedCategoryId = categoryId;
-
-    // NEW: fetch selected category
-    this.productService.getCategoryById(categoryId).subscribe(category => {
-      console.log("Selected category details:", category);
-    });
-
     this.currentFilter = { ...this.currentFilter, categoryId };
 
+    console.log("Category selected:", categoryId);
     this.router.navigate(['/shopping/category', categoryId]);
     this.loadProducts();
   }
@@ -190,11 +182,6 @@ export class ProductListComponent implements OnInit {
     }
 
     this.selectedBrandId = brandId;
-
-    // NEW: fetch selected brand
-    this.productService.getBrandById(brandId).subscribe(brand => {
-      console.log("Selected brand details:", brand);
-    });
 
     this.currentFilter = { ...this.currentFilter, brandId };
 
@@ -221,12 +208,12 @@ export class ProductListComponent implements OnInit {
     this.searchQuery = '';
     this.currentFilter = {};
     this.currentPage = 0;
-    
+
     // Clear the search filter component's form
     if (this.searchFilterComponent) {
       this.searchFilterComponent.clearFilters();
     }
-    
+
     // Reset URL
     this.router.navigate(['/shopping']);
     this.loadProducts();
@@ -242,7 +229,7 @@ export class ProductListComponent implements OnInit {
     }
 
     // 2. Safety guard
-    if (!product?.id) return; 
+    if (!product?.id) return;
 
     console.log("ProductList received:", product);
 
@@ -269,7 +256,7 @@ export class ProductListComponent implements OnInit {
     }
 
     console.log('Add to wishlist:', product);
-    
+
     this.wishlistService.addToWishlist(product.id).subscribe({
       next: (item) => {
         if (item) this.toast.success('Item successfully added to wishlist!');
@@ -296,12 +283,12 @@ export class ProductListComponent implements OnInit {
 
   // Check if any filter is active
   get hasActiveFilters(): boolean {
-    return !!this.selectedCategoryId || 
-           !!this.selectedBrandId || 
-           !!this.currentFilter.search ||
-           !!this.currentFilter.minPrice ||
-           !!this.currentFilter.maxPrice ||
-           !!this.currentFilter.minRating;
+    return !!this.selectedCategoryId ||
+      !!this.selectedBrandId ||
+      !!this.currentFilter.search ||
+      !!this.currentFilter.minPrice ||
+      !!this.currentFilter.maxPrice ||
+      !!this.currentFilter.minRating;
   }
 
   // Get products for current page

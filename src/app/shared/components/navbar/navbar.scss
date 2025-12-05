@@ -1,7 +1,120 @@
 nav {
-  background-color: white;
+  background: linear-gradient(to right, #111827, #1f2937, #111827);
+  
   .material-icons {
     font-size: 24px;
+  }
+
+  // Smooth badge animations
+  .mat-badge-content {
+    animation: badgePulse 2s ease-in-out infinite;
+  }
+
+  @keyframes badgePulse {
+    0%, 100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.1);
+    }
+  }
+
+  // Enhanced hover effects for icons
+  button mat-icon {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  // Tooltip arrow animation
+  .group:hover span[class*="absolute"][class*="-bottom-8"] {
+    animation: tooltipSlide 0.3s ease-out;
+  }
+
+  @keyframes tooltipSlide {
+    from {
+      opacity: 0;
+      transform: translate(-50%, 5px);
+    }
+    to {
+      opacity: 1;
+      transform: translate(-50%, 0);
+    }
+  }
+
+  // Gradient text shimmer effect
+  @keyframes shimmer {
+    0% {
+      background-position: -200% center;
+    }
+    100% {
+      background-position: 200% center;
+    }
+  }
+
+  .bg-clip-text {
+    background-size: 200% auto;
+    animation: shimmer 3s linear infinite;
+  }
+
+  // Pulse animation for logo dot
+  @keyframes pulse {
+    0%, 100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.5;
+      transform: scale(1.2);
+    }
+  }
+
+  // Search input focus effect
+  input[type="text"] {
+    transition: all 0.3s ease;
+    
+    &:focus {
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+    }
+  }
+
+  // Menu items hover animation
+  .mat-menu-item {
+    position: relative;
+    overflow: hidden;
+    
+    &::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 100%;
+      width: 3px;
+      background: linear-gradient(to bottom, #3b82f6, #6366f1);
+      transform: translateX(-100%);
+      transition: transform 0.3s ease;
+    }
+    
+    &:hover::before {
+      transform: translateX(0);
+    }
+  }
+
+  // Badge glow effect
+  .mat-badge-warn .mat-badge-content {
+    box-shadow: 0 0 10px rgba(239, 68, 68, 0.5);
+  }
+
+  // Avatar border animation
+  img, div[class*="rounded-full"] {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  // Button scale effect
+  button, a {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    
+    &:active {
+      transform: scale(0.95);
+    }
   }
 }
 
@@ -9,8 +122,8 @@ nav {
   display: flex;
   justify-content: space-between;
   padding: 12px 24px;
-  background: #fff;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  background: linear-gradient(to right, #111827, #1f2937, #111827);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
 }
 
 .nav-right {
@@ -29,11 +142,13 @@ nav {
   position: absolute;
   top: -6px;
   right: -10px;
-  background: red;
+  background: linear-gradient(135deg, #ef4444, #dc2626);
   padding: 2px 6px;
   border-radius: 50%;
   color: white;
   font-size: 11px;
+  animation: badgePulse 2s ease-in-out infinite;
+  box-shadow: 0 2px 8px rgba(239, 68, 68, 0.4);
 }
 
 .user-menu {
@@ -46,6 +161,11 @@ nav {
   display: flex;
   align-items: center;
   cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:hover {
+    transform: scale(1.05);
+  }
 }
 
 .dropdown {
@@ -53,24 +173,50 @@ nav {
   right: 0;
   top: 40px;
   background: white;
-  border: 1px solid #ddd;
+  border: 1px solid #374151;
   padding: 8px 0;
-  border-radius: 4px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-  min-width: 150px;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+  min-width: 200px;
   display: flex;
   flex-direction: column;
+  animation: dropdownSlide 0.2s ease-out;
 
   a, button {
-    padding: 10px 15px;
+    padding: 12px 16px;
     text-align: left;
     border: none;
     background: none;
     width: 100%;
     cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
   }
 
   a:hover, button:hover {
-    background: #f5f5f5;
+    background: linear-gradient(to right, rgba(59, 130, 246, 0.1), rgba(99, 102, 241, 0.1));
+    transform: translateX(4px);
+  }
+}
+
+@keyframes dropdownSlide {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  nav {
+    .hidden.md\\:flex {
+      display: none !important;
+    }
   }
 }

@@ -19,7 +19,7 @@ export class ProductDetailsComponent implements OnInit {
   private authService = inject(AuthService);
   private wishlistService = inject(WishlistService);
   private toast = inject(ToastService);
-  
+
   product: Product | null = null;
   isLoading = false;
   error: string | null = null;
@@ -30,12 +30,13 @@ export class ProductDetailsComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private productService: ProductService,
-    private router: Router, // ← ADD THIS
+    private router: Router,
     private cartService: CartService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.loadProduct();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   goBackToShopping(): void {
@@ -45,15 +46,15 @@ export class ProductDetailsComponent implements OnInit {
   loadProduct(): void {
     this.isLoading = true;
     this.error = null;
-    
+
     const productId = Number(this.route.snapshot.paramMap.get('id'));
-    
+
     if (!productId) {
       this.error = 'Product not found';
       this.isLoading = false;
       return;
     }
-    
+
     this.productService.getProductById(productId).subscribe({
       next: (product) => {
         this.product = product;
@@ -108,48 +109,60 @@ export class ProductDetailsComponent implements OnInit {
   // UPDATED: Add to cart with product ID and quantity parameters
   addToCart(): void {
     console.log(this.authService.isAuthenticated());
-    if(!this.authService.isAuthenticated()) {
+    if (!this.authService.isAuthenticated()) {
       console.log('User not authenticated. Cannot add to cart.');
       this.toast.warn('Please log in to add items to your cart!');
       return;
     }
 
     if (!this.product) return;
-    
-    // TODO: Implement cart service
+
     console.log('Add to cart:', this.product, 'Quantity:', this.quantity);
-    this.cartService.addToCart(this.product.id, this.quantity, this.getFinalPrice()).subscribe();
-    // Show success message
-    alert(`Added ${this.quantity} ${this.product.title}(s) to cart!`);
+
+    this.cartService.addToCart(this.product.id, this.quantity, this.getFinalPrice()).subscribe({
+      next: () => {
+        // Use Toast service with the dynamic message
+        this.toast.success(`Added ${this.quantity} ${this.product!.title}(s) to cart!`);
+      },
+      error: () => {
+        this.toast.error('Failed to add item to cart.');
+      }
+    });
   }
 
-  // NEW: Add to wishlist with product ID parameter
-  addToWishlist(): void {
-    console.log(this.authService.isAuthenticated());
-    if(!this.authService.isAuthenticated()) {
-      console.log('User not authenticated. Cannot add to wishlist.');
-      this.toast.warn('Please log in to add items to your wishlist!');
+  isInWishlist(): boolean {
+    if (!this.product) return false;
+    return this.wishlistService.wishlist().some(i => i.productId === this.product!.id);
+  }
+
+  // Toggle wishlist (Add or Remove)
+  toggleWishlist(): void {
+    if (!this.authService.isAuthenticated()) {
+      this.toast.warn('Please log in to manage your wishlist!');
       return;
     }
 
     if (!this.product) return;
-    
-    // Get the product ID
-    const productId = this.product.id;
-    
-    // TODO: Implement wishlist service - use this parameter:
-    this.wishlistService.addToWishlist(productId).subscribe({
-      next: (item) => {
-        if (item) this.toast.success('Item successfully added to wishlist!');
-        else this.toast.warn('Item already exists in wishlist!');
+
+    this.wishlistService.toggleWishlist(this.product.id).subscribe({
+      next: (result) => {
+        // If result is object (WishlistItem), it was added. If void/undefined, it was removed.
+        // Or strictly rely on the isInWishlist() check after the operation if signals update reactively.
+        const inWishlist = this.isInWishlist(); // Note: Signals might take a tick to update depending on implementation
+
+        if (result) {
+          this.toast.success('Added to wishlist!');
+        } else {
+          // If the service returns void for remove, we assume removal.
+          // Adjust message logic based on exact service return type if needed.
+          this.toast.info('Removed from wishlist');
+        }
       },
-      error: (err) => this.toast.error('Something went wrong')}
-    );
-    
-    console.log('Add to wishlist - Product ID:', productId);
-    
-    // Show success message
-    //alert(`Added ${this.product.title} to your wishlist!`);
+      error: (err) => {
+        console.error("Wishlist toggle error:", err);
+        this.toast.error('Failed to update wishlist');
+      }
+    });
   }
 
   isInStock(): boolean {
@@ -158,12 +171,12 @@ export class ProductDetailsComponent implements OnInit {
 
   getFinalPrice(): number {
     if (!this.product) return 0;
-    
+
     if (this.product.discountPercentage > 0) {
       const discount = this.product.price * (this.product.discountPercentage / 100);
       return this.product.price - discount;
     }
-    
+
     return this.product.price;
   }
 }
