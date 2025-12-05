@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProductService } from '../../../core/services/product-service';
 import { Product } from '../../../core/models/product.models';
@@ -26,7 +26,7 @@ export class ProductDetailsComponent implements OnInit {
   selectedImageIndex = 0;
   quantity = 1;
   private failedImages = new Set<number>();
-
+  
   constructor(
     private route: ActivatedRoute,
     private productService: ProductService,
@@ -148,8 +148,7 @@ export class ProductDetailsComponent implements OnInit {
       next: (result) => {
         // If result is object (WishlistItem), it was added. If void/undefined, it was removed.
         // Or strictly rely on the isInWishlist() check after the operation if signals update reactively.
-        const inWishlist = this.isInWishlist(); // Note: Signals might take a tick to update depending on implementation
-
+        
         if (result) {
           this.toast.success('Added to wishlist!');
         } else {
@@ -157,6 +156,8 @@ export class ProductDetailsComponent implements OnInit {
           // Adjust message logic based on exact service return type if needed.
           this.toast.info('Removed from wishlist');
         }
+        // Refresh wishlist signal
+        this.wishlistService.loadWishlist(1, this.wishlistService.totalItems()).subscribe(); 
       },
       error: (err) => {
         console.error("Wishlist toggle error:", err);
