@@ -1,134 +1,170 @@
-<div class="container mx-auto p-4 md:p-8 max-w-3xl">
-    <h1 class="text-3xl font-bold text-gray-800 mb-6">My Profile</h1>
+<!-- Outer Container: Matches Dark Theme -->
+<div class="min-h-[calc(100vh-80px)] bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 px-4 py-8">
+    <div class="container mx-auto max-w-5xl">
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- Page Title -->
+        <h1 class="text-3xl font-bold text-white mb-8 tracking-tight pl-2 border-l-4 border-blue-500">
+            My Profile
+        </h1>
 
-        <!-- Left Column: Profile Picture Card -->
-        <mat-card class="col-span-1 p-4 flex flex-col items-center text-center h-fit">
-            <div class="relative w-32 h-32 mb-4">
-                <img [src]="currentImage()" (error)="handleImageError($event)"
-                    class="w-full h-full rounded-full object-cover border-4 border-gray-100 shadow-sm"
-                    alt="Profile Picture">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
 
-                <!-- Edit Icon Overlay -->
-                <button (click)="fileInput.click()"
-                    class="absolute bottom-0 right-0 bg-blue-600 text-white p-2 rounded-full shadow-md hover:bg-blue-700 transition">
-                    <mat-icon class="text-sm">edit</mat-icon>
-                </button>
-                <input #fileInput type="file" (change)="onFileSelected($event)" class="hidden" accept="image/*">
-            </div>
+            <!-- Left Column: Profile Picture Card -->
+            <mat-card
+                class="col-span-1 p-6 flex flex-col items-center text-center h-fit !bg-gray-800/80 !backdrop-blur-md !text-white !rounded-2xl !border !border-gray-700 !shadow-2xl relative overflow-hidden">
 
-            <h2 class="text-xl font-semibold">{{ authService.currentUser()?.displayName }}</h2>
-            <p class="text-gray-500 text-sm">{{ authService.currentUser()?.email }}</p>
+                <!-- Decorative Glow -->
+                <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 via-indigo-500 to-blue-500">
+                </div>
 
-            <div class="mt-4 w-full flex flex-col gap-2 items-center">
-                <div class="w-full flex flex-wrap justify-center gap-2 mb-2">
-                    <!-- DYNAMIC ROLES SECTION -->
+                <div class="relative w-32 h-32 mb-5 mt-4">
+                    <img [src]="currentImage()" (error)="handleImageError($event)"
+                        class="w-full h-full rounded-full object-cover border-4 border-gray-700 shadow-xl"
+                        alt="Profile Picture">
+
+                    <!-- Edit Icon Overlay -->
+                    <button (click)="fileInput.click()"
+                        class="absolute bottom-0 right-0 bg-blue-600 text-white p-2.5 rounded-full shadow-lg hover:bg-blue-500 hover:scale-110 transition-all duration-300">
+                        <mat-icon class="!text-lg !w-5 !h-5 flex items-center justify-center">edit</mat-icon>
+                    </button>
+                    <input #fileInput type="file" (change)="onFileSelected($event)" class="hidden" accept="image/*">
+                </div>
+
+                <h2 class="text-2xl font-bold tracking-wide">{{ authService.currentUser()?.displayName }}</h2>
+                <p class="text-gray-400 text-sm mb-4">{{ authService.currentUser()?.email }}</p>
+
+                <!-- Roles Badges -->
+                <div class="w-full flex flex-wrap justify-center gap-2 mb-6">
                     @if (authService.currentUser()?.roles?.length) {
                     @for (role of authService.currentUser()?.roles; track role) {
-                    <!-- Different color for Admin role -->
-                    <span [class]="role === 'Admin' ? 'bg-purple-100 text-purple-800' : 'bg-green-100 text-green-800'"
-                        class="px-3 py-1 rounded-full text-xs font-medium">
+                    <span [class]="role === 'Admin' 
+                                ? 'bg-purple-500/20 text-purple-300 border border-purple-500/30' 
+                                : 'bg-green-500/20 text-green-300 border border-green-500/30'"
+                        class="px-3 py-1 rounded-full text-xs font-semibold tracking-wide">
                         {{ role }}
                     </span>
                     }
                     } @else {
-                    <!-- Fallback if no roles found -->
-                    <span class="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-xs font-medium">
+                    <span
+                        class="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-xs font-semibold border border-gray-600">
                         User
                     </span>
                     }
                 </div>
 
-                <!-- Face ID Status Badge -->
+                <!-- Face ID Status -->
                 @if (hasFaceId()) {
                 <div
-                    class="flex items-center gap-1 text-green-600 text-sm font-medium bg-green-50 px-3 py-1 rounded-full border border-green-200">
-                    <mat-icon
-                        class="!w-4 !h-4 text-[16px] leading-none flex items-center justify-center">check_circle</mat-icon>
+                    class="flex items-center gap-2 text-green-400 text-sm font-medium bg-green-500/10 px-4 py-2 rounded-xl border border-green-500/20 mb-2 w-full justify-center">
+                    <mat-icon class="!w-5 !h-5 text-[20px]">verified_user</mat-icon>
                     <span>Face ID Active</span>
                 </div>
                 }
-            </div>
 
-            <mat-divider class="w-full !my-4"></mat-divider>
+                <mat-divider class="!bg-gray-700 w-full !my-4"></mat-divider>
 
-            <!-- Face ID Action Button -->
-            <button mat-stroked-button color="accent" class="w-full" (click)="registerFace()">
-                <mat-icon>face</mat-icon>
-                {{ hasFaceId() ? 'Update Face ID' : 'Enable Face ID' }}
-            </button>
+                <!-- Action Buttons -->
+                <div class="flex flex-col gap-3 w-full">
+                    <button mat-stroked-button (click)="registerFace()"
+                        class="!w-full !rounded-xl !border-gray-600 !text-gray-200 hover:!bg-gray-700/50 hover:!border-indigo-400 hover:!text-indigo-400 transition-all duration-300 !py-6">
+                        <mat-icon class="mr-2">face</mat-icon>
+                        {{ hasFaceId() ? 'Update Face ID' : 'Enable Face ID' }}
+                    </button>
 
-            <mat-divider class="w-full !my-4"></mat-divider>
-            <!-- New Button -->
-            <button mat-stroked-button color="accent" class="w-full" (click)="openChangePassword()">
-                <mat-icon>lock_reset</mat-icon>
-                Change Password
-            </button>
+                    <button mat-stroked-button (click)="openChangePassword()"
+                        class="!w-full !rounded-xl !border-gray-600 !text-gray-200 hover:!bg-gray-700/50 hover:!border-orange-400 hover:!text-orange-400 transition-all duration-300 !py-6">
+                        <mat-icon class="mr-2">lock_reset</mat-icon>
+                        Change Password
+                    </button>
+                </div>
+            </mat-card>
 
-        </mat-card>
+            <!-- Right Column: Edit Form -->
+            <mat-card
+                class="col-span-1 md:col-span-2 p-8 !bg-gray-800/80 !backdrop-blur-md !text-white !rounded-2xl !border !border-gray-700 !shadow-2xl relative overflow-hidden">
 
-        <!-- Right Column: Edit Details Form -->
-        <mat-card class="col-span-1 md:col-span-2 p-6">
-            <mat-card-header class="mb-4">
-                <mat-card-title>Account Details</mat-card-title>
-            </mat-card-header>
+                <!-- Decorative Glow -->
+                <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 via-indigo-500 to-blue-500">
+                </div>
 
-            <mat-card-content>
-                <form [formGroup]="profileForm" (ngSubmit)="onSubmit()" class="flex flex-col gap-4">
+                <mat-card-header class="mb-6 p-0">
+                    <mat-card-title class="!text-2xl !font-bold text-gray-100">Account Details</mat-card-title>
+                </mat-card-header>
 
-                    <!-- Email (Read Only) -->
-                    <mat-form-field appearance="outline">
-                        <mat-label>Email Address</mat-label>
-                        <input matInput formControlName="email" readonly class="text-gray-500">
-                        <mat-icon matSuffix>lock</mat-icon>
-                        <mat-hint>Email cannot be changed</mat-hint>
-                    </mat-form-field>
+                <mat-card-content class="!p-0">
+                    <form [formGroup]="profileForm" (ngSubmit)="onSubmit()" class="flex flex-col gap-6">
 
-                    <!-- Display Name -->
-                    <mat-form-field appearance="outline">
-                        <mat-label>Display Name</mat-label>
-                        <input matInput formControlName="displayName">
-                        <mat-icon matSuffix>person</mat-icon>
-                        @if (profileForm.get('displayName')?.hasError('required')) {
-                        <mat-error>Name is required</mat-error>
-                        }
-                    </mat-form-field>
+                        <!-- Email (Read Only) -->
+                        <mat-form-field appearance="outline" class="w-full custom-dark-field">
+                            <mat-label class="!text-gray-400">Email Address</mat-label>
+                            <input matInput formControlName="email" readonly class="!text-gray-500 cursor-not-allowed">
+                            <mat-icon matSuffix class="!text-gray-600">lock</mat-icon>
+                            <mat-hint class="!text-gray-500">Email cannot be changed</mat-hint>
+                        </mat-form-field>
 
-                    <!-- Phone Number -->
-                    <mat-form-field appearance="outline">
-                        <mat-label>Phone Number</mat-label>
-                        <input matInput formControlName="phoneNumber" placeholder="+1 234 567 890">
-                        <mat-icon matSuffix>phone</mat-icon>
-                    </mat-form-field>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <!-- Display Name -->
+                            <mat-form-field appearance="outline" class="w-full custom-dark-field">
+                                <mat-label class="!text-gray-400">Display Name</mat-label>
+                                <input matInput formControlName="displayName" class="!text-white">
+                                <mat-icon matSuffix class="!text-gray-500">person</mat-icon>
+                                @if (profileForm.get('displayName')?.hasError('required')) {
+                                <mat-error>Name is required</mat-error>
+                                }
+                            </mat-form-field>
 
-                    <!-- Preview Selected File Name -->
-                    @if (selectedFile) {
-                    <div class="bg-blue-50 text-blue-700 p-3 rounded-md text-sm flex items-center gap-2">
-                        <mat-icon>image</mat-icon>
-                        <span>New image selected: {{ selectedFile.name }}</span>
-                    </div>
-                    }
+                            <!-- Phone Number -->
+                            <mat-form-field appearance="outline" class="w-full custom-dark-field">
+                                <mat-label class="!text-gray-400">Phone Number</mat-label>
+                                <input matInput formControlName="phoneNumber" placeholder="+1 234 567 890"
+                                    class="!text-white">
+                                <mat-icon matSuffix class="!text-gray-500">phone</mat-icon>
+                            </mat-form-field>
+                        </div>
 
-                    <div class="flex justify-end mt-4">
-                        <button mat-flat-button color="primary" type="submit"
-                            [disabled]="profileForm.invalid || isLoading() || profileForm.pristine && !selectedFile"
-                            class="px-8 py-2 !flex !items-center !justify-center">
-                            @if (isLoading()) {
-                            <div class="flex items-center gap-2">
-                                <mat-spinner diameter="20"></mat-spinner>
-                                <span>Saving...</span>
+                        <!-- Image Selection Feedback -->
+                        @if (selectedFile) {
+                        <div
+                            class="bg-blue-900/30 border border-blue-500/30 text-blue-200 p-4 rounded-xl flex items-center gap-3 animate-pulse">
+                            <div class="bg-blue-500/20 p-2 rounded-full">
+                                <mat-icon class="text-blue-400">image</mat-icon>
                             </div>
-                            } @else {
-                            Save Changes
-                            }
-                        </button>
-                    </div>
+                            <div class="flex flex-col">
+                                <span class="text-xs text-blue-300 uppercase tracking-wider font-semibold">New
+                                    Upload</span>
+                                <span class="text-sm font-medium">{{ selectedFile.name }}</span>
+                            </div>
+                        </div>
+                        }
 
-                </form>
+                        <!-- Save Button Area -->
+                        <div class="flex justify-end mt-4 pt-6 border-t border-gray-700">
+                            <button mat-flat-button color="primary" type="submit"
+                                [disabled]="profileForm.invalid || isLoading() || (profileForm.pristine && !selectedFile)"
+                                class="!px-8 !py-6 !text-lg !rounded-xl 
+                                       !bg-gradient-to-r !from-blue-600 !to-indigo-600 
+                                       hover:!from-blue-500 hover:!to-indigo-500 
+                                       !text-white !shadow-lg hover:!shadow-blue-500/25 
+                                       transition-all duration-300 
+                                       disabled:!bg-none disabled:!bg-gray-700 disabled:!text-gray-500 disabled:!shadow-none">
 
-            </mat-card-content>
-        </mat-card>
+                                @if (isLoading()) {
+                                <div class="flex items-center gap-2">
+                                    <mat-spinner diameter="20" class="custom-spinner"></mat-spinner>
+                                    <span>Saving...</span>
+                                </div>
+                                } @else {
+                                <span class="flex items-center gap-2">
+                                    Save Changes <mat-icon>save</mat-icon>
+                                </span>
+                                }
+                            </button>
+                        </div>
 
+                    </form>
+                </mat-card-content>
+            </mat-card>
+
+        </div>
     </div>
 </div>

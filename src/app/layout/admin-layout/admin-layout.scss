@@ -1,0 +1,8 @@
+.nav-item {
+  @apply flex items-center py-3 px-5 text-gray-300 hover:bg-gray-800 
+         hover:text-white rounded-lg transition-all cursor-pointer;
+}
+
+.active-nav {
+  @apply bg-blue-600 text-white font-semibold;
+}

@@ -1,3 +1,52 @@
+/* --- Custom Dark Mode Form Fields --- */
+
+// Fix width for Tailwind flex containers
 mat-form-field {
     width: 100%;
+}
+
+// 1. Outline Borders (Default: Gray)
+::ng-deep .custom-dark-field .mdc-notched-outline__leading,
+::ng-deep .custom-dark-field .mdc-notched-outline__notch,
+::ng-deep .custom-dark-field .mdc-notched-outline__trailing {
+    border-color: #4b5563 !important; // gray-600
+}
+
+// 2. Outline Borders (Focused: Blue/Indigo)
+::ng-deep .custom-dark-field.mat-focused .mdc-notched-outline__leading,
+::ng-deep .custom-dark-field.mat-focused .mdc-notched-outline__notch,
+::ng-deep .custom-dark-field.mat-focused .mdc-notched-outline__trailing {
+    border-color: #60a5fa !important; // blue-400
+    border-width: 2px !important;
+}
+
+// 3. Input Text Color
+::ng-deep .custom-dark-field input.mat-mdc-input-element {
+    color: white !important;
+    caret-color: #60a5fa; // Cursor color
+}
+
+// 4. Placeholder Color
+::ng-deep .custom-dark-field .mat-mdc-input-element::placeholder {
+    color: #6b7280 !important; // gray-500
+}
+
+// 5. Label Color (Resting)
+::ng-deep .custom-dark-field .mdc-floating-label {
+    color: #9ca3af !important; // gray-400
+}
+
+// 6. Label Color (Floating/Focused)
+::ng-deep .custom-dark-field.mat-focused .mdc-floating-label {
+    color: #60a5fa !important; // blue-400
+}
+
+// 7. Error Text Color
+mat-error {
+    color: #f87171 !important; // red-400
+}
+
+/* --- Spinner Color --- */
+::ng-deep .custom-spinner circle {
+    stroke: white !important;
 }
