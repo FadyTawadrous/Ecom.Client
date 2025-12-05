@@ -34,9 +34,9 @@ export class AddressStepComponent implements OnInit {
     this.addressService.loadUserAddresses();
 
     // Auto-update UI when the service updates
-    effect(() => {
-      this.addresses(); // reactive trigger
-    });
+    // effect(() => {
+    //   this.addresses(); // reactive trigger
+    // });
   }
 
   openDialog(address?: Address) {

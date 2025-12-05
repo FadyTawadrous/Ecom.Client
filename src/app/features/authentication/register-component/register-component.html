@@ -73,27 +73,28 @@
                 </mat-form-field>
 
                 <!-- Profile Image Upload -->
-                    <div class="flex flex-col gap-2">
-                        <label class="text-sm font-medium text-gray-700">Profile Picture (Optional)</label>
-                        <div class="flex items-center gap-4">
-                            <button type="button" mat-stroked-button (click)="fileInput.click()">
-                                <mat-icon>cloud_upload</mat-icon> Choose File
-                            </button>
-                            <span class="text-sm text-gray-600 truncate max-w-[200px]">
-                                {{ selectedFileName() || 'No file chosen' }}
-                            </span>
-                            <input #fileInput type="file" (change)="onFileSelected($event)" class="hidden"
-                                accept="image/*" >
-                        </div>
+                <div class="flex flex-col gap-2">
+                    <label class="text-sm font-medium text-gray-700">Profile Picture (Optional)</label>
+                    <div class="flex items-center gap-4">
+                        <button type="button" mat-stroked-button (click)="fileInput.click()">
+                            <mat-icon>cloud_upload</mat-icon> Choose File
+                        </button>
+                        <span class="text-sm text-gray-600 truncate max-w-[200px]">
+                            {{ selectedFileName() || 'No file chosen' }}
+                        </span>
+                        <input #fileInput type="file" (change)="onFileSelected($event)" class="hidden" accept="image/*">
                     </div>
+                </div>
 
                 <!-- Submit Button -->
-                 <br>
+                <br>
                 <button mat-flat-button color="primary" type="submit" [disabled]="registerForm.invalid || isLoading()"
-                    class="w-full h-12 text-lg mt-4">
+                    class="w-full h-12 text-lg">
                     @if (isLoading()) {
-                    <mat-spinner diameter="24" class="inline-block"></mat-spinner>
-                    Creating Account...
+                    <div class="flex items-center justify-center gap-2 w-full">
+                        <mat-spinner diameter="24" strokeWidth="3"></mat-spinner>
+                        <span>Creating Account...</span>
+                    </div>
                     } @else {
                     Sign Up
                     }

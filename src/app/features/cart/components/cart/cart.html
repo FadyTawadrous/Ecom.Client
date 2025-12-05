@@ -2,25 +2,21 @@
 
   <h1 class="title">Your Shopping Cart</h1>
 
-  <!-- LOADING -->
   <ng-container *ngIf="loading(); else content">
     <div class="loading"><mat-spinner></mat-spinner></div>
   </ng-container>
 
   <ng-template #content>
 
-    <!-- EMPTY CART -->
     <div *ngIf="cartItems().length === 0" class="empty">
       <mat-icon>shopping_cart</mat-icon>
       <p>Your cart is empty.</p>
     </div>
 
-    <!-- CART TABLE -->
     <mat-card *ngIf="cartItems().length > 0" class="cart-card">
 
       <table mat-table [dataSource]="cartItems()" class="mat-elevation-z2">
 
-        <!-- IMAGE COLUMN -->
         <ng-container matColumnDef="image">
           <th mat-header-cell *matHeaderCellDef> Image </th>
           <td mat-cell class="mat-column-image" *matCellDef="let item">
@@ -28,7 +24,6 @@
           </td>
         </ng-container>
 
-        <!-- PRODUCT NAME COLUMN -->
         <ng-container matColumnDef="productName">
           <th mat-header-cell *matHeaderCellDef> Product </th>
           <td mat-cell class="mat-column-productName" *matCellDef="let item">
@@ -36,7 +31,6 @@
           </td>
         </ng-container>
 
-        <!-- PRICE COLUMN -->
         <ng-container matColumnDef="unitPrice">
           <th mat-header-cell *matHeaderCellDef> Price </th>
           <td mat-cell class="mat-column-unitPrice" *matCellDef="let item">
@@ -44,17 +38,14 @@
           </td>
         </ng-container>
 
-        <!-- QUANTITY COLUMN -->
         <ng-container matColumnDef="quantity">
           <th mat-header-cell *matHeaderCellDef> Qty </th>
-          <td mat-cell class="mat-column-quantity qty-controls" *matCellDef="let item">
+          <td mat-cell class="mat-column-quantity" *matCellDef="let item">
             <div class="qty-controls">
               <button mat-icon-button (click)="updateQuantity(item, item.quantity - 1)" [disabled]="item.quantity <= 1">
                 <mat-icon>remove</mat-icon>
               </button>
-
               <span class="qty">{{ item.quantity }}</span>
-
               <button mat-icon-button (click)="updateQuantity(item, item.quantity + 1)">
                 <mat-icon>add</mat-icon>
               </button>
@@ -62,7 +53,6 @@
           </td>
         </ng-container>
 
-        <!-- TOTAL COLUMN -->
         <ng-container matColumnDef="totalPrice">
           <th mat-header-cell *matHeaderCellDef> Total </th>
           <td mat-cell class="mat-column-totalPrice" *matCellDef="let item">
@@ -70,7 +60,6 @@
           </td>
         </ng-container>
 
-        <!-- REMOVE COLUMN -->
         <ng-container matColumnDef="remove">
           <th mat-header-cell *matHeaderCellDef></th>
           <td mat-cell class="mat-column-remove" *matCellDef="let item">
@@ -80,7 +69,6 @@
           </td>
         </ng-container>
 
-        <!-- RENDER ROWS -->
         <tr mat-header-row *matHeaderRowDef="['image','productName','unitPrice','quantity','totalPrice','remove']">
         </tr>
 
@@ -91,7 +79,6 @@
 
       <mat-divider></mat-divider>
 
-      <!-- TOTAL + ACTIONS -->
       <div class="totals">
         <h2>Total: {{ total() | currency }}</h2>
 

@@ -38,7 +38,7 @@ export class Navbar implements OnInit{
         // Load some wishlist data when user is authenticated
         this.wishlistService.loadWishlist(1, this.wishlistService.pageSize()).subscribe();
         // Load cart data as well
-        //this.cartService.loadCart().subscribe();
+        this.cartService.loadCart();
       }
     });
   }
@@ -47,7 +47,7 @@ export class Navbar implements OnInit{
     // Load cart and some wishlist on component init if user is already authenticated
     if (this.isAuthenticated()) {
       this.wishlistService.loadWishlist(1, this.wishlistService.pageSize()).subscribe();
-      //this.cartService.loadCart().subscribe();
+      this.cartService.loadCart();
     }
   }
 
