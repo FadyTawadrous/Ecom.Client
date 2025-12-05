@@ -1,25 +1,28 @@
-/* search-filter.component.scss - WITH BETTER TEXT STYLING */
+/* --- search-filter.component.scss - DARK MODE --- */
+
 .search-filter {
-  background: white;
+  // Dark Mode Container Styles
+  background: #1f2937; /* gray-800 background */
   border-radius: 16px;
   padding: 24px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-  border: 1px solid rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4); /* Stronger shadow for dark mode lift */
+  border: 1px solid #374151; /* gray-700 border */
 }
 
+/* --- Filter Header and Titles --- */
 .filter-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 28px;
   padding-bottom: 16px;
-  border-bottom: 1px solid #f0f0f0;
+  border-bottom: 1px solid #374151; /* gray-700 separator */
   
   .filter-title {
     margin: 0;
     font-size: 20px;
     font-weight: 600;
-    color: #2c3e50;
+    color: white; /* Changed from #2c3e50 to white */
   }
 }
 
@@ -30,18 +33,18 @@
     margin: 0 0 12px;
     font-size: 16px;
     font-weight: 600;
-    color: #34495e;
+    color: white; /* Changed from #34495e to white */
   }
   
   .rating-subtitle {
     margin: 0 0 16px;
     font-size: 14px;
-    color: #7f8c8d;
+    color: #9ca3af; /* gray-400 */
     font-weight: 400;
   }
 }
 
-// Price range buttons
+/* --- Price Range Buttons --- */
 .price-ranges {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -56,16 +59,29 @@
     display: flex;
     align-items: center;
     justify-content: center;
+
+    // Apply dark mode button defaults
+    border: 1px solid #4b5563; /* gray-600 */
+    background-color: #374151; /* gray-700 */
+    color: #e5e7eb; /* gray-200 text */
     
     .price-label {
       font-weight: 500;
       color: inherit;
     }
+
+    // Hover State
+    &:hover:not(.active) {
+      border-color: #60a5fa; /* blue-400 */
+      background-color: #4b5563; /* gray-600 slightly darker hover */
+    }
     
     &.active {
-      background: linear-gradient(135deg, #3f51b5, #2196f3);
+      // Replace Blue/Indigo gradient with Blue-400 flat color/gradient
+      background: linear-gradient(135deg, #60a5fa, #3b82f6); /* blue-400 to blue-500 */
       color: white;
       font-weight: 600;
+      border-color: #60a5fa;
       
       .price-label {
         color: white;
@@ -74,11 +90,12 @@
   }
 }
 
+/* --- Custom Price Inputs --- */
 .custom-price {
   .custom-price-label {
     margin: 0 0 12px;
     font-size: 14px;
-    color: #555;
+    color: #9ca3af; /* gray-400 */
     font-weight: 500;
   }
   
@@ -92,14 +109,14 @@
     }
     
     .price-to {
-      color: #7f8c8d;
+      color: #9ca3af; /* gray-400 */
       font-size: 15px;
       font-weight: 500;
     }
   }
 }
 
-// Rating buttons
+/* --- Rating Buttons --- */
 .rating-buttons {
   display: flex;
   flex-direction: column;
@@ -112,6 +129,10 @@
     padding: 12px 20px;
     border-radius: 12px;
     min-height: 56px;
+
+    // Default Dark Mode Button Styles
+    border: 1px solid #4b5563; /* gray-600 */
+    background-color: #374151; /* gray-700 */
     
     .rating-content {
       display: flex;
@@ -127,29 +148,26 @@
         font-size: 20px;
         width: 20px;
         height: 20px;
-        color: #ffd740;
+        color: #fcd34d; /* yellow-300 (Lighter yellow for dark mode) */
       }
     }
     
     .rating-text {
       font-size: 14px;
       font-weight: 500;
-      color: #333;
-    }
-    
-    .up-text {
-      font-size: 13px;
-      color: #666;
-      font-weight: 500;
+      color: #e5e7eb; /* gray-200 */
     }
     
     &.active {
-      background: linear-gradient(135deg, #ff9800, #ff5722);
+      // Replace Orange gradient with a consistent accent color (Blue-400 or Orange/Amber accent)
+      // Sticking to Blue-400 for consistency across the application
+      background: linear-gradient(135deg, #60a5fa, #3b82f6);
+      border-color: #60a5fa;
       color: white;
       
       .stars {
         .star {
-          color: white;
+          color: white; /* White stars for active state */
         }
       }
       
@@ -157,29 +175,70 @@
         color: white;
         font-weight: 600;
       }
-      
-      .up-text {
-        color: white;
-        font-weight: 500;
-      }
+    }
+
+    // Hover State
+    &:hover:not(.active) {
+      border-color: #60a5fa; /* blue-400 */
+      background-color: #4b5563; /* gray-600 */
     }
   }
 }
 
-// Form fields
+/* --- Form Fields (Apply Custom Dark Field Styles) --- */
+// Since we can't apply the .custom-dark-field class directly via SCSS
+// we target the mat-form-field inside this component and force the styles.
 mat-form-field {
   width: 100%;
   
-  .mat-form-field-label {
-    font-weight: 500;
+  // Apply generic dark mode text/label styles globally to inputs within this filter
+  ::ng-deep &.mat-mdc-form-field {
+    // This uses the same classes as your reference dark mode input styles
+    
+    // Input/Text Color
+    .mat-mdc-input-element {
+      color: white !important;
+      caret-color: #60a5fa !important;
+    }
+
+    // Placeholder Color
+    .mat-mdc-input-element::placeholder {
+      color: #6b7280 !important; // gray-500
+    }
+
+    // Label Color (Default)
+    .mdc-floating-label {
+      color: #9ca3af !important; // gray-400
+    }
+
+    // Label Color (Focused/Floating)
+    &.mat-focused .mdc-floating-label {
+      color: #60a5fa !important; // blue-400
+    }
+
+    // Outline/Border Default
+    .mdc-notched-outline__leading,
+    .mdc-notched-outline__notch,
+    .mdc-notched-outline__trailing {
+      border-color: #4b5563 !important; // gray-600
+    }
+
+    // Outline/Border Focused
+    &.mat-focused .mdc-notched-outline__leading,
+    &.mat-focused .mdc-notched-outline__notch,
+    &.mat-focused .mdc-notched-outline__trailing {
+      border-color: #60a5fa !important; // blue-400
+      border-width: 2px !important;
+    }
   }
-  
-  input::placeholder {
-    color: #95a5a6;
+
+  // Icons inside the form field
+  ::ng-deep .mat-icon {
+    color: #9ca3af !important; // gray-400
   }
 }
 
-// Responsive
+/* --- Responsive --- */
 @media (max-width: 768px) {
   .price-ranges {
     grid-template-columns: 1fr;

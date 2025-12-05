@@ -1,15 +1,33 @@
+/* --- product-review.component.scss - DARK MODE --- */
+
 .review-container {
   margin-top: 30px;
+    background-color: #1f2937; /* gray-800 */
+    padding: 50px;
 }
 
+h3{
+    color: white;
+    font-size: 24px;
+
+    padding: 20px;
+}
+// --- Review Form Container (Input Section) ---
 .review-form {
   padding: 15px;
-  border: 1px solid #ddd;
+  // Dark Mode: Darker background, softer border
+  background-color: #1f2937; /* gray-800 */
+  border: 1px solid #374151; /* gray-700 border */
   border-radius: 8px;
   margin-bottom: 25px;
-  background: #fafafa;
+  
+  // Set all text inside the form to light
+  h3, strong {
+    color: white; 
+  }
 }
 
+// --- Rating Input Stars ---
 .rating-input {
   display: flex;
   gap: 5px;
@@ -18,10 +36,12 @@
   .star {
     cursor: pointer;
     font-size: 28px;
-    color: #ccc;
+    // Dark Mode: Inactive stars are dark gray
+    color: #4b5563; /* gray-600 (soft background color) */
 
     &.active {
-      color: #ffbf00;
+      // Dark Mode: Active stars are bright yellow/gold
+      color: #fcd34d; /* yellow-300 */
     }
   }
 }
@@ -30,11 +50,136 @@
   width: 100%;
 }
 
+// --- Angular Material Form Field Overrides (Deep Styling) ---
+.review-form {
+    // Target the mat-form-field inside the review form
+    mat-form-field.full-width {
+        
+        // Use ::ng-deep to override the internal MDC structure
+        ::ng-deep &.mat-mdc-form-field {
+            
+            // 1. Label Color (mat-label / mdc-floating-label)
+            .mdc-floating-label {
+                color: #9ca3af !important; /* gray-400 */
+            }
+            
+            // 2. Input/Textarea Text Color
+            .mat-mdc-input-element {
+                caret-color: white !important; /* Cursor color */
+                color: white !important; /* Input text color */
+            }
+            
+            // 3. Outline Color (mdc-notched-outline)
+            .mdc-notched-outline__leading,
+            .mdc-notched-outline__notch,
+            .mdc-notched-outline__trailing {
+                border-color: #4b5563 !important; /* gray-600 */
+            }
+            
+            // 4. Focus/Hover Outline Color
+            &.mat-focused .mdc-notched-outline__leading,
+            &.mat-focused .mdc-notched-outline__notch,
+            &.mat-focused .mdc-notched-outline__trailing,
+            &:hover:not(.mat-focused) .mdc-notched-outline__leading,
+            &:hover:not(.mat-focused) .mdc-notched-outline__notch,
+            &:hover:not(.mat-focused) .mdc-notched-outline__trailing {
+                border-color: #60a5fa !important; /* blue-400 */
+            }
+        }
+    }
+}
+
+// --- Action Buttons in Form ---
+.review-buttons {
+    display: flex;
+    gap: 10px;
+    
+    // Primary Button (Submit)
+    button[color="primary"] {
+        ::ng-deep &.mat-mdc-raised-button.mat-primary {
+            background-color: #60a5fa !important; /* blue-400 */
+            color: #111827 !important; /* Dark text for high contrast */
+        }
+    }
+    
+    // Accent Button (Save Changes)
+    button[color="accent"] {
+        ::ng-deep &.mat-mdc-raised-button.mat-accent {
+            background-color: #34d399 !important; /* green-400 */
+            color: #111827 !important;
+        }
+    }
+    
+    // Warn Button (Cancel)
+    button[color="warn"] {
+        color: #f87171 !important; /* red-400 text color */
+        
+        &:hover {
+            background-color: rgba(248, 113, 113, 0.1) !important;
+        }
+    }
+}
+
+// --- Reviews List ---
+.reviews-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0; // The gap is determined by the border
+}
+
 .review-item {
-  border-bottom: 1px solid #eee;
+  // Dark Mode: Separator border color
+  border-bottom: 1px solid #374151; /* gray-700 */
   padding: 15px 0;
+  
+  // Text colors
+  strong, h4 {
+    color: white; 
+  }
+  p {
+    color: #e5e7eb; /* gray-200 */
+  }
+  .date {
+    color: #6b7280; /* gray-500 */
+  }
+
+  .review-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+  
+  .review-stars {
+    .star.small {
+      font-size: 16px;
+      width: 16px;
+      height: 16px;
+      // Dark Mode: Star color
+      color: #fcd34d !important; /* yellow-300 */
+    }
+  }
 
   .review-actions {
     margin-top: 5px;
+    
+    // Button styling for 'Edit' and 'Delete'
+    button {
+        color: #9ca3af !important; /* gray-400 default text/icon */
+        background-color: transparent !important;
+        
+        &:hover {
+            background-color: rgba(96, 165, 250, 0.1) !important;
+        }
+    }
+    
+    // Delete button warn color override
+    button[color="warn"] {
+        color: #f87171 !important; /* red-400 */
+        
+        &:hover {
+            background-color: rgba(248, 113, 113, 0.1) !important;
+        }
+    }
   }
 }
