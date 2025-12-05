@@ -15,12 +15,12 @@ export class WishlistService {
   private wishlistSignal = signal<WishlistItem[]>([]);
   private totalItemsSignal = signal<number>(0);
   private pageNumSignal = signal<number>(1);
-  private pageSizeSignal = signal<number>(10); // default page size
+  private pageSizeSignal = signal<number>(100); // default page size
 
   readonly wishlist = this.wishlistSignal.asReadonly();
   readonly totalItems = this.totalItemsSignal.asReadonly();
   readonly pageNum = this.pageNumSignal.asReadonly();
-  readonly pageSize = this.pageSizeSignal; // allow setting page size
+  pageSize = this.pageSizeSignal; // allow setting page size
 
   loading = signal<boolean>(false);
 
@@ -106,8 +106,7 @@ export class WishlistService {
   // Toggle convenience method (search productId)
   toggleWishlist(productId: number): Observable<WishlistItem | void> {
     // Refresh wishlist to ensure latest wishlistsignal
-    this.loadWishlist(1, this.totalItems()).subscribe();
-
+    this.loadWishlist(1, this.pageSize()).subscribe();
     // Check if product already in wishlist
     const existing = this.wishlistSignal().find(i => i.productId === productId);
     console.log("exist", existing);

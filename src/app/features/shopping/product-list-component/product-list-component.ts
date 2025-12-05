@@ -270,7 +270,7 @@ export class ProductListComponent implements OnInit {
             this.toast.info('Removed from wishlist');
         }
         // Refresh wishlist signal
-        this.wishlistService.loadWishlist(1, this.wishlistService.totalItems()).subscribe(); 
+        this.wishlistService.loadWishlist(1, this.wishlistService.pageSize()).subscribe(); 
       },
       error: (err) => {
         console.error("Wishlist toggle error:", err);
