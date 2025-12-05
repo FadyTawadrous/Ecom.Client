@@ -1,31 +1,34 @@
-
-import { Component, inject, OnInit, ViewChild } from '@angular/core';
+import { Component, inject, OnInit, signal, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProductService } from '../../../core/services/product-service';
 import { Product, ProductFilter, Category, Brand } from '../../../core/models/product.models';
 import { PageEvent } from '@angular/material/paginator';
 import { SearchFilterComponent } from '../search-filter/search-filter.component';
 import { WishlistService } from '../../../core/services/wishlist-service';
-
+import { ToastService } from '../../../core/services/toast.service';
+import { AuthService } from '../../../core/services/auth-service';
+import { CartService } from '../../../core/services/cart-service';
 
 @Component({
   selector: 'app-product-list',
   templateUrl: './product-list-component.html',
-  styleUrls: ['./product-list-component.scss'], 
-   standalone: false
-  
+  styleUrls: ['./product-list-component.scss'],
+  standalone: false
 })
 export class ProductListComponent implements OnInit {
+  private authService = inject(AuthService);
   private wishlistService = inject(WishlistService);
+  private toast = inject(ToastService);
   
-    @ViewChild(SearchFilterComponent) searchFilterComponent!: SearchFilterComponent;
+  @ViewChild(SearchFilterComponent) searchFilterComponent!: SearchFilterComponent;
+  
   // Products data
   products: Product[] = [];
   categories: Category[] = [];
   brands: Brand[] = [];
   
   // Loading and error states
-  isLoading = false;
+  isLoading = signal<boolean>(false);
   error: string | null = null;
   
   // Pagination
@@ -43,6 +46,7 @@ export class ProductListComponent implements OnInit {
   constructor(
     private productService: ProductService,
     private route: ActivatedRoute,
+    private cartService: CartService,
     private router: Router
   ) {}
 
@@ -55,157 +59,177 @@ export class ProductListComponent implements OnInit {
   }
 
   // Setup route parameters for category/brand filtering
- private setupRouteParams(): void {
-  this.route.params.subscribe(params => {
-    if (params['categoryId']) {
-      const id = +params['categoryId'];
+  private setupRouteParams(): void {
+    this.route.params.subscribe(params => {
+      if (params['categoryId']) {
+        const id = +params['categoryId'];
 
-      this.selectedCategoryId = id;
-      this.currentFilter = { ...this.currentFilter, categoryId: id };
+        this.selectedCategoryId = id;
+        this.currentFilter = { ...this.currentFilter, categoryId: id };
 
-      // ⬅ NEW: Fetch selected category info
-      this.productService.getCategoryById(id).subscribe(category => {
-        console.log("Selected category:", category);
+        // ⬅ NEW: Fetch selected category info
+        this.productService.getCategoryById(id).subscribe(category => {
+          console.log("Selected category:", category);
+        });
+
+      } else if (params['brandId']) {
+        const id = +params['brandId'];
+
+        this.selectedBrandId = id;
+        this.currentFilter = { ...this.currentFilter, brandId: id };
+
+        // ⬅ NEW: Fetch selected brand info
+        this.productService.getBrandById(id).subscribe(brand => {
+          console.log("Selected brand:", brand);
+        });
+      }
+    });
+  }
+
+  loadProducts(): void {
+    this.isLoading.set(true);
+    console.log('loading products', this.isLoading());
+    // 1️⃣ Category has highest priority
+    if (this.selectedCategoryId) {
+      this.productService.getProductsByCategory(this.selectedCategoryId).subscribe({
+        next: products => {
+          this.products = products;
+          this.totalProducts = products.length;
+          this.isLoading.set(false);
+          console.log('stop loading', this.isLoading());
+        },
+        error: console.error
       });
+      return;
+    }
 
-    } else if (params['brandId']) {
-      const id = +params['brandId'];
+    // 2️⃣ Brand second priority
+    if (this.selectedBrandId) {
+      this.productService.getProductsByBrand(this.selectedBrandId).subscribe({
+        next: products => {
+          this.products = products;
+          this.totalProducts = products.length;
+          this.isLoading.set(false);
+          console.log('stop loading', this.isLoading());
+        },
+        error: console.error
+      });
+      return;
+    }
 
-      this.selectedBrandId = id;
-      this.currentFilter = { ...this.currentFilter, brandId: id };
-
-      // ⬅ NEW: Fetch selected brand info
-      this.productService.getBrandById(id).subscribe(brand => {
-        console.log("Selected brand:", brand);
+    if (this.currentFilter) {
+      this.productService.filterProducts(this.currentFilter).subscribe({
+        next: products => {
+          this.products = products;
+          this.totalProducts = products.length;
+          this.isLoading.set(false);
+          console.log('stop loading', this.isLoading());        
+        },
+        error: console.error
       });
     }
-  });
-}
-
-loadProducts(): void {
-  this.isLoading = true;
-  this.error = null;
-
-  this.productService.filterProducts(this.currentFilter).subscribe({
-    next: products => {
-      this.products = products;
-      this.totalProducts = products.length;
-      this.isLoading = false;
-    },
-    error: err => {
-      this.error = "Failed to load products";
-      this.isLoading = false;
-    }
-  });
-}
-
-
-
-
-
+  }
 
   // Load categories for the slider
-loadCategories(): void {
-  this.productService.getAllCategories().subscribe({
-    next: (categories) => {
+  loadCategories(): void {
+    this.productService.getAllCategories().subscribe({
+      next: (categories) => {
+        const filteredCategories: any[] = [];
 
-      const filteredCategories: any[] = [];
-
-      categories.forEach(category => {
-        this.productService.getProductsByCategory(category.id).subscribe({
-          next: (products) => {
-
-            // Keep only categories that actually have products
-            if (products && products.length > 0) {
-              filteredCategories.push(category);
+        categories.forEach(category => {
+          this.productService.getProductsByCategory(category.id).subscribe({
+            next: (products) => {
+              // Keep only categories that actually have products
+              if (products && products.length > 0) {
+                filteredCategories.push(category);
+              }
+              // Update list only after finishing
+              this.categories = filteredCategories;
             }
-
-            // Update list only after finishing
-            this.categories = filteredCategories;
-          }
+          });
         });
-      });
-
-    },
-    error: (err) => console.error("Failed to load categories:", err)
-  });
-}
-
+      },
+      error: (err) => console.error("Failed to load categories:", err)
+    });
+  }
 
   // Load brands for the slider
- loadBrands(): void {
-  this.productService.getAllBrands().subscribe({
-    next: (brands) => {
+  loadBrands(): void {
+    this.productService.getAllBrands().subscribe({
+      next: (brands) => {
+        const filteredBrands: any[] = [];
 
-      const filteredBrands: any[] = [];
-
-      brands.forEach(brand => {
-        this.productService.getProductsByBrand(brand.id).subscribe({
-          next: (products) => {
-
-            // Keep only brands with products
-            if (products && products.length > 0) {
-              filteredBrands.push(brand);
+        brands.forEach(brand => {
+          this.productService.getProductsByBrand(brand.id).subscribe({
+            next: (products) => {
+              // Keep only brands with products
+              if (products && products.length > 0) {
+                filteredBrands.push(brand);
+              }
+              // Update result list
+              this.brands = filteredBrands;
             }
-
-            // Update result list
-            this.brands = filteredBrands;
-          }
+          });
         });
-      });
-
-    },
-    error: (err) => console.error("Failed to load brands:", err)
-  });
-}
+      },
+      error: (err) => console.error("Failed to load brands:", err)
+    });
+  }
 
   // Event Handlers
 
- onCategorySelected(categoryId: number): void {
-  if (categoryId === 0) {
-    this.selectedCategoryId = null;
-    this.currentFilter.categoryId = undefined;
-    this.router.navigate(['/shopping']);
+  // When user selects a category
+  onCategorySelected(categoryId: number): void {
+    if (categoryId === 0) {
+      this.selectedCategoryId = null;
+      this.currentFilter.categoryId = undefined;
+      this.router.navigate(['/shopping']);
+      this.loadProducts();
+      return;
+    }
+
+    this.selectedCategoryId = categoryId;
+
+    // NEW: fetch selected category
+    this.productService.getCategoryById(categoryId).subscribe(category => {
+      console.log("Selected category details:", category);
+    });
+
+    this.currentFilter = { ...this.currentFilter, categoryId };
+
+    this.router.navigate(['/shopping/category', categoryId]);
     this.loadProducts();
-    return;
   }
-
-  this.selectedCategoryId = categoryId;
-  this.currentFilter = { ...this.currentFilter, categoryId };
-
-  this.router.navigate(['/shopping/category', categoryId]);
-  this.loadProducts();
-}
-
 
   // When user selects a brand
-onBrandSelected(brandId: number): void {
-  if (brandId === 0) {
-    this.selectedBrandId = null;
-    this.currentFilter.brandId = undefined;
-    this.router.navigate(['/shopping']);
+  onBrandSelected(brandId: number): void {
+    if (brandId === 0) {
+      this.selectedBrandId = null;
+      this.currentFilter.brandId = undefined;
+      this.router.navigate(['/shopping']);
+      this.loadProducts();
+      return;
+    }
+
+    this.selectedBrandId = brandId;
+
+    // NEW: fetch selected brand
+    this.productService.getBrandById(brandId).subscribe(brand => {
+      console.log("Selected brand details:", brand);
+    });
+
+    this.currentFilter = { ...this.currentFilter, brandId };
+
+    this.router.navigate(['/shopping/brand', brandId]);
     this.loadProducts();
-    return;
   }
-
-  this.selectedBrandId = brandId;
-  this.currentFilter = { ...this.currentFilter, brandId };
-
-  this.router.navigate(['/shopping/brand', brandId]);
-  this.loadProducts();
-}
-
 
   // When filter changes from search-filter component
   onFilterChange(filter: ProductFilter): void {
     this.currentFilter = { ...this.currentFilter, ...filter };
     this.currentPage = 0;
     this.loadProducts();
-    console.log(this.currentFilter);
-    
   }
-
-
 
   // When page changes
   onPageChange(event: PageEvent): void {
@@ -213,7 +237,7 @@ onBrandSelected(brandId: number): void {
     this.pageSize = event.pageSize;
   }
 
- clearFiltersList(): void {
+  clearFiltersList(): void {
     this.selectedCategoryId = null;
     this.selectedBrandId = null;
     this.searchQuery = '';
@@ -230,17 +254,51 @@ onBrandSelected(brandId: number): void {
     this.loadProducts();
   }
 
-  // Add to cart (to be implemented)
+  // Add to cart
   onAddToCart(product: Product): void {
-    console.log('Add to cart:', product);
-    // TODO: Implement cart service
+    // 1. Authentication Check
+    if (!this.authService.isAuthenticated()) {
+      console.log('User not authenticated. Cannot add to cart.');
+      this.toast.warn('Please log in to add items to your cart!');
+      return;
+    }
+
+    // 2. Safety guard
+    if (!product?.id) return; 
+
+    console.log("ProductList received:", product);
+
+    // 3. Add to cart via service
+    this.cartService.addToCart(product.id, 1, product.price).subscribe({
+      next: () => {
+        console.log("Added to cart successfully");
+        this.toast.success('Item added to cart!');
+      },
+      error: () => {
+        console.error("Failed to add product to cart");
+        this.toast.error('Failed to add item to cart.');
+      }
+    });
   }
 
-  // Add to wishlist (to be implemented)
+  // Add to wishlist
   onAddToWishlist(product: Product): void {
+    console.log(this.authService.isAuthenticated());
+    if (!this.authService.isAuthenticated()) {
+      console.log('User not authenticated. Cannot add to wishlist.');
+      this.toast.warn('Please log in to add items to your wishlist!');
+      return;
+    }
+
     console.log('Add to wishlist:', product);
-    // TODO: Implement wishlist service
-    this.wishlistService.addToWishlist(product.id).subscribe();
+    
+    this.wishlistService.addToWishlist(product.id).subscribe({
+      next: (item) => {
+        if (item) this.toast.success('Item successfully added to wishlist!');
+        else this.toast.warn('Item already exists in wishlist!');
+      },
+      error: (err) => this.toast.error('Something went wrong')
+    });
   }
 
   // Get page title based on current filters

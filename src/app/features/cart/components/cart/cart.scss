@@ -1,0 +1,52 @@
+.cart-container {
+  max-width: 900px;
+  margin: auto;
+  padding: 20px;
+}
+
+.title {
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+.cart-card {
+  padding: 20px;
+}
+
+.qty-value {
+  margin: 0 10px;
+  font-weight: 600;
+}
+
+.totals {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 15px;
+}
+
+.actions button {
+  margin-left: 10px;
+}
+
+.empty {
+  text-align: center;
+  padding: 50px 0;
+
+  mat-icon {
+    font-size: 80px;
+    color: #bbb;
+  }
+
+  p {
+    margin-top: 10px;
+    font-size: 18px;
+  }
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  padding: 40px 0;
+}
+

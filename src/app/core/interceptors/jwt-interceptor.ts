@@ -17,5 +17,4 @@ export const jwtInterceptor: HttpInterceptorFn = (req, next) => {
 
   // 3. Pass to next handler
   return next(req);
-  
 };

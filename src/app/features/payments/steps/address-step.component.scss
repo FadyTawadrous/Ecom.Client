@@ -1,0 +1,12 @@
+:host {
+  display: block;
+}
+
+mat-card {
+  border-radius: 12px;
+}
+
+button[disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

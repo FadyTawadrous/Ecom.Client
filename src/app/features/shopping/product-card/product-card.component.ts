@@ -44,6 +44,7 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { Router } from '@angular/router'; // ← ADD THIS IMPORT
 import { Product } from '../../../core/models/product.models';
 import { ProductService } from '../../../core/services/product-service';
+import { CartService } from '../../../core/services/cart-service';
 
 @Component({
   selector: 'app-product-card',
@@ -63,7 +64,7 @@ export class ProductCardComponent {
     return this.productService.getProductImageUrl(product.thumbnailUrl, true);
   }
   
-  @Input() product!: Product;
+@Input({ required: true }) product!: Product;
   @Output() addToCart = new EventEmitter<Product>();
   @Output() addToWishlist = new EventEmitter<Product>();
   

@@ -4,25 +4,25 @@
   padding: 16px 0;
   overflow-x: auto;
   white-space: nowrap;
-  
-  // Hide scrollbar but keep functionality
-  scrollbar-width: none; // Firefox
-  &::-webkit-scrollbar {
-    display: none; // Chrome, Safari
-  }
+
+  // Custom scrollbar
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 #f1f5f9;
 }
 
 .category-button {
   display: flex;
   flex-direction: column;
   align-items: center;
-  min-width: 80px;
-  height: 90px;
-  padding: 8px;
+  padding: 12px 8px; // Reduced padding
   border-radius: 12px;
   border: 2px solid #e0e0e0;
   background: white;
   transition: all 0.2s ease;
+  cursor: pointer;
+  min-width: auto; // Remove fixed min-width
+  width: auto; // Allow natural width
+  height: auto; // Allow natural height
   
   // Active state
   &.active {
@@ -49,9 +49,9 @@
   mat-icon {
     margin-bottom: 4px;
     color: #666;
-    font-size: 24px;
-    width: 24px;
-    height: 24px;
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
   }
 }
 

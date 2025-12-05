@@ -34,7 +34,7 @@ export class WishlistItemComponent {
   }
 
   addToCart() {
-    this.cartService.addToCart(this.item.productId).subscribe();
+    this.cartService.addToCart(this.item.productId,1,this.item.price).subscribe();
   }
 
   increment() {
