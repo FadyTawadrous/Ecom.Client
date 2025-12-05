@@ -97,9 +97,15 @@ export class WishlistService {
   // Toggle convenience method (search productId)
   toggleWishlist(productId: number): Observable<WishlistItem | void> {
     const existing = this.wishlistSignal().find(i => i.productId === productId);
+    console.log("exist",existing);
+    
     if (existing) {
+      console.log("removed", existing);
       return this.removeFromWishlist(existing.id) as Observable<void>;
+      
+      
     } else {
+      console.log("added", productId);
       return this.addToWishlist(productId) as Observable<WishlistItem>;
     }
   }

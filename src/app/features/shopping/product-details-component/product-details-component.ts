@@ -30,6 +30,7 @@ export class ProductDetailsComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadProduct();
+     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   goBackToShopping(): void {
@@ -117,20 +118,41 @@ export class ProductDetailsComponent implements OnInit {
   }
 
   // NEW: Add to wishlist with product ID parameter
-  addToWishlist(): void {
-    if (!this.product) return;
+  // addToWishlist(): void {
+  //   if (!this.product) return;
     
-    // Get the product ID
-    const productId = this.product.id;
+  //   // Get the product ID
+  //   const productId = this.product.id;
     
-    // TODO: Implement wishlist service - use this parameter:
-    this.wishlistService.addToWishlist(productId).subscribe();
+  //   // TODO: Implement wishlist service - use this parameter:
+  //   this.wishlistService.addToWishlist(productId).subscribe();
     
-    console.log('Add to wishlist - Product ID:', productId);
+  //   console.log('Add to wishlist - Product ID:', productId);
     
-    // Show success message
-    alert(`Added ${this.product.title} to your wishlist!`);
-  }
+  //   // Show success message
+  //   alert(`Added ${this.product.title} to your wishlist!`);
+  // }
+
+  // Check if this product is in wishlist
+isInWishlist(): boolean {
+  if (!this.product) return false;
+  return this.wishlistService.wishlist().some(i => i.productId === this.product!.id);
+}
+
+// Toggle wishlist
+toggleWishlist(): void {
+  if (!this.product) return;
+
+  this.wishlistService.toggleWishlist(this.product.id).subscribe({
+    next: () => {
+      console.log("Wishlist updated for product:", this.product?.id);
+    },
+    error: (err) => {
+      console.error("Wishlist toggle error:", err);
+    }
+  });
+}
+
 
   isInStock(): boolean {
     return this.product ? this.product.stock > 0 : false;

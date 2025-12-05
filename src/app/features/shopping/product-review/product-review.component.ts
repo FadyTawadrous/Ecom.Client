@@ -95,11 +95,11 @@ isCurrentUsersReview(reviewUserId: string|null): boolean {
   console.log(update);
   this.productService.updateReview(update).subscribe({
     next: () => {
-      this.snack.open('Review updated', 'Close', { duration: 1500 });
+      this.snack.open('Review updated', 'Close', { duration: 4000 });
       this.cancelEdit();
       this.refreshReviews.emit();
     },
-    error: () => this.snack.open('Failed to update review', 'Close')
+    error: () => this.snack.open('Failed to update review', 'Close',{ duration: 4000 })
   });
 }
 
@@ -111,10 +111,10 @@ isCurrentUsersReview(reviewUserId: string|null): boolean {
 
     this.productService.deleteReview(id).subscribe({
       next: () => {
-        this.snack.open('Review deleted', 'Close', { duration: 1500 });
+        this.snack.open('Review deleted', 'Close', { duration: 4000 });
         this.refreshReviews.emit();
       },
-      error: () => this.snack.open('Failed to delete review', 'Close')
+      error: () => this.snack.open('Failed to delete review', 'Close',{ duration: 4000 })
     });
   }
 

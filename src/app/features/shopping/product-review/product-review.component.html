@@ -4,6 +4,7 @@
 <div class="review-container">
   
   <!-- Review Form -->
+   @if(currentUserId) {
   <div class="review-form">
     <h3>{{ isEditing ? 'Update Review' : 'Write a Review' }}</h3>
 
@@ -56,7 +57,7 @@
     </button>
   }
 </div>
-  </div>
+  </div>}
 
  
   <!-- Existing Reviews List -->
