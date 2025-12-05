@@ -141,17 +141,17 @@
           
           <!-- NEW: Add to Wishlist Button -->
          <button 
-  mat-raised-button
-  class="wishlist-btn"
-  [ngClass]="{ 'added': isInWishlist() }"
-  (click)="toggleWishlist()">
+          mat-raised-button
+          class="wishlist-btn"
+          [ngClass]="{ 'added': isInWishlist() }"
+          (click)="toggleWishlist()">
 
-  <mat-icon>
-    {{ isInWishlist() ? 'favorite' : 'favorite_border' }}
-  </mat-icon>
+          <mat-icon>
+            {{ isInWishlist() ? 'favorite' : 'favorite_border' }}
+          </mat-icon>
 
-  {{ isInWishlist() ? 'Remove from Wishlist' : 'Add to Wishlist' }}
-</button>
+          {{ isInWishlist() ? 'Remove from Wishlist' : 'Add to Wishlist' }}
+        </button>
 
         </div>
 

@@ -52,9 +52,11 @@
     <button 
       mat-icon-button 
       color="warn"
-      (click)="onAddToWishlist(); $event.stopPropagation()" 
+      (click)="onToggleWishlist(); $event.stopPropagation()" 
       class="wishlist-btn">
-      <mat-icon>favorite</mat-icon>
+      <mat-icon>
+            {{ isInWishlist() ? 'favorite' : 'favorite_border' }}
+      </mat-icon>
     </button>
   </mat-card-actions>
   

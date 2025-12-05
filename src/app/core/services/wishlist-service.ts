@@ -105,6 +105,10 @@ export class WishlistService {
 
   // Toggle convenience method (search productId)
   toggleWishlist(productId: number): Observable<WishlistItem | void> {
+    // Refresh wishlist to ensure latest wishlistsignal
+    this.loadWishlist(1, this.totalItems()).subscribe();
+
+    // Check if product already in wishlist
     const existing = this.wishlistSignal().find(i => i.productId === productId);
     console.log("exist", existing);
     

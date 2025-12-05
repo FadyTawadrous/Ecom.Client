@@ -40,11 +40,12 @@
 
 
 // product-card.component.ts - UPDATED
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, inject } from '@angular/core';
 import { Router } from '@angular/router'; // ← ADD THIS IMPORT
 import { Product } from '../../../core/models/product.models';
 import { ProductService } from '../../../core/services/product-service';
 import { CartService } from '../../../core/services/cart-service';
+import { WishlistService } from '../../../core/services/wishlist-service';
 
 @Component({
   selector: 'app-product-card',
@@ -53,7 +54,7 @@ import { CartService } from '../../../core/services/cart-service';
   standalone: false,
 })
 export class ProductCardComponent {
-
+  private wishlistService = inject(WishlistService);
   // Add Router to constructor
   constructor(
     private productService: ProductService,
@@ -83,8 +84,13 @@ export class ProductCardComponent {
     this.addToCart.emit(this.product);  
   }
   
-  onAddToWishlist(): void {
+  onToggleWishlist(): void {
     console.log(this.product.id);
     this.addToWishlist.emit(this.product);
+  }
+
+  isInWishlist(): boolean {
+    if (!this.product) return false;
+    return this.wishlistService.wishlist().some(i => i.productId === this.product!.id);
   }
 }

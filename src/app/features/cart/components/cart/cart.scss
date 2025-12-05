@@ -76,6 +76,17 @@
 /* ------------------------------
    QUANTITY COLUMN FIX
 --------------------------------*/
+.mat-column-quantity {
+  text-align: center; /* Center the inner DIV within the cell */
+}
+
+/* Ensure the inner controls are styled correctly */
+.qty-controls {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+}
 
 .qty-controls * {
   line-height: 1 !important; /* prevents baseline line */
@@ -107,18 +118,11 @@
   display: flex;
   gap: 12px;
 }
-.mat-column-quantity {
-  text-align: center; /* Center the inner DIV within the cell */
-}
 
-/* Ensure the inner controls are styled correctly */
-.qty-controls {
- display: inline-flex; /* Use inline-flex or just flex if you remove text-align above */
- justify-content: center;
- align-items: center;
- gap: 6px;
-}
-
+/* ------------------------------
+   MATERIAL RIPPLE REMOVAL
+   (Cleaner look for +/- buttons)
+--------------------------------*/
 .mat-column-quantity .mdc-button::before,
 .mat-column-quantity .mdc-icon-button::before {
   display: none !important;
@@ -131,10 +135,3 @@
 .mat-column-quantity .mat-mdc-focus-indicator {
   display: none !important;
 }
-
-.mat-column-quantity .mat-mdc-button-persistent-ripple,
-.mat-column-quantity .mat-mdc-button-ripple,
-.mat-column-quantity .mat-mdc-focus-indicator {
-  display: none !important;
-}
-

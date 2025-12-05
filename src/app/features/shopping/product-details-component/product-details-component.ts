@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProductService } from '../../../core/services/product-service';
 import { Product } from '../../../core/models/product.models';
@@ -19,20 +19,20 @@ export class ProductDetailsComponent implements OnInit {
   private authService = inject(AuthService);
   private wishlistService = inject(WishlistService);
   private toast = inject(ToastService);
-  
+
   product: Product | null = null;
   isLoading = false;
   error: string | null = null;
   selectedImageIndex = 0;
   quantity = 1;
   private failedImages = new Set<number>();
-
+  
   constructor(
     private route: ActivatedRoute,
     private productService: ProductService,
-    private router: Router, 
+    private router: Router,
     private cartService: CartService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.loadProduct();
@@ -46,15 +46,15 @@ export class ProductDetailsComponent implements OnInit {
   loadProduct(): void {
     this.isLoading = true;
     this.error = null;
-    
+
     const productId = Number(this.route.snapshot.paramMap.get('id'));
-    
+
     if (!productId) {
       this.error = 'Product not found';
       this.isLoading = false;
       return;
     }
-    
+
     this.productService.getProductById(productId).subscribe({
       next: (product) => {
         this.product = product;
@@ -109,21 +109,28 @@ export class ProductDetailsComponent implements OnInit {
   // UPDATED: Add to cart with product ID and quantity parameters
   addToCart(): void {
     console.log(this.authService.isAuthenticated());
-    if(!this.authService.isAuthenticated()) {
+    if (!this.authService.isAuthenticated()) {
       console.log('User not authenticated. Cannot add to cart.');
       this.toast.warn('Please log in to add items to your cart!');
       return;
     }
 
     if (!this.product) return;
-    
-    // TODO: Implement cart service
+
     console.log('Add to cart:', this.product, 'Quantity:', this.quantity);
-    this.cartService.addToCart(this.product.id, this.quantity, this.getFinalPrice()).subscribe();
-    // Show success message
-    alert(`Added ${this.quantity} ${this.product.title}(s) to cart!`);
+
+    this.cartService.addToCart(this.product.id, this.quantity, this.getFinalPrice()).subscribe({
+      next: () => {
+        // Use Toast service with the dynamic message
+        this.toast.success(`Added ${this.quantity} ${this.product!.title}(s) to cart!`);
+      },
+      error: () => {
+        this.toast.error('Failed to add item to cart.');
+      }
+    });
   }
- isInWishlist(): boolean {
+
+  isInWishlist(): boolean {
     if (!this.product) return false;
     return this.wishlistService.wishlist().some(i => i.productId === this.product!.id);
   }
@@ -141,15 +148,16 @@ export class ProductDetailsComponent implements OnInit {
       next: (result) => {
         // If result is object (WishlistItem), it was added. If void/undefined, it was removed.
         // Or strictly rely on the isInWishlist() check after the operation if signals update reactively.
-        const inWishlist = this.isInWishlist(); // Note: Signals might take a tick to update depending on implementation
         
         if (result) {
-            this.toast.success('Added to wishlist!');
+          this.toast.success('Added to wishlist!');
         } else {
-            // If the service returns void for remove, we assume removal.
-            // Adjust message logic based on exact service return type if needed.
-            this.toast.info('Removed from wishlist');
+          // If the service returns void for remove, we assume removal.
+          // Adjust message logic based on exact service return type if needed.
+          this.toast.info('Removed from wishlist');
         }
+        // Refresh wishlist signal
+        this.wishlistService.loadWishlist(1, this.wishlistService.totalItems()).subscribe(); 
       },
       error: (err) => {
         console.error("Wishlist toggle error:", err);
@@ -164,12 +172,12 @@ export class ProductDetailsComponent implements OnInit {
 
   getFinalPrice(): number {
     if (!this.product) return 0;
-    
+
     if (this.product.discountPercentage > 0) {
       const discount = this.product.price * (this.product.discountPercentage / 100);
       return this.product.price - discount;
     }
-    
+
     return this.product.price;
   }
 }

@@ -51,7 +51,7 @@ export class FaceIdService {
           localStorage.setItem('token', response.result);
           // Trigger a profile fetch to update the UI/State
           this.authService.getProfile().subscribe();
-          this.snackBar.open('Face Login Successful!', 'Close', { duration: 3000 });
+          this.snackBar.open('Face Login Successful! Welcome back.', 'Close', { duration: 3000 });
         }
       })
     );

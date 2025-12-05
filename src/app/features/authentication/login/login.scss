@@ -1,4 +1,54 @@
-/* Custom override if Tailwind isn't catching the mat-form-field width */
+/* --- Custom Dark Mode Form Fields --- */
+
+// Force width to full (fix for Tailwind conflict)
 mat-form-field {
     width: 100%;
+}
+
+// Target the outline/border of the input
+::ng-deep .custom-dark-field .mdc-notched-outline__leading,
+::ng-deep .custom-dark-field .mdc-notched-outline__notch,
+::ng-deep .custom-dark-field .mdc-notched-outline__trailing {
+    border-color: #4b5563 !important; // gray-600
+    border-width: 1px !important;
+}
+
+// Change border color on focus (Blue/Indigo)
+::ng-deep .custom-dark-field.mat-focused .mdc-notched-outline__leading,
+::ng-deep .custom-dark-field.mat-focused .mdc-notched-outline__notch,
+::ng-deep .custom-dark-field.mat-focused .mdc-notched-outline__trailing {
+    border-color: #60a5fa !important; // blue-400
+    border-width: 2px !important;
+}
+
+// Input Text Color
+::ng-deep .custom-dark-field input.mat-mdc-input-element {
+    color: white !important;
+    caret-color: #60a5fa; // blue-400 cursor
+}
+
+// Placeholder Color
+::ng-deep .custom-dark-field .mat-mdc-input-element::placeholder {
+    color: #6b7280 !important; // gray-500
+}
+
+// Label Color (Default)
+::ng-deep .custom-dark-field .mdc-floating-label {
+    color: #9ca3af !important; // gray-400
+}
+
+// Label Color (Focused/Floating)
+::ng-deep .custom-dark-field.mat-focused .mdc-floating-label,
+::ng-deep .custom-dark-field.mat-form-field-label-wrapper {
+    color: #60a5fa !important; // blue-400
+}
+
+// Error Text Color
+mat-error {
+    color: #f87171 !important; // red-400 (brighter for dark mode)
+}
+
+/* --- Spinner Color Override --- */
+::ng-deep .custom-spinner circle {
+    stroke: white !important;
 }

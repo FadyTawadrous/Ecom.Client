@@ -1,0 +1,27 @@
+/* Ensure icons inside our custom circle buttons are centered */
+button.mat-mdc-icon-button {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+
+    .mat-icon {
+        line-height: 1;
+    }
+}
+
+/* Optional: Smooth entry animation for the cards */
+mat-card {
+    animation: fadeIn 0.4s ease-out forwards;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
