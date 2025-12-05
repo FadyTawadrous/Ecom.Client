@@ -120,8 +120,9 @@ export class ProductDetailsComponent implements OnInit {
     // TODO: Implement cart service
     console.log('Add to cart:', this.product, 'Quantity:', this.quantity);
     this.cartService.addToCart(this.product.id, this.quantity, this.getFinalPrice()).subscribe();
+    this.toast.success('Item added to cart!');
     // Show success message
-    alert(`Added ${this.quantity} ${this.product.title}(s) to cart!`);
+    //alert(`Added ${this.quantity} ${this.product.title}(s) to cart!`);
   }
  isInWishlist(): boolean {
     if (!this.product) return false;
