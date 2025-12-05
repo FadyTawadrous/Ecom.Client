@@ -28,40 +28,6 @@
       <!-- Right Side Icons -->
       <div class="flex items-center gap-1 md:gap-2">
 
-        <!-- Search -->
-        <div class="relative flex items-center">
-          <!-- Sliding Input -->
-          <div
-            class="absolute right-12 top-1/2 -translate-y-1/2 overflow-hidden transition-all duration-300 ease-in-out"
-            [class.w-80]="showSearch() && !isMobile()"
-            [class.w-full]="showSearch() && isMobile()"
-            [class.w-0]="!showSearch()"
-            [class.opacity-100]="showSearch()"
-            [class.opacity-0]="!showSearch()"
-          >
-            <input
-              type="text"
-              placeholder="Search products..."
-              [(ngModel)]="searchQuery"
-              (keyup.enter)="performSearch()"
-              class="border border-gray-600 rounded-xl px-4 py-2.5 w-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-lg bg-gray-800 text-white placeholder-gray-400"
-            />
-          </div>
-
-          <!-- Search Icon Button -->
-          <button
-            mat-icon-button
-            class="!text-gray-400 hover:!text-white hover:!bg-gray-700 transition-all duration-300 !rounded-xl group relative"
-            (click)="toggleSearch()"
-          >
-            <mat-icon class="group-hover:scale-110 group-hover:rotate-12 transition-transform">search</mat-icon>
-            <span class="absolute -bottom-8 left-1/2 -translate-x-1/2 hidden group-hover:block bg-gray-700 text-white text-xs px-3 py-1.5 rounded-lg whitespace-nowrap shadow-lg">
-              Search
-              <span class="absolute top-full left-1/2 -translate-x-1/2 -mt-px w-2 h-2 bg-gray-700 rotate-45"></span>
-            </span>
-          </button>
-        </div>
-
         <!-- Authentication State Switch -->
         @if (isAuthenticated()) {
           <!-- Wishlist Icon -->
