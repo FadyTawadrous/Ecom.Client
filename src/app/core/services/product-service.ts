@@ -32,6 +32,7 @@ export class ProductService {
   // Helper method to extract data from API response
   private extractData<T>(response: ApiResponse<T>): T {
     if (response.isSuccess && response.result !== null && response.result !== undefined) {
+      console.log("API response data:", response.result);
       return response.result;
     } else {
       throw new Error(response.errorMessage || 'API request failed');
@@ -70,6 +71,7 @@ export class ProductService {
       });
     }
     
+    console.log("Filters applied in service:", filters);
   return this.apiService.get<ApiResponse<Product[]>>(`api/Product/filter`, params).pipe(
    map(response => this.extractData(response))
     );
