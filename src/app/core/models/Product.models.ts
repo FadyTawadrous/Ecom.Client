@@ -1,3 +1,5 @@
+
+
 // Main Product Interface
 export interface Product {
   id: number;
@@ -34,8 +36,6 @@ export interface ProductReviewCreate {
   description: string;
   rating: number;
   productId: number;
-  appUserId: string;
-  createdBy: string;
 }
 
 export interface ProductReview {
@@ -48,10 +48,10 @@ export interface ProductReview {
   updatedBy: string | null;
   updatedOn: string | null;
   isDeleted: boolean;
+  ProductId: number;
   
   // Relation keys
-  productId: number;
-  appUserId: string;
+  
   
   // Extra read-only fields for display
   productTitle: string | null;
@@ -59,11 +59,11 @@ export interface ProductReview {
 }
 
 export interface ProductReviewUpdate {
+  productId: number;
   id: number;
   title: string;
   description: string;
   rating: number;
-  updatedBy: string;
 }
 
 // Category Interface
@@ -90,7 +90,7 @@ export interface ProductFilter {
   minPrice?: number;
   maxPrice?: number;
   minRating?: number;
-  search?: string;
+  search?: string|null;
   sortBy?: 'price' | 'rating' | 'name'|'price' ;
   sortOrder?: 'asc' | 'desc';
   page?: number;

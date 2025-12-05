@@ -1,1 +1,86 @@
-<p>product-review works!</p>
+<div class="review-container">
+  
+  <!-- Review Form -->
+  <div class="review-form">
+    <h3>{{ isEditing ? 'Update Review' : 'Write a Review' }}</h3>
+
+    <!-- Rating -->
+    <div class="rating-input">
+      @for (star of [1,2,3,4,5]; track star) {
+        <mat-icon 
+          class="star"
+          [class.active]="star <= reviewRating"
+          (click)="reviewRating = star">
+          {{ star <= reviewRating ? 'star' : 'star_border' }}
+        </mat-icon>
+      }
+    </div>
+
+    <!-- Title -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Review Title</mat-label>
+      <input matInput [(ngModel)]="reviewTitle">
+    </mat-form-field>
+
+    <!-- Description -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Review Description</mat-label>
+      <textarea matInput rows="3" [(ngModel)]="reviewDescription"></textarea>
+    </mat-form-field>
+
+    <!-- Buttons -->
+    <div class="review-buttons">
+      <button *ngIf="!isEditing"
+              mat-raised-button 
+              color="primary"
+              (click)="submitReview()">
+        Submit Review
+      </button>
+
+      <button 
+              mat-raised-button 
+              color="accent"
+              (click)="updateReview()">
+        Save Changes
+      </button>
+
+      <button *ngIf="isEditing"
+              mat-button 
+              color="warn"
+              (click)="cancelEdit()">
+        Cancel
+      </button>
+    </div>
+  </div>
+
+  <!-- Existing Reviews List -->
+  <div class="reviews-list">
+    @for (review of reviews; track review.id) {
+      <div class="review-item">
+
+        <div class="review-header">
+          <strong>{{ review.appUserDisplayName || 'User' }}</strong>
+
+          <div class="review-stars">
+            @for (star of [1,2,3,4,5]; track star) {
+              <mat-icon class="star small">
+                {{ star <= review.rating ? 'star' : 'star_border' }}
+              </mat-icon>
+            }
+          </div>
+        </div>
+
+        <h4>{{ review.title }}</h4>
+        <p>{{ review.description }}</p>
+
+        <span class="date">{{ review.createdOn | date }}</span>
+
+        <!-- Edit / Delete Buttons -->
+        <div class="review-actions">
+          <button mat-button (click)="startEdit(review)">Edit</button>
+          <button mat-button color="warn" (click)="deleteReview(review.id)">Delete</button>
+        </div>
+      </div>
+    }
+  </div>
+</div>

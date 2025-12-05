@@ -1,0 +1,40 @@
+.review-container {
+  margin-top: 30px;
+}
+
+.review-form {
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  margin-bottom: 25px;
+  background: #fafafa;
+}
+
+.rating-input {
+  display: flex;
+  gap: 5px;
+  margin-bottom: 10px;
+
+  .star {
+    cursor: pointer;
+    font-size: 28px;
+    color: #ccc;
+
+    &.active {
+      color: #ffbf00;
+    }
+  }
+}
+
+.full-width {
+  width: 100%;
+}
+
+.review-item {
+  border-bottom: 1px solid #eee;
+  padding: 15px 0;
+
+  .review-actions {
+    margin-top: 5px;
+  }
+}

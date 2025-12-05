@@ -4,7 +4,8 @@ import { RouterModule, Routes } from '@angular/router';
 import { ProductListComponent } from './product-list-component/product-list-component';
 import { ProductDetailsComponent } from './product-details-component/product-details-component';
 import { TestinComponent } from './testin.component/testin.component';
-
+import { ProductReviewComponent } from './product-review/product-review.component';
+import { authGuard } from '../../core/guards/auth.guard';
 
 const routes: Routes = [
   { 
@@ -26,6 +27,11 @@ const routes: Routes = [
   { 
     path: 'product/:id', 
     component: ProductDetailsComponent 
+  },
+   { 
+    path: 'ProductReview', 
+    component: ProductReviewComponent , 
+        canActivate: [authGuard] 
   },
   { path: 'testing', component: TestinComponent },
   { 

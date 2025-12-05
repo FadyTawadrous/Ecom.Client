@@ -86,6 +86,9 @@ export class SearchFilterComponent implements OnInit {
     if (formValue.search?.trim()) {
       filter.search = formValue.search.trim();
     }
+    else {
+    filter.search = null; // <<-- important!
+  }
     
     if (formValue.minPrice) {
       filter.minPrice = formValue.minPrice;
