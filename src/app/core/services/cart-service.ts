@@ -1,10 +1,9 @@
 import { Injectable, signal, computed, inject } from '@angular/core';
-import { tap } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
+import { tap, switchMap } from 'rxjs/operators';
 import { ApiService } from './api-service';
-import { GetCartDTO, GetCartItemDTO, AddCartItemDTO } from '../models/cart.models';
 import { AuthService } from './auth-service';
-import { switchMap } from 'rxjs/operators';
-import { Observable } from 'rxjs';
+import { GetCartDTO, GetCartItemDTO } from '../models/cart.models';
 
 @Injectable({
   providedIn: 'root'
@@ -15,268 +14,218 @@ export class CartService {
   private auth = inject(AuthService);
 
   // ------------------------------
-  // CART STATE (signals)
+  // STATE
   // ------------------------------
   private cartSignal = signal<GetCartDTO | null>(null);
-  private totalItemsSignal = signal<number>(0);
-
-  // Use this in your Navbar component
-  readonly totalItems = this.totalItemsSignal.asReadonly();
   readonly cart = this.cartSignal.asReadonly();
 
+  // Badge: total number of units in cart
+  readonly totalItems = computed(() => {
+    const cart = this.cartSignal();
+    if (!cart || !cart.cartItems) return 0;
 
-  // readonly totalItems = computed(() =>
-  //   this.cartSignal()?.cartItems?.reduce((sum, i) => sum + i.quantity, 0) ?? 0
-  // );
-  readonly totalAmount = computed(() =>
-    this.cartSignal()?.cartItems?.reduce((sum, i) => sum + i.totalPrice, 0) ?? 0
-  );
+    return cart.cartItems.reduce(
+      (sum, item) => sum + (Number(item.quantity) || 0),
+      0
+    );
+  });
+
+  // Total amount (from items)
+  readonly totalAmount = computed(() => {
+    const cart = this.cartSignal();
+    if (!cart || !cart.cartItems) return 0;
+
+    return cart.cartItems.reduce(
+      (sum, item) => sum + (Number(item.totalPrice) || 0),
+      0
+    );
+  });
 
   // ------------------------------
-  // LOAD CART
+  // HELPERS
   // ------------------------------
-  loadCart(): void {
-    this.api.get<{ result: GetCartDTO, isSuccess: boolean }>('api/cart/user')
-      .subscribe({
-        next: (res) => {
-          if (res.isSuccess) {
-            const cart = res.result;
-            // ... (recalculating totalPrice and totalAmount, which is fine)
-            this.cartSignal.set(cart);
 
-            // ✅ NEW: Set the total items count based on the loaded data
-            const totalQty = cart.cartItems.reduce((sum, i) => sum + i.quantity, 0);
-            this.totalItemsSignal.set(totalQty);
-          } else {
-            // this.createCart();
-          }
-        },
-        // error: () => this.createCart()
-      });
+  /** Normalize numbers & update the cart signal */
+  private setCartFromDto(dto: GetCartDTO | null) {
+    if (!dto) {
+      this.cartSignal.set(null);
+      return;
+    }
+
+    const cleanItems = dto.cartItems.map(item => {
+      const quantity = Number(item.quantity) || 0;
+      const unitPrice = Number(item.unitPrice) || 0;
+
+      return {
+        ...item,
+        quantity,
+        unitPrice,
+        totalPrice: unitPrice * quantity
+      };
+    });
+
+    const totalAmount = cleanItems.reduce(
+      (sum, i) => sum + i.totalPrice,
+      0
+    );
+
+    const cleanCart: GetCartDTO = {
+      ...dto,
+      cartItems: cleanItems,
+      totalAmount
+    };
+
+    this.cartSignal.set(cleanCart);
   }
 
+  /** Ensure user is logged in and return userId or error */
+  private requireUserId(): string {
+    const user = this.auth.currentUser();
+    if (!user || !user.id) {
+      throw new Error('User not logged in');
+    }
+    return user.id;
+  }
 
-
+  // ------------------------------
+  // LOAD CART (CALL THIS ON LOGIN / APP INIT)
+  // ------------------------------
+  loadCart(): void {
+    this.api.get<{ result: GetCartDTO; isSuccess: boolean }>('api/cart/user')
+      .subscribe({
+        next: res => {
+          if (res.isSuccess && res.result) {
+            this.setCartFromDto(res.result);
+          } else {
+            this.cartSignal.set(null);
+          }
+        },
+        error: err => {
+          console.error('Failed to load cart:', err);
+          this.cartSignal.set(null);
+        }
+      });
+  }
 
   // ------------------------------
   // ADD ITEM TO CART
   // ------------------------------
-  // CartService.ts
+  addToCart(productId: number, quantity = 1, unitPrice: number): Observable<any> {
+    const userId = this.requireUserId();
 
-// ------------------------------
-// ADD ITEM TO CART
-// ------------------------------
-addToCart(productId: number, quantity = 1, unitPrice: number): any {
-  const user = this.auth.currentUser();
-  if (!user) {
-    // Return an Observable that throws an error to maintain Observable consistency
-    return new Observable(observer => observer.error(new Error("User not logged in.")));
-  }
+    const currentCart = this.cartSignal();
 
-  let cart = this.cartSignal();
+    // If cart not yet loaded, load it first then retry
+    if (!currentCart) {
+      return this.api
+        .get<{ result: GetCartDTO; isSuccess: boolean }>('api/cart/user')
+        .pipe(
+          tap(res => {
+            if (!res.isSuccess || !res.result) {
+              throw new Error('Cart not found for this user.');
+            }
+            this.setCartFromDto(res.result);
+          }),
+          switchMap(() => this.addToCart(productId, quantity, unitPrice))
+        );
+    }
 
-  // 1️⃣ If cart not loaded → load it and retry ONCE
-  if (!cart) {
-    console.log("Cart not loaded → fetching from backend...");
+    const dto = {
+      cartId: currentCart.id,
+      productId,
+      quantity: Number(quantity),
+      unitPrice: Number(unitPrice),
+      totalPrice: Number(unitPrice) * Number(quantity),
+      createdBy: userId
+    };
 
-    return this.api.get<{ result: GetCartDTO, isSuccess: boolean }>('api/cart/user')
+    return this.api
+      .post<{ result: GetCartItemDTO; isSuccess: boolean }>('api/cartitem', dto)
       .pipe(
         tap(res => {
-          if (res.isSuccess) {
-            const loadedCart = res.result;
-
-            // Recalculate totals and set initial state immutably
-            loadedCart.cartItems = loadedCart.cartItems.map(item => ({
-              ...item,
-              totalPrice: item.unitPrice * item.quantity
-            }));
-            loadedCart.totalAmount = loadedCart.cartItems.reduce(
-              (sum, item) => sum + item.totalPrice,
-              0
-            );
-            
-            // Set the loaded state, then let the switchMap retry the add operation
-            this.cartSignal.set(loadedCart);
-            console.log("Cart loaded successfully before adding item.");
-          } else {
-            // If the cart doesn't exist, you might need a createCart() call here
-            throw new Error("Cart not found in backend.");
+          if (!res.isSuccess) {
+            console.error('Backend refused addToCart:', res);
+            return;
           }
-        }),
-        // switchMap retries the entire addToCart logic now that cartSignal is populated
-        switchMap(() => {
-          return this.addToCart(productId, quantity, unitPrice);
+          // 🔁 Reload full cart from backend to stay in sync
+          this.loadCart();
         })
       );
   }
 
-  // 2️⃣ Cart already exists → add item normally
-  const dto = {
-    cartId: cart.id,
-    productId,
-    // Ensure quantity is sent as a number
-    quantity: Number(quantity),
-    unitPrice,
-    // Ensure calculation is based on numbers
-    totalPrice: Number(unitPrice) * Number(quantity),
-    createdBy: user.id
-  };
-
-  return this.api.post<{ result: GetCartItemDTO, isSuccess: boolean }>('api/cartitem', dto)
-    .pipe(
-      tap(res => {
-        if (!res.isSuccess || !res.result) return;
-
-        const addedItem = res.result;
-        const current = this.cartSignal();
-        if (!current) return;
-
-        // Find the existing item
-        const existing = current.cartItems.find(i => i.productId === addedItem.productId);
-
-        if (existing) {
-          // ⚠️ FIX: Ensure all values are numbers before adding to prevent NaN
-          existing.quantity = Number(existing.quantity) + Number(addedItem.quantity);
-          existing.totalPrice = Number(existing.totalPrice) + Number(addedItem.totalPrice);
-        } else {
-          // Push the new item
-          current.cartItems.push(addedItem);
-        }
-
-        // ✅ IMPORTANT: Call refreshTotals() to sanitize and set the signal immutably
-        this.refreshTotals();
-      })
-    );
-}
-
-
-
-
-
   // ------------------------------
-  // UPDATE QUANTITY
+  // UPDATE QUANTITY (INCREMENT / DECREMENT)
   // ------------------------------
-  updateQuantity(cartItemId: number, quantity: number): any {
+  updateQuantity(cartItemId: number, quantity: number): Observable<any> {
     const cart = this.cartSignal();
-    if (!cart) return;
+    if (!cart) {
+      return throwError(() => new Error('Cart not loaded'));
+    }
 
     const item = cart.cartItems.find(i => i.id === cartItemId);
-    if (!item) return;
+    if (!item) {
+      return throwError(() => new Error('Cart item not found'));
+    }
 
     const dto = {
       id: cartItemId,
-      quantity: quantity,
-      unitPrice: item.unitPrice,
+      quantity: Number(quantity),
+      unitPrice: Number(item.unitPrice),
       cartId: item.cartId,
       productId: item.productId,
-      updatedBy: this.auth.currentUser()?.id || ""
+      updatedBy: this.auth.currentUser()?.id || ''
     };
 
-    return this.api.put<{ result: GetCartItemDTO, isSuccess: boolean }>('api/CartItem', dto)
+    return this.api
+      .put<{ result: GetCartItemDTO; isSuccess: boolean }>('api/CartItem', dto)
       .pipe(
-        tap((res) => {
-          if (!res?.isSuccess || !res.result) return;
-
-          // update item - ENSURE THIS IS A NUMBER
-          item.quantity = Number(res.result.quantity);
-
-          // FIX: recalculating totalPrice here
-          item.totalPrice = item.unitPrice * item.quantity;
-
-          // important: refresh totals
-          this.refreshTotals();
+        tap(res => {
+          if (!res.isSuccess) {
+            console.error('Backend refused updateQuantity:', res);
+            return;
+          }
+          // 🔁 Sync from backend
+          this.loadCart();
         })
       );
   }
 
-
-
   // ------------------------------
-  // DELETE ITEM
+  // REMOVE ITEM
   // ------------------------------
-  removeItem(cartItemId: number) {
-    return this.api.delete('api/cartitem/' + cartItemId)
+  removeItem(cartItemId: number): Observable<any> {
+    return this.api
+      .delete('api/cartitem/' + cartItemId)
       .pipe(
         tap(() => {
-          const c = this.cartSignal();
-          if (!c) return;
-
-          c.cartItems = c.cartItems.filter(i => i.id !== cartItemId);
-          this.cartSignal.set({ ...c });
+          // 🔁 Reload cart from backend after deletion
+          this.loadCart();
         })
       );
   }
-
 
   // ------------------------------
   // CLEAR CART
   // ------------------------------
-  clearCart(): any {
+  clearCart(): Observable<any> {
     const cart = this.cartSignal();
-
-    // 1️⃣ If no cart loaded → load it first then retry
     if (!cart) {
-      console.warn("Cart not loaded — loading then clearing...");
-
-      return this.api.get<{ result: GetCartDTO, isSuccess: boolean }>('api/cart/user')
-        .pipe(
-          tap(res => {
-            if (res.isSuccess) {
-              this.cartSignal.set(res.result);
-            }
-          }),
-          switchMap(() => this.clearCart()) // retry AFTER loading
-        );
+      return throwError(() => new Error('Cart not loaded'));
     }
 
-    // 2️⃣ Cart exists → clear backend cart
-    return this.api.delete('api/cart/clear/' + cart.id).pipe(
-      tap(() => {
-        this.cartSignal.set({
-          id: cart.id,
-          appUserId: cart.appUserId,
-          cartItems: [],
-          totalAmount: 0,
-          createdOn: cart.createdOn
-        });
-        console.log("Cart successfully cleared.");
-      })
-    );
+    return this.api
+      .delete('api/cart/clear/' + cart.id)
+      .pipe(
+        tap(() => {
+          // Local clean state
+          this.cartSignal.set({
+            id: cart.id,
+            appUserId: cart.appUserId,
+            cartItems: [],
+            totalAmount: 0,
+            createdOn: cart.createdOn
+          });
+        })
+      );
   }
-
-
-  // CartService.ts
-
-  // CartService.ts
-
-private refreshTotals() {
-  const cart = this.cartSignal();
-  if (!cart) return;
-
-  // 1. Create a NEW array of cartItems with sanitized numbers and recalculated totals
-  const newCartItems = cart.cartItems.map(item => {
-    // ⚠️ CRITICAL FIX: Ensure quantity is a safe number (falls back to 0 if NaN/null)
-    const safeQuantity = Number(item.quantity) || 0; 
-    const safeUnitPrice = Number(item.unitPrice) || 0;
-    
-    return {
-      ...item,
-      quantity: safeQuantity, // Use the sanitized quantity
-      totalPrice: safeUnitPrice * safeQuantity
-    }
-  });
-
-  // 2. Calculate the NEW totalAmount from the NEW array
-  const newTotalAmount = newCartItems.reduce(
-    (sum, i) => sum + i.totalPrice, 0
-  );
-  
-  // 3. Set the signal with a NEW object (IMMUTABILITY)
-  this.cartSignal.set({ 
-    ...cart, // Copy existing properties
-    cartItems: newCartItems, // Use the new, safe array
-    totalAmount: newTotalAmount // Use the new total
-  });
-}
-
 }

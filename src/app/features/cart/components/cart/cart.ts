@@ -1,20 +1,18 @@
-import { Component, OnInit, inject, signal, computed } from '@angular/core';
+import { Component, OnInit, inject, computed } from '@angular/core';
 import { CommonModule, CurrencyPipe } from '@angular/common';
-import { ApiService } from '../../../../core/services/api-service';
-import {UiService} from '../../../../core/services/ui-service';
-import { ConfirmDialog } from '../../../../shared/components/confirm-dialog/confirm-dialog';
 import { Router } from '@angular/router';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+
+import { CartService } from '../../../../core/services/cart-service';
+import { UiService } from '../../../../core/services/ui-service';
 import { PaymentStateService } from '../../../../core/services/payment-state-service';
 import { ProductService } from '../../../../core/services/product-service';
-import {
-  GetCartDTO,
-  GetCartItemDTO,
-  UpdateCartItemDTO
-} from '../../../../core/models/cart.models';
+
+import { GetCartItemDTO } from '../../../../core/models/cart.models';
 import { MaterialModule } from '../../../../shared/material/material-module';
 import { SharedModule } from '../../../../shared/shared-module';
-import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { AuthService } from '../../../../core/services/auth-service';
+import { ConfirmDialog } from '../../../../shared/components/confirm-dialog/confirm-dialog';
+
 @Component({
   standalone: true,
   selector: 'app-cart',
@@ -23,171 +21,170 @@ import { AuthService } from '../../../../core/services/auth-service';
     CurrencyPipe,
     MaterialModule,
     SharedModule,
-MatDialogModule
+    MatDialogModule,
   ],
   templateUrl: './cart.html',
   styleUrl: './cart.scss'
 })
 export class Cart implements OnInit {
 
-  /** Signals */
-  cart = signal<GetCartDTO | null>(null);
-  cartItems = signal<GetCartItemDTO[]>([]);
-  loading = signal<boolean>(false);
-
-  private api = inject(ApiService);
+  // ------------------------------
+  // Services
+  // ------------------------------
+  private cartService = inject(CartService);
   private router = inject(Router);
-  private paymentState = inject(PaymentStateService);
-  private dialog = inject(MatDialog);
   private ui = inject(UiService);
-  private auth = inject(AuthService);
+  private dialog = inject(MatDialog);
+  private paymentState = inject(PaymentStateService);
   private productService = inject(ProductService);
 
-  // userId = '081d0d65-8f7b-4375-afd2-81cf2664fe6e';
+  // ------------------------------
+  // Signals from CartService
+  // ------------------------------
+  cart = this.cartService.cart;
+  total = this.cartService.totalAmount;
+  cartItems = computed(() => this.cart()?.cartItems ?? []);
+  loading = computed(() => !this.cart());
+
+  // ------------------------------
+  // Product cache (name + thumbnail)
+  // ------------------------------
+  private productCache: Record<
+    number,
+    { name: string; image: string; loaded: boolean }
+  > = {};
 
   ngOnInit() {
-    this.loadCart();
+    this.cartService.loadCart();
+    // ❗ No effect(), no extra logic needed here
   }
 
-  /** Load Cart */
-  loadCart() {
-    this.loading.set(true);
+  // ------------------------------
+  // Ensure product info is loaded (name + image)
+  // ------------------------------
+  private ensureProductInfo(productId: number): void {
+    // Already loaded → do nothing
+    const cached = this.productCache[productId];
+    if (cached?.loaded) return;
 
-    this.api
-      .get<{ result: GetCartDTO; isSuccess: boolean }>(`api/cart/user/`)
-      .subscribe({
-        next: (res) => {
-          if (res.isSuccess) {
-            this.cart.set(res.result);
-            this.loadCartItems(res.result.id);
-          } else {
-            this.loading.set(false);
-          }
-        },
-        error: () => this.loading.set(false)
-      });
-  }
+    // If request already in flight, we don't block, just return
+    if (cached && !cached.loaded) return;
 
-  /** Load Cart Items */
-  loadCartItems(cartId: number) {
-  this.api
-    .get<{ result: GetCartItemDTO[]; isSuccess: boolean }>(`api/cartitem/cart/${cartId}`)
-    .subscribe({
-      next: (res) => {
-        const items = Array.isArray(res.result) ? res.result : [];
-        this.cartItems.set(items);
+    // Mark as loading with safe defaults
+    this.productCache[productId] = {
+      name: '',
+      image: 'assets/default-product.jpg',
+      loaded: false
+    };
 
-        // Load thumbnails
-        items.forEach(item => this.loadThumbnail(item.productId));
-
-        this.loading.set(false);
+    this.productService.getProductById(productId).subscribe({
+      next: product => {
+        this.productCache[productId] = {
+          name: product.title,
+          image: this.productService.getThumbnailUrl(product),
+          loaded: true
+        };
       },
       error: () => {
-        this.cartItems.set([]);
-        this.loading.set(false);
+        // On error, keep default image and empty name
+        this.productCache[productId] = {
+          name: '',
+          image: 'assets/default-product.jpg',
+          loaded: true
+        };
       }
-    });
-}
-
-
-  /** Update Quantity */
-  updateQuantity(item: GetCartItemDTO, qty: number) {
-    const userId= this.auth.currentUser()?.id;
-    
-  if (qty < 1) return;
-
-  const dto: UpdateCartItemDTO = {
-    id: item.id,
-    quantity: qty,
-    unitPrice: item.unitPrice,
-    cartId: item.cartId,
-    productId: item.productId,
-    updatedBy:userId ? userId : ''
-  };
-  console.log(dto)
-  this.api
-    .put<{ isSuccess: boolean }>('api/CartItem', dto)
-    .subscribe({
-      next: () => this.loadCart(),
-      error: err => console.error("updateQuantity FAILED:", err)
-    });
-}
-
-
-  /** Remove item */
-  removeItem(itemId: number) {
-  const dialogRef = this.dialog.open(ConfirmDialog, {
-    data: {
-      title: 'Remove Item',
-      message: 'Are you sure you want to remove this item from your cart?'
-    }
-  });
-
-  dialogRef.afterClosed().subscribe(confirmed => {
-    if (!confirmed) return;
-
-    this.api
-      .delete<{ isSuccess: boolean }>(`api/cartitem/${itemId}`)
-      .subscribe({
-        next: (res) => {
-          if (res.isSuccess) {
-            this.ui.success('Item removed from cart');
-            this.loadCart();
-          } else {
-            this.ui.error('Failed to remove item');
-          }
-        },
-        error: () => {
-          this.ui.error('Server error while removing item');
-        }
-      });
-  });
-}
-
-
-  /** Clear Cart */
-  clearCart() {
-    const cartId = this.cart()?.id;
-    if (!cartId) return;
-
-    this.api.delete(`api/cart/clear/${cartId}`).subscribe(() => {
-      this.loadCart();
     });
   }
 
-  /** Total using computed signal (cleaner & reactive) */
-  total = computed(() => {
-    const items = this.cartItems();
-    if (!Array.isArray(items)) return 0;
-    return items.reduce((sum, i) => sum + i.totalPrice, 0);
-  });
+  // ------------------------------
+  // PRODUCT NAME (used in template)
+  // ------------------------------
+  getProductName(item: GetCartItemDTO): string {
+    const productId = item.productId;
 
-  goToPayment() {
-   const total = this.total; // your computed getter
-  this.paymentState.setTotal(total());
-
-  this.router.navigate(['/payment']);
-}
-
-
-getProductImage(item: GetCartItemDTO): string {
-  // We do not have the product object in cart response, so we construct the thumbnail path manually.
-  // BUT your backend normally stores thumbnailUrl inside product entity.
-  // So we fetch product by ID once.
-  
-  return this.productThumbnails[item.productId] || 'assets/default-product.jpg';
-}
-
-productThumbnails: Record<number, string> = {};
-
-loadThumbnail(productId: number) {
-  if (this.productThumbnails[productId]) return; // cached
-
-  this.productService.getProductById(productId).subscribe({
-    next: product => {
-      this.productThumbnails[productId] = 
-        this.productService.getThumbnailUrl(product);
+    const cached = this.productCache[productId];
+    if (!cached) {
+      // Trigger lazy load
+      this.ensureProductInfo(productId);
+      return 'Loading...';
     }
-  });
-}
+
+    // Once loaded, return name (or a fallback)
+    return cached.name || 'Unnamed product';
+  }
+
+  // ------------------------------
+  // PRODUCT IMAGE (used in template)
+  // ------------------------------
+  getProductImage(item: GetCartItemDTO): string {
+    const productId = item.productId;
+
+    const cached = this.productCache[productId];
+    if (!cached) {
+      // Trigger lazy load and return default for first render
+      this.ensureProductInfo(productId);
+      return 'assets/default-product.jpg';
+    }
+
+    return cached.image || 'assets/default-product.jpg';
+  }
+
+  // ------------------------------
+  // QUANTITY
+  // ------------------------------
+  increment(item: GetCartItemDTO) {
+    this.cartService.updateQuantity(item.id, item.quantity + 1).subscribe({
+      error: () => this.ui.error("Failed to update quantity")
+    });
+  }
+
+  decrement(item: GetCartItemDTO) {
+    const newQty = item.quantity - 1;
+
+    if (newQty <= 0) {
+      this.removeItem(item.id);
+    } else {
+      this.cartService.updateQuantity(item.id, newQty).subscribe({
+        error: () => this.ui.error("Failed to update quantity")
+      });
+    }
+  }
+
+  // ------------------------------
+  // REMOVE ITEM
+  // ------------------------------
+  removeItem(itemId: number) {
+    const dialogRef = this.dialog.open(ConfirmDialog, {
+      data: {
+        title: 'Remove Item',
+        message: 'Are you sure you want to remove this item from your cart?'
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(confirmed => {
+      if (!confirmed) return;
+
+      this.cartService.removeItem(itemId).subscribe({
+        next: () => this.ui.success('Item removed'),
+        error: () => this.ui.error('Failed to remove item')
+      });
+    });
+  }
+
+  // ------------------------------
+  // CLEAR CART
+  // ------------------------------
+  clearCart() {
+    this.cartService.clearCart().subscribe({
+      error: () => this.ui.error("Failed to clear cart")
+    });
+  }
+
+  // ------------------------------
+  // PAYMENT
+  // ------------------------------
+  goToPayment() {
+    this.paymentState.setTotal(this.total());
+    this.router.navigate(['/payment']);
+  }
 }
