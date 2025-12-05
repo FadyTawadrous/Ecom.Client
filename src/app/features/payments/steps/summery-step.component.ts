@@ -20,33 +20,88 @@ import { StripeService } from '../../../core/services/stripe-service';
         MatButtonModule
     ],
     template: `
-    <mat-card class="summary-card">
+    <mat-card class="summary-card p-4">
 
-      <h2>Order Summary</h2>
+  <h2 class="mb-3">Order Summary</h2>
 
-      <h3>Shipping Address</h3>
-      <p>
-        {{ service.addressData()?.street }},
-        {{ service.addressData()?.city }},
-        {{ service.addressData()?.country }}
-      </p>
+  <!-- Shipping -->
+  <section class="mb-4">
+    <h3 class="section-title">Shipping Address</h3>
+    <p class="section-text">
+      {{ service.addressData()?.street }}<br>
+      {{ service.addressData()?.city }}, {{ service.addressData()?.country }}
+    </p>
+  </section>
 
-      <h3>Delivery</h3>
-<p>{{ service.deliveryType() }}</p>
+  <!-- Delivery -->
+  <section class="mb-4">
+    <h3 class="section-title">Delivery</h3>
+    <p class="section-text">
+      {{ service.deliveryType() }}
+    </p>
+  </section>
 
-<h3>Payment</h3>
-<p>Paid with Stripe</p>
+  <!-- Payment -->
+  <section class="mb-4">
+    <h3 class="section-title">Payment</h3>
+    <p class="section-text">
+      Paid with <strong>Stripe</strong>
+    </p>
+  </section>
 
-      <h3>Total Amount</h3>
-      <p>{{ total | currency }}</p>
+  <!-- Total -->
+  <section class="mb-4">
+    <h3 class="section-title">Total Amount</h3>
+    <p class="total-amount">
+      {{ total | currency }}
+    </p>
+  </section>
 
-      <button mat-raised-button color="primary" (click)="placeOrder()">
-        Place Order
-      </button>
+  <!-- Button -->
+  <div class="mt-4 text-center">
+    <button mat-raised-button color="primary" (click)="placeOrder()">
+      Place Order
+    </button>
+  </div>
 
-    </mat-card>
-  `
-})
+</mat-card>
+
+  `,
+  styles: `.summary-card {
+  padding: 24px;
+  border-radius: 12px;
+}
+
+.section-title {
+  margin: 0 0 4px;
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+.section-text {
+  margin: 0;
+  color: #555;
+  line-height: 1.4;
+}
+
+.total-amount {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #2e7d32; /* Material Green for emphasis */
+}
+
+.mb-3 { margin-bottom: 16px; }
+.mb-4 { margin-bottom: 20px; }
+.mt-4 { margin-top: 20px; }
+.text-center { text-align: center; }
+`
+}
+ 
+    )
+
+
+
+
 export class SummaryStepComponent {
 
     service = inject(PaymentService);

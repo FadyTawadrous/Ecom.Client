@@ -1,0 +1,41 @@
+<div class="orders-container">
+
+  <h1 class="page-title">Order History</h1>
+
+  @if (orders().length === 0) {
+    <div class="empty-message">
+      <mat-icon>history</mat-icon>
+      <p>No orders found.</p>
+    </div>
+  }
+
+  <div class="orders-grid">
+
+    @for (order of orders(); track order.id) {
+
+      <mat-card class="order-card">
+
+        <div class="order-header">
+          <h2>Order #{{ order.id }}</h2>
+          <span class="status-badge status-{{ order.status }}">
+            {{ statusLabels[order.status] }}
+          </span>
+        </div>
+
+        <p><strong>Total:</strong> {{ order.totalAmount | currency }}</p>
+        <p><strong>Date:</strong> {{ order.createdOn | date }}</p>
+        <p><strong>Tracking:</strong> {{ order.trackingNumber || 'N/A' }}</p>
+
+        <div class="actions">
+          <button mat-flat-button color="primary" (click)="openOrder(order.id)">
+            View Details
+          </button>
+        </div>
+
+      </mat-card>
+
+    }
+
+  </div>
+
+</div>

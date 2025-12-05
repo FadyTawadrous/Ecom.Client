@@ -14,7 +14,7 @@ import { MatButtonModule } from '@angular/material/button';
       <p>Your order <strong>#{{ orderId }}</strong> has been placed.</p>
 
       <button mat-raised-button color="primary"
-              [routerLink]="['/orders/details', orderId]">
+              [routerLink]="['/orders', orderId]">
         View Order Details
       </button>
 
@@ -42,24 +42,12 @@ export class PaymentSuccessComponent {
   orderId = this.route.snapshot.params['orderId'];
   private cartService = inject(CartService);
   ngOnInit(): void {
-    // Clear the cart upon successful payment
-   const clear$ = this.cartService.clearCart();
-  
-  if (clear$) {
-    clear$.subscribe({
-      next: () => console.log("Frontend cart cleared"),
-      error: err => console.error("Failed to clear cart", err)
-    });
-  } else {
-    console.warn("Cart is not loaded yet, trying again in 300ms...");
-    setTimeout(() => {
-      this.cartService.clearCart()?.subscribe({
-        next: () => console.log("Frontend cart cleared (retry)"),
-        error: err => console.error("Failed to clear cart", err)
-      });
-    }, 300);
-  }
     
+    // Clear the cart upon successful payment
+    this.cartService.clearCart().subscribe({
+      next: () => console.log("Cart cleared after success"),
+      error: (err:any) => console.error("Failed to clear cart:", err)
+    });
   }
   
 }

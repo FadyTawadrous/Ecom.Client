@@ -89,7 +89,7 @@ export class CartService {
               (sum, item) => sum + item.totalPrice,
               0
             );
-
+            this.refreshTotals();
             this.cartSignal.set(loadedCart);
             console.log("Cart loaded successfully");
           } else {
@@ -135,6 +135,7 @@ export class CartService {
         current.totalAmount = current.cartItems.reduce(
           (sum, i) => sum + i.totalPrice, 0
         );
+            this.refreshTotals();
 
         this.cartSignal.set({ ...current });
       })
@@ -148,27 +149,39 @@ export class CartService {
   // ------------------------------
   // UPDATE QUANTITY
   // ------------------------------
-  updateQuantity(cartItemId: number, quantity: number) {
-    const dto = { id: cartItemId, quantity };
+  updateQuantity(cartItemId: number, quantity: number):any {
+  const cart = this.cartSignal();
+  if (!cart) return;
 
-    return this.api.put<{ result: GetCartItemDTO, isSuccess: boolean }>('api/CartItem', dto)
-      .pipe(
-        tap((res) => {
-          if (!res?.result) return;
+  const item = cart.cartItems.find(i => i.id === cartItemId);
+  if (!item) return;
 
-          const c = this.cartSignal();
-          if (!c) return;
+  const dto = {
+    id: cartItemId,
+    quantity: quantity,
+    unitPrice: item.unitPrice,
+    cartId: item.cartId,
+    productId: item.productId,
+    updatedBy: this.auth.currentUser()?.id || ""
+  };
 
-          const item = c.cartItems.find(i => i.id === cartItemId);
-          if (!item) return;
+  return this.api.put<{ result: GetCartItemDTO, isSuccess: boolean }>('api/CartItem', dto)
+    .pipe(
+      tap((res) => {
+        if (!res?.isSuccess || !res.result) return;
 
-          item.quantity = res.result.quantity;
-          item.totalPrice = res.result.totalPrice;
+        // update item
+        item.quantity = res.result.quantity;
 
-          this.cartSignal.set({ ...c });
-        })
-      );
-  }
+        // FIX: recalculating totalPrice here
+        item.totalPrice = item.unitPrice * item.quantity;
+
+        // important: refresh totals
+        this.refreshTotals();
+      })
+    );
+}
+
 
 
   // ------------------------------
@@ -191,21 +204,53 @@ export class CartService {
   // ------------------------------
   // CLEAR CART
   // ------------------------------
-  clearCart() {
-    const cart = this.cartSignal();
-    if (!cart) return;
+  clearCart():any {
+  const cart = this.cartSignal();
 
-    return this.api.delete('api/cart/clear/' + cart.id)
+  // 1️⃣ If no cart loaded → load it first then retry
+  if (!cart) {
+    console.warn("Cart not loaded — loading then clearing...");
+
+    return this.api.get<{ result: GetCartDTO, isSuccess: boolean }>('api/cart/user')
       .pipe(
-        tap(() => {
-          this.cartSignal.set({
-            id: cart.id,
-            appUserId: cart.appUserId,
-            cartItems: [],
-            totalAmount: 0,
-            createdOn: cart.createdOn
-          });
-        })
+        tap(res => {
+          if (res.isSuccess) {
+            this.cartSignal.set(res.result);
+          }
+        }),
+        switchMap(() => this.clearCart()) // retry AFTER loading
       );
   }
+
+  // 2️⃣ Cart exists → clear backend cart
+  return this.api.delete('api/cart/clear/' + cart.id).pipe(
+    tap(() => {
+      this.cartSignal.set({
+        id: cart.id,
+        appUserId: cart.appUserId,
+        cartItems: [],
+        totalAmount: 0,
+        createdOn: cart.createdOn
+      });
+      console.log("Cart successfully cleared.");
+    })
+  );
+}
+
+private refreshTotals() {
+  const cart = this.cartSignal();
+  if (!cart) return;
+
+  cart.cartItems = cart.cartItems.map(item => ({
+    ...item,
+    totalPrice: item.unitPrice * item.quantity   // ← ALWAYS RECALCULATE
+  }));
+
+  cart.totalAmount = cart.cartItems.reduce(
+    (sum, i) => sum + i.totalPrice, 0
+  );
+
+  this.cartSignal.set({ ...cart });
+}
+
 }

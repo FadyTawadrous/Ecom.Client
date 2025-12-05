@@ -5,7 +5,7 @@ import {UiService} from '../../../../core/services/ui-service';
 import { ConfirmDialog } from '../../../../shared/components/confirm-dialog/confirm-dialog';
 import { Router } from '@angular/router';
 import { PaymentStateService } from '../../../../core/services/payment-state-service';
-
+import { ProductService } from '../../../../core/services/product-service';
 import {
   GetCartDTO,
   GetCartItemDTO,
@@ -41,6 +41,8 @@ export class Cart implements OnInit {
   private dialog = inject(MatDialog);
   private ui = inject(UiService);
   private auth = inject(AuthService);
+  private productService = inject(ProductService);
+
   // userId = '081d0d65-8f7b-4375-afd2-81cf2664fe6e';
 
   ngOnInit() {
@@ -68,20 +70,25 @@ export class Cart implements OnInit {
 
   /** Load Cart Items */
   loadCartItems(cartId: number) {
-    this.api
-      .get<{ result: GetCartItemDTO[]; isSuccess: boolean }>(`api/cartitem/cart/${cartId}`)
-      .subscribe({
-        next: (res) => {
-          const items = Array.isArray(res.result) ? res.result : [];
-          this.cartItems.set(items);
-          this.loading.set(false);
-        },
-        error: () => {
-          this.cartItems.set([]);
-          this.loading.set(false);
-        }
-      });
-  }
+  this.api
+    .get<{ result: GetCartItemDTO[]; isSuccess: boolean }>(`api/cartitem/cart/${cartId}`)
+    .subscribe({
+      next: (res) => {
+        const items = Array.isArray(res.result) ? res.result : [];
+        this.cartItems.set(items);
+
+        // Load thumbnails
+        items.forEach(item => this.loadThumbnail(item.productId));
+
+        this.loading.set(false);
+      },
+      error: () => {
+        this.cartItems.set([]);
+        this.loading.set(false);
+      }
+    });
+}
+
 
   /** Update Quantity */
   updateQuantity(item: GetCartItemDTO, qty: number) {
@@ -160,5 +167,27 @@ export class Cart implements OnInit {
   this.paymentState.setTotal(total());
 
   this.router.navigate(['/payment']);
+}
+
+
+getProductImage(item: GetCartItemDTO): string {
+  // We do not have the product object in cart response, so we construct the thumbnail path manually.
+  // BUT your backend normally stores thumbnailUrl inside product entity.
+  // So we fetch product by ID once.
+  
+  return this.productThumbnails[item.productId] || 'assets/default-product.jpg';
+}
+
+productThumbnails: Record<number, string> = {};
+
+loadThumbnail(productId: number) {
+  if (this.productThumbnails[productId]) return; // cached
+
+  this.productService.getProductById(productId).subscribe({
+    next: product => {
+      this.productThumbnails[productId] = 
+        this.productService.getThumbnailUrl(product);
+    }
+  });
 }
 }
