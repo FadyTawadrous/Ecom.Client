@@ -50,7 +50,7 @@ import { MatBadgeModule } from '@angular/material/badge';
     MatInputModule,
     MatFormFieldModule,
     MatSelectModule,
-    MatTableModule,
+    MatTableModule, 
     MatPaginatorModule,
     MatDialogModule,
     MatSnackBarModule,

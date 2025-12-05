@@ -5,12 +5,10 @@
   padding: 16px 0;
   overflow-x: auto;
   white-space: nowrap;
-  
-  // Hide scrollbar but keep functionality
-  scrollbar-width: none;
-  &::-webkit-scrollbar {
-    display: none;
-  }
+
+  // Custom scrollbar
+  scrollbar-width: thin;
+  scrollbar-color: #fca5a5 #fee2e2;
 }
 
 .brand-button {

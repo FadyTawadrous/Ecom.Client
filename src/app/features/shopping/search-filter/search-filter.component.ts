@@ -1,3 +1,5 @@
+
+// search-filter.component.ts - FIXED VERSION
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormControl, ReactiveFormsModule } from '@angular/forms';
 import { ProductFilter, Product } from '../../../core/models/product.models';

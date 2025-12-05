@@ -1,11 +1,11 @@
 import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { catchError, throwError } from 'rxjs';
 import { Router } from '@angular/router';
+import { ToastService } from '../services/toast.service';
 
 export const errorInterceptor: HttpInterceptorFn = (req, next) => {
-  const snackBar = inject(MatSnackBar); // Inject Material SnackBar
+  const toast = inject(ToastService);
   const router = inject(Router);
 
   const ERROR_MESSAGES = { // Centralized error messages for consistency, can be expanded as needed
@@ -34,45 +34,31 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
               }
             }
             // Show the first validation error found
-            snackBar.open(modelStateErrors.flat()[0] || 'Validation Error', 'Close', {
-              duration: 5000,
-              panelClass: ['error-snackbar']
-            });
+            toast.error(modelStateErrors.flat()[0] || 'Validation Error');
+
             throw error.error; // Rethrow for component-level handling if needed
           } else {
             // This handles logic BadRequests (e.g. "Email already taken")
-            snackBar.open(serverMessage || error.message, 'Close', {
-              duration: 3000,
-              panelClass: ['error-snackbar'] // You can define this class in global styles.scss
-            });
+            toast.error(serverMessage || error.message);
           }
         }
 
         if (error.status === 401) {
           // --- THIS IS THE FIX FOR LOGIN ---
           // Use serverMessage if available, otherwise fallback to 'Unauthorized'
-          snackBar.open(serverMessage || 'Unauthorized access', 'Close', {
-            duration: 3000,
-            panelClass: ['error-snackbar']
-          });
+          toast.error(serverMessage || 'Unauthorized access');
           // Optional: Clear token and redirect to login
           // localStorage.removeItem('token');
           // router.navigateByUrl('/auth/login');
         }
 
         if (error.status === 404) {
-          snackBar.open(serverMessage || 'Resource not found', 'Close', {
-            duration: 4000,
-            panelClass: ['warning-snackbar']
-          });
+          toast.error(serverMessage || 'Resource not found');
           router.navigateByUrl('/not-found');
         }
 
         if (error.status === 500) {
-          snackBar.open(serverMessage || 'Server Error - Please try again later', 'Close', {
-            duration: 5000,
-            panelClass: ['error-snackbar']
-          });
+          toast.error(serverMessage || 'Server error - Please try again later');
         }
       }
 

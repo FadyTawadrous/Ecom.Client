@@ -1,0 +1,11 @@
+<mat-horizontal-stepper #stepper>
+
+  <mat-step label="Address">
+    <app-address-step [stepper]="stepper"></app-address-step>
+  </mat-step>
+
+  <mat-step label="Summary">
+    <app-summary-step></app-summary-step>
+  </mat-step>
+
+</mat-horizontal-stepper>

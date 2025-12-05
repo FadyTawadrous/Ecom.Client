@@ -5,7 +5,7 @@
       <!-- Logo -->
       <a routerLink="/" class="flex items-center gap-2.5 no-underline text-gray-800 hover:opacity-80 transition-opacity group">
         <div class="relative">
-          <mat-icon class="text-blue-600 !w-9 !h-9 !text-4xl group-hover:scale-110 transition-transform">shopping_bag</mat-icon>
+          <img src="ecom-icon.png" alt="E-Com Store Logo" class="!w-9 !h-9 !text-4xl group-hover:scale-110 transition-transform">
           <div class="absolute -bottom-1 -right-1 w-3 h-3 bg-indigo-500 rounded-full"></div>
         </div>
         <span class="text-xl md:text-2xl font-bold tracking-tight bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">E-Com Store</span>
@@ -13,20 +13,9 @@
 
       <!-- Desktop Navigation (Middle) -->
       <div class="hidden md:flex items-center gap-1 ml-8">
-        <a routerLink="/shop" routerLinkActive="!bg-blue-50 !text-blue-600 !font-semibold"
+        <a routerLink="/shopping" routerLinkActive="!bg-blue-50 !text-blue-600 !font-semibold"
             class="px-4 py-2 rounded-lg hover:bg-gray-50 transition-all duration-200 text-gray-700">
           Shop
-        </a>
-        <a routerLink="/categories" routerLinkActive="!bg-blue-50 !text-blue-600 !font-semibold"
-            class="px-4 py-2 rounded-lg hover:bg-gray-50 transition-all duration-200 text-gray-700">
-          Categories
-        </a>
-        <a routerLink="/deals" routerLinkActive="!bg-blue-50 !text-blue-600 !font-semibold"
-            class="px-4 py-2 rounded-lg hover:bg-gray-50 transition-all duration-200 text-gray-700">
-          <span class="flex items-center gap-1">
-            Deals
-            <span class="text-xs bg-red-500 text-white px-1.5 py-0.5 rounded-full font-semibold">Hot</span>
-          </span>
         </a>
       </div>
 
@@ -41,7 +30,7 @@
           <!-- Sliding Input -->
           <div
             class="absolute right-12 top-1/2 -translate-y-1/2 overflow-hidden transition-all duration-300 ease-in-out"
-            [class.w-64]="showSearch() && !isMobile()"
+            [class.w-80]="showSearch() && !isMobile()"
             [class.w-full]="showSearch() && isMobile()"
             [class.w-0]="!showSearch()"
             [class.opacity-100]="showSearch()"

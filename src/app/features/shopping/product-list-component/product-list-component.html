@@ -34,7 +34,7 @@
     <!-- Filters Sidebar -->
      
     <aside class="sidebar">
-        <button mat-stroked-button (click)="clearFiltersList()" class="clear-filters-btn">
+        <button mat-stroked-button (click)="clearFiltersList()" class="clear-filters-btn mb-4">
         <mat-icon>clear_all</mat-icon>
         Clear Filters
       </button>
@@ -47,7 +47,7 @@
     <!-- Products Grid -->
     <main class="products-main">
       <!-- Loading State -->
-      @if (isLoading) {
+      @if (isLoading()) {
         <div class="loading-state">
           <mat-spinner diameter="50"></mat-spinner>
           <p>Loading products...</p>
@@ -55,7 +55,7 @@
       }
 
       <!-- Error State -->
-      @if (error && !isLoading) {
+      @if (error && !isLoading()) {
         <div class="error-state">
           <mat-icon class="error-icon">error_outline</mat-icon>
           <h3>Oops! Something went wrong</h3>
@@ -68,7 +68,7 @@
       }
 
       <!-- Empty State -->
-      @if (!isLoading && !error && products.length === 0) {
+      @if (!isLoading() && !error && products.length === 0) {
         <div class="empty-state">
           <mat-icon class="empty-icon">inventory_2</mat-icon>
           <h3>No products found</h3>
@@ -80,7 +80,7 @@
       }
 
       <!-- Products Grid -->
-      @if (!isLoading && !error && products.length > 0) {
+      @if (!isLoading() && !error && products.length > 0) {
         <div class="products-grid">
           @for (product of paginatedProducts; track product.id) {
             <div class="product-card-wrapper">

@@ -1,0 +1,76 @@
+<div class="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50 flex items-center justify-center px-4">
+  <div class="max-w-2xl w-full text-center">
+    
+    <!-- 404 Illustration -->
+    <div class="mb-8 relative">
+      <div class="text-9xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600 animate-pulse">
+        404
+      </div>
+      <div class="absolute inset-0 flex items-center justify-center">
+        <span class="material-icons text-8xl text-blue-200 animate-bounce">
+          search_off
+        </span>
+      </div>
+    </div>
+
+    <!-- Title -->
+    <h1 class="text-4xl md:text-5xl font-bold text-gray-800 mb-4">
+      Page Not Found
+    </h1>
+
+    <!-- Description -->
+    <p class="text-lg text-gray-600 mb-8 max-w-md mx-auto">
+      Oops! The page you're looking for seems to have wandered off. 
+      Let's get you back on track.
+    </p>
+
+    <!-- Action Buttons -->
+    <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+      <button 
+        (click)="goHome()"
+        class="px-8 py-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl font-semibold hover:from-blue-700 hover:to-indigo-700 transition-all shadow-lg hover:shadow-xl flex items-center gap-2 group"
+      >
+        <span class="material-icons group-hover:-translate-x-1 transition-transform">
+          home
+        </span>
+        Go to Homepage
+      </button>
+
+      <button 
+        (click)="goBack()"
+        class="px-8 py-4 bg-white border-2 border-gray-300 text-gray-700 rounded-xl font-semibold hover:border-blue-500 hover:text-blue-600 transition-all shadow-md hover:shadow-lg flex items-center gap-2 group"
+      >
+        <span class="material-icons group-hover:-translate-x-1 transition-transform">
+          arrow_back
+        </span>
+        Go Back
+      </button>
+    </div>
+
+    <!-- Popular Links -->
+    <div class="mt-12 pt-8 border-t border-gray-200">
+      <p class="text-sm text-gray-500 mb-4">Or try these popular pages:</p>
+      <div class="flex flex-wrap gap-3 justify-center">
+        <button 
+          (click)="navigateTo('/shopping')"
+          class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-blue-100 hover:text-blue-600 transition-all text-sm font-medium"
+        >
+          Products
+        </button>
+        <button 
+          (click)="navigateTo('/cart')"
+          class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-blue-100 hover:text-blue-600 transition-all text-sm font-medium"
+        >
+          Shopping Cart
+        </button>
+        <button 
+          (click)="navigateTo('/wishlist')"
+          class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-blue-100 hover:text-blue-600 transition-all text-sm font-medium"
+        >
+          Wishlist
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>

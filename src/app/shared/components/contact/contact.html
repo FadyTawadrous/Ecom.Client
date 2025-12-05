@@ -1,0 +1,78 @@
+<div class="max-w-6xl mx-auto px-6 py-20">
+
+  <!-- TITLE -->
+  <h1 class="text-4xl font-bold text-center text-indigo-600 mb-4">
+    Contact Us
+  </h1>
+  <p class="text-center text-gray-500 mb-14">
+    We'd love to hear from you. Fill the form and we’ll get back shortly.
+  </p>
+
+  <div class="grid md:grid-cols-2 gap-10 items-center">
+
+    <!-- FORM -->
+    <form (ngSubmit)="submit()" #f="ngForm"
+          class="bg-white p-8 rounded-xl shadow-2xl">
+
+      <!-- NAME -->
+      <mat-form-field appearance="outline" class="w-full mb-4">
+        <mat-label>Your Name</mat-label>
+        <input matInput required
+               [(ngModel)]="model.name"
+               name="name">
+      </mat-form-field>
+
+      <!-- EMAIL -->
+      <mat-form-field appearance="outline" class="w-full mb-4">
+        <mat-label>Your Email</mat-label>
+        <input matInput type="email" required
+               [(ngModel)]="model.email"
+               name="email">
+      </mat-form-field>
+
+      <!-- MESSAGE -->
+      <mat-form-field appearance="outline" class="w-full mb-6">
+        <mat-label>Your Message</mat-label>
+        <textarea matInput rows="5" required
+                  [(ngModel)]="model.message"
+                  name="message"></textarea>
+      </mat-form-field>
+
+      <!-- BUTTON -->
+      <button mat-raised-button
+              type="submit"
+              color="primary"
+              class="w-full py-3 text-lg"
+              [disabled]="f.invalid || sending">
+
+        {{ sending ? 'Sending...' : 'Send Message 🚀' }}
+
+      </button>
+
+    </form>
+
+    <!-- CONTACT CARD -->
+    <div class="bg-gradient-to-br from-indigo-600 to-purple-600
+                text-white p-10 rounded-2xl shadow-xl">
+
+      <h2 class="text-2xl font-bold mb-6">Reach Us</h2>
+
+      <p class="mb-4 text-lg">
+        📧 Email <br>
+        <span class="font-semibold">
+          e.com.store61425@gmail.com
+        </span>
+      </p>
+
+      <p class="mb-4 text-lg">🌍 Global Support</p>
+      <p class="mb-4 text-lg">⏰ Available 24/7</p>
+
+      <div class="mt-8 p-4 text-sm rounded-lg bg-white/20">
+        We usually reply within 24 hours.
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

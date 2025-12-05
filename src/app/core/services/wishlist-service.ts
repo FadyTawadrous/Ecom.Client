@@ -3,7 +3,7 @@ import { ApiService } from './api-service';
 import { WishlistItem } from '../models/wishlist.models'; // create this model
 import { Observable, tap, catchError, of } from 'rxjs';
 import { HttpParams } from '@angular/common/http';
-import { PaginatedResponse} from '../models/pagination.models'; // for pagination
+import { PaginatedResponse } from '../models/pagination.models'; // for pagination
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +15,7 @@ export class WishlistService {
   private wishlistSignal = signal<WishlistItem[]>([]);
   private totalItemsSignal = signal<number>(0);
   private pageNumSignal = signal<number>(1);
-  private pageSizeSignal = signal<number>(5); // default page size
+  private pageSizeSignal = signal<number>(10); // default page size
 
   readonly wishlist = this.wishlistSignal.asReadonly();
   readonly totalItems = this.totalItemsSignal.asReadonly();
@@ -35,7 +35,7 @@ export class WishlistService {
       params
     ).pipe(
       tap(
-        //For paginated response
+        // For paginated response
         res => {
           this.wishlistSignal.set(res.items);
           this.totalItemsSignal.set(res.totalCount);
@@ -58,7 +58,7 @@ export class WishlistService {
   }
 
   // Add a product to wishlist
-  addToWishlist(productId: number): Observable<WishlistItem> {
+  addToWishlist(productId: number): Observable<WishlistItem | null> {
     return this.api.post<WishlistItem>(`api/WishlistItem/WishlistItems`, { productId }).pipe(
       tap((result) => {
         // avoid duplicates
@@ -66,6 +66,11 @@ export class WishlistService {
         if (result && !this.wishlistSignal().some(i => i.id === result.id)) {
           this.totalItemsSignal.set(this.totalItemsSignal() + 1); // update total items
         }
+      }),
+      catchError(error => {
+        console.error('addToWishlist failed', error);
+        // return null as fallback so components can react
+        return of(null);
       })
     );
   }
@@ -91,19 +96,21 @@ export class WishlistService {
           }
         }
       }),
+      catchError(error => {
+        console.error('removeFromWishlist failed', error);
+        return of(void 0);
+      })
     );
   }
 
   // Toggle convenience method (search productId)
   toggleWishlist(productId: number): Observable<WishlistItem | void> {
     const existing = this.wishlistSignal().find(i => i.productId === productId);
-    console.log("exist",existing);
+    console.log("exist", existing);
     
     if (existing) {
       console.log("removed", existing);
       return this.removeFromWishlist(existing.id) as Observable<void>;
-      
-      
     } else {
       console.log("added", productId);
       return this.addToWishlist(productId) as Observable<WishlistItem>;
