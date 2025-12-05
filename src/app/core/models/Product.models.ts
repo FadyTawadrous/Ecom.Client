@@ -51,7 +51,7 @@ export interface ProductReview {
   ProductId: number;
   
   // Relation keys
-  
+  appUserId: string | null;
   
   // Extra read-only fields for display
   productTitle: string | null;
