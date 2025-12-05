@@ -1,7 +1,14 @@
+/* --- product-details.component.scss - DARK MODE --- */
+
 .product-details {
   max-width: 1200px;
   margin: 0 auto;
   padding: 24px;
+  
+  // Force all text to be light in dark mode
+  h1, h2, h3, h4, p, span, label {
+    color: white !important;
+  }
 }
 
 // Loading and Error States
@@ -15,23 +22,28 @@
   
   mat-spinner {
     margin-bottom: 16px;
+    
+    // Target spinner circle
+    ::ng-deep circle {
+      stroke: #60a5fa !important; // blue-400 for spinner
+    }
   }
   
   mat-icon {
     font-size: 48px;
     width: 48px;
     height: 48px;
-    color: #f44336;
+    color: #f87171 !important; // red-400 for error
     margin-bottom: 16px;
   }
   
   h3 {
     margin: 0 0 8px;
-    color: #333;
+    color: white !important;
   }
   
   p {
-    color: #666;
+    color: #9ca3af !important; // gray-400
     margin-bottom: 16px;
   }
 }
@@ -42,6 +54,10 @@
   grid-template-columns: 1fr 1fr;
   gap: 48px;
   margin-bottom: 48px;
+  background-color: #111827 !important; // gray-700 background
+ border: 1px solid #4b5563 !important; // gray-600 border
+
+ padding: 50px;
 
   @media (max-width: 768px) {
     grid-template-columns: 1fr;
@@ -55,7 +71,8 @@
     border-radius: 12px;
     overflow: hidden;
     margin-bottom: 16px;
-    background: #f5f5f5;
+    background: wheat !important; // gray-700 background
+    border: 1px solid #4b5563 !important; // gray-600 border
     
     img {
       width: 100%;
@@ -79,13 +96,14 @@
       border: 2px solid transparent;
       transition: all 0.2s ease;
       flex-shrink: 0;
+      background: wheat !important; // gray-700
       
       &.active {
-        border-color: #3f51b5;
+        border-color: #60a5fa !important; // blue-400
       }
       
       &:hover:not(.active) {
-        border-color: #ccc;
+        border-color: #9ca3af !important; // gray-400
       }
       
       img {
@@ -103,7 +121,7 @@
     margin: 0 0 16px;
     font-size: 28px;
     font-weight: 600;
-    color: #333;
+    color: white !important;
   }
 }
 
@@ -119,7 +137,7 @@
     align-items: center;
     
     .star {
-      color: #ff9800;
+      color: #fcd34d !important; // yellow-300 for stars
       font-size: 20px;
       width: 20px;
       height: 20px;
@@ -128,12 +146,12 @@
     .rating-value {
       margin-left: 8px;
       font-weight: 500;
-      color: #333;
+      color: white !important;
     }
   }
   
   .review-count {
-    color: #666;
+    color: #9ca3af !important; // gray-400
     font-size: 14px;
   }
 }
@@ -148,18 +166,18 @@
   .current-price {
     font-size: 32px;
     font-weight: 700;
-    color: #333;
+    color: white !important;
   }
   
   .original-price {
     font-size: 20px;
-    color: #999;
+    color: #6b7280 !important; // gray-500
     text-decoration: line-through;
   }
   
   .discount-badge {
-    background: #ff5252;
-    color: white;
+    background: #f87171 !important; // red-400
+    color: white !important;
     padding: 4px 12px;
     border-radius: 20px;
     font-size: 14px;
@@ -176,16 +194,16 @@
   
   mat-icon {
     &.in-stock {
-      color: #4caf50;
+      color: #4ade80 !important; // green-400
     }
     
     &.out-of-stock {
-      color: #f44336;
+      color: #f87171 !important; // red-400
     }
   }
   
   span {
-    color: #333;
+    color: white !important;
   }
 }
 
@@ -196,11 +214,11 @@
   h3 {
     margin: 0 0 12px;
     font-size: 18px;
-    color: #333;
+    color: white !important;
   }
   
   p {
-    color: #555;
+    color: #e5e7eb !important; // gray-200
     line-height: 1.6;
   }
 }
@@ -212,7 +230,7 @@
   h4 {
     margin: 0 0 12px;
     font-size: 16px;
-    color: #333;
+    color: white !important;
   }
   
   .quantity-selector {
@@ -221,8 +239,16 @@
     gap: 12px;
     
     button {
-      border: 1px solid #ddd;
+      border: 1px solid #4b5563 !important; // gray-600
       border-radius: 4px;
+      background: #374151 !important; // gray-700
+      color: white !important;
+      
+      &:disabled {
+        border-color: #374151 !important;
+        background: #1f2937 !important; // gray-800
+        color: #6b7280 !important; // gray-500
+      }
     }
     
     .quantity-value {
@@ -230,6 +256,7 @@
       text-align: center;
       font-size: 18px;
       font-weight: 500;
+      color: white !important;
     }
   }
 }
@@ -249,6 +276,45 @@
       margin-right: 8px;
     }
   }
+  
+  // Add to Cart Button
+  .add-to-cart-btn {
+    ::ng-deep &.mat-mdc-raised-button.mat-primary {
+      background-color: #60a5fa !important; // blue-400
+      color: #111827 !important; // Dark text for contrast
+    }
+  }
+  
+  // Wishlist Button
+  .wishlist-btn {
+    transition: all 0.3s ease;
+    
+    // Default state
+    background: #374151 !important; // gray-700
+    color: white !important;
+    
+    mat-icon {
+      color: white !important;
+    }
+    
+    &:hover {
+      background: #4b5563 !important; // gray-600
+    }
+  }
+  
+  // Wishlist Added State
+  .wishlist-btn.added {
+    background: #f87171 !important; // red-400
+    color: white !important;
+    
+    &:hover {
+      background: #ef4444 !important; // red-500
+    }
+    
+    mat-icon {
+      color: white !important;
+    }
+  }
 }
 
 // Specs Section
@@ -258,7 +324,7 @@
   h3 {
     margin: 0 0 16px;
     font-size: 18px;
-    color: #333;
+    color: white !important;
   }
   
   .specs-grid {
@@ -275,36 +341,36 @@
     display: flex;
     justify-content: space-between;
     padding: 8px 0;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid #374151 !important; // gray-700
     
     .spec-label {
-      color: #666;
+      color: #9ca3af !important; // gray-400
     }
     
     .spec-value {
-      color: #333;
+      color: white !important;
       font-weight: 500;
     }
   }
 }
 
-/* Back Navigation Styling */
+// Back Navigation
 .back-navigation {
   margin-bottom: 20px;
   padding-bottom: 15px;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid #374151 !important; // gray-700
 }
 
 .back-button {
   display: flex;
   align-items: center;
   gap: 8px;
-  color: #666;
+  color: #9ca3af !important; // gray-400
   transition: color 0.3s ease;
   
   &:hover {
-    color: #1976d2; /* Material primary color */
-    background-color: rgba(25, 118, 210, 0.04);
+    color: #60a5fa !important; // blue-400
+    background-color: rgba(96, 165, 250, 0.1) !important;
   }
   
   mat-icon {
@@ -314,7 +380,74 @@
   }
 }
 
-/* Responsive design for back button */
+// Reviews Section
+.reviews-section {
+  h3 {
+    margin: 0 0 24px;
+    font-size: 24px;
+    color: white !important;
+  }
+  
+  .no-reviews {
+    color: #9ca3af !important; // gray-400
+    font-style: italic;
+  }
+  
+  .reviews-list {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+  
+  .review-item {
+    background: #1f2937 !important; // gray-800
+    border-radius: 8px;
+    padding: 20px;
+    border: 1px solid #374151 !important; // gray-700
+    
+    .review-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      
+      .reviewer {
+        font-weight: 500;
+        color: white !important;
+      }
+      
+      .review-rating {
+        display: flex;
+        
+        .star.small {
+          font-size: 16px;
+          width: 16px;
+          height: 16px;
+          color: #fcd34d !important; // yellow-300
+        }
+      }
+    }
+    
+    .review-title {
+      margin: 0 0 8px;
+      font-size: 16px;
+      color: white !important;
+    }
+    
+    .review-description {
+      color: #e5e7eb !important; // gray-200
+      line-height: 1.5;
+      margin-bottom: 8px;
+    }
+    
+    .review-date {
+      color: #6b7280 !important; // gray-500
+      font-size: 12px;
+    }
+  }
+}
+
+// Responsive Design
 @media (max-width: 768px) {
   .back-navigation {
     margin-bottom: 15px;
@@ -326,22 +459,6 @@
   }
 }
 
-/* Optional: Make the Add to Cart button full width */
-.action-buttons {
-  display: flex;
-  gap: 10px;
-  
-  .add-to-cart-btn {
-    flex: 1; /* Takes full available width */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    padding: 12px 24px;
-  }
-}
-
-/* Optional: Adjust button layout since we removed Buy Now */
 @media (max-width: 576px) {
   .action-buttons {
     flex-direction: column;
@@ -350,83 +467,4 @@
       width: 100%;
     }
   }
-}
-
-// Reviews Section
-.reviews-section {
-  h3 {
-    margin: 0 0 24px;
-    font-size: 24px;
-    color: #333;
-  }
-  
-  .no-reviews {
-    color: #666;
-    font-style: italic;
-  }
-  
-  .reviews-list {
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
-  }
-  
-  .review-item {
-    background: #f9f9f9;
-    border-radius: 8px;
-    padding: 20px;
-    
-    .review-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 12px;
-      
-      .reviewer {
-        font-weight: 500;
-        color: #333;
-      }
-      
-      .review-rating {
-        display: flex;
-        
-        .star.small {
-          font-size: 16px;
-          width: 16px;
-          height: 16px;
-          color: #ff9800;
-        }
-      }
-    }
-    
-    .review-title {
-      margin: 0 0 8px;
-      font-size: 16px;
-      color: #333;
-    }
-    
-    .review-description {
-      color: #555;
-      line-height: 1.5;
-      margin-bottom: 8px;
-    }
-    
-    .review-date {
-      color: #999;
-      font-size: 12px;
-    }
-  }
-}
-
-.wishlist-btn {
-  transition: 0.3s ease;
-}
-
-.wishlist-btn.added {
-  background-color: #e91e63 !important;
-  color: white !important;
-}
-
-.wishlist-btn.added mat-icon {
-  color: white !important;
 }

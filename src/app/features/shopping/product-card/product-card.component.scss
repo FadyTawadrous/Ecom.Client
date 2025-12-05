@@ -1,18 +1,25 @@
+/* --- product-card.component.scss - DARK MODE --- */
+
 .product-card {
   width: 280px;
   margin: 16px;
   transition: transform 0.3s ease;
+
+  // Dark Mode Card Base
+  background-color: #1f2937 !important; /* gray-800 */
+  border: 1px solid #374151; /* gray-700 border */
   
   &:hover {
     transform: translateY(-4px);
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    // Darker shadow for better visibility on dark background
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4); 
   }
 }
 
 .product-image {
   height: 200px;
   object-fit: cover;
-  background-color: #f5f5f5; // Fallback color if image fails
+  background-color: #374151; // gray-700 fallback color
 }
 
 .product-content {
@@ -23,7 +30,7 @@
   margin: 0 0 8px;
   font-size: 16px;
   font-weight: 500;
-  color: #333;
+  color: white; /* Changed from #333 to white */
   height: 40px;
   overflow: hidden;
   display: -webkit-box;
@@ -41,11 +48,11 @@
 .current-price {
   font-size: 18px;
   font-weight: bold;
-  color: #333;
+  color: white; /* Changed from #333 to white */
 }
 
 .discount {
-  background-color: #ff5252;
+  background-color: #f87171; /* red-400 (Brighter for dark mode) */
   color: white;
   padding: 2px 6px;
   border-radius: 4px;
@@ -56,12 +63,20 @@
   display: flex;
   align-items: center;
   gap: 4px;
-  color: #ff9800;
+  // Use a softer gold/yellow accent for dark mode
+  color: #fcd34d; 
   
   mat-icon {
     font-size: 18px;
     width: 18px;
     height: 18px;
+    color: #fcd34d !important; /* Force star color */
+  }
+
+  // Text rating next to star
+  span {
+    color: #9ca3af; /* gray-400 */
+    font-size: 14px;
   }
 }
 
@@ -74,8 +89,19 @@
 .add-to-cart-btn {
   flex: 1;
   margin-right: 8px;
+
+  // Override Primary Button Style for Dark Mode
+  ::ng-deep &.mat-mdc-raised-button.mat-primary {
+    background-color: #60a5fa !important; /* blue-400 */
+    color: #111827 !important; /* Dark text for high contrast */
+  }
 }
 
 .wishlist-btn:hover {
   transform: scale(1.1);
+}
+
+// Override Wishlist Button Color
+::ng-deep .wishlist-btn.mat-warn {
+    color: #f87171 !important; /* red-400 for warn/favorite icon */
 }

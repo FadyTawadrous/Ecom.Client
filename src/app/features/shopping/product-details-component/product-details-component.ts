@@ -116,7 +116,6 @@ export class ProductDetailsComponent implements OnInit {
     }
 
     if (!this.product) return;
-
     console.log('Add to cart:', this.product, 'Quantity:', this.quantity);
 
     this.cartService.addToCart(this.product.id, this.quantity, this.getFinalPrice()).subscribe({
