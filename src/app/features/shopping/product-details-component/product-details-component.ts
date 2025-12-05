@@ -30,12 +30,13 @@ export class ProductDetailsComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private productService: ProductService,
-    private router: Router, // ← ADD THIS
+    private router: Router, 
     private cartService: CartService
   ) {}
 
   ngOnInit(): void {
     this.loadProduct();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   goBackToShopping(): void {
@@ -122,34 +123,39 @@ export class ProductDetailsComponent implements OnInit {
     // Show success message
     alert(`Added ${this.quantity} ${this.product.title}(s) to cart!`);
   }
+ isInWishlist(): boolean {
+    if (!this.product) return false;
+    return this.wishlistService.wishlist().some(i => i.productId === this.product!.id);
+  }
 
-  // NEW: Add to wishlist with product ID parameter
-  addToWishlist(): void {
-    console.log(this.authService.isAuthenticated());
-    if(!this.authService.isAuthenticated()) {
-      console.log('User not authenticated. Cannot add to wishlist.');
-      this.toast.warn('Please log in to add items to your wishlist!');
+  // Toggle wishlist (Add or Remove)
+  toggleWishlist(): void {
+    if (!this.authService.isAuthenticated()) {
+      this.toast.warn('Please log in to manage your wishlist!');
       return;
     }
 
     if (!this.product) return;
-    
-    // Get the product ID
-    const productId = this.product.id;
-    
-    // TODO: Implement wishlist service - use this parameter:
-    this.wishlistService.addToWishlist(productId).subscribe({
-      next: (item) => {
-        if (item) this.toast.success('Item successfully added to wishlist!');
-        else this.toast.warn('Item already exists in wishlist!');
+
+    this.wishlistService.toggleWishlist(this.product.id).subscribe({
+      next: (result) => {
+        // If result is object (WishlistItem), it was added. If void/undefined, it was removed.
+        // Or strictly rely on the isInWishlist() check after the operation if signals update reactively.
+        const inWishlist = this.isInWishlist(); // Note: Signals might take a tick to update depending on implementation
+        
+        if (result) {
+            this.toast.success('Added to wishlist!');
+        } else {
+            // If the service returns void for remove, we assume removal.
+            // Adjust message logic based on exact service return type if needed.
+            this.toast.info('Removed from wishlist');
+        }
       },
-      error: (err) => this.toast.error('Something went wrong')}
-    );
-    
-    console.log('Add to wishlist - Product ID:', productId);
-    
-    // Show success message
-    //alert(`Added ${this.product.title} to your wishlist!`);
+      error: (err) => {
+        console.error("Wishlist toggle error:", err);
+        this.toast.error('Failed to update wishlist');
+      }
+    });
   }
 
   isInStock(): boolean {

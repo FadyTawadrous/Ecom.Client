@@ -3,7 +3,7 @@ import { ApiService } from './api-service';
 import { WishlistItem } from '../models/wishlist.models'; // create this model
 import { Observable, tap, catchError, of } from 'rxjs';
 import { HttpParams } from '@angular/common/http';
-import { PaginatedResponse} from '../models/pagination.models'; // for pagination
+import { PaginatedResponse } from '../models/pagination.models'; // for pagination
 
 @Injectable({
   providedIn: 'root'
@@ -35,7 +35,7 @@ export class WishlistService {
       params
     ).pipe(
       tap(
-        //For paginated response
+        // For paginated response
         res => {
           this.wishlistSignal.set(res.items);
           this.totalItemsSignal.set(res.totalCount);
@@ -101,6 +101,20 @@ export class WishlistService {
         return of(void 0);
       })
     );
+  }
+
+  // Toggle convenience method (search productId)
+  toggleWishlist(productId: number): Observable<WishlistItem | void> {
+    const existing = this.wishlistSignal().find(i => i.productId === productId);
+    console.log("exist", existing);
+    
+    if (existing) {
+      console.log("removed", existing);
+      return this.removeFromWishlist(existing.id) as Observable<void>;
+    } else {
+      console.log("added", productId);
+      return this.addToWishlist(productId) as Observable<WishlistItem>;
+    }
   }
 
   // Method to clear wishlist state (useful on logout)

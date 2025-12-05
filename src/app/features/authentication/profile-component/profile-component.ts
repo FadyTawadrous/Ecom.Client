@@ -11,6 +11,7 @@ import { MaterialModule } from '../../../shared/material/material-module';
 import { MatDialog } from '@angular/material/dialog';
 import { FaceCaptureComponent } from '../../../shared/components/face-capture-component/face-capture-component';
 import { FaceIdService } from '../../../core/services/face-id-service';
+import { ChangePasswordComponent } from '../change-password-component/change-password-component';
 
 @Component({
   selector: 'app-profile-component',
@@ -175,6 +176,13 @@ export class ProfileComponent {
         // This handles actual network errors (500 Server Error, offline, etc.)
         this.hasFaceId.set(false);
       }
+    });
+  }
+
+  openChangePassword() {
+    this.dialog.open(ChangePasswordComponent, {
+      width: '400px',
+      disableClose: true
     });
   }
 

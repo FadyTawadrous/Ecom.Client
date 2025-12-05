@@ -26,7 +26,7 @@ import { OrderStatusStepperComponent } from '../order-status-stepper/order-statu
 
       <h2>Order #{{ order()?.id }}</h2>
 
-      <p><strong>Status:</strong> {{ statusLabels[order()?.status] }}</p>
+      <p><strong>Status:</strong> {{ order()?.status }}</p>
       <p><strong>Tracking:</strong> {{ order()?.trackingNumber || 'Tracking Id not assigned' }}</p>
       <p><strong>Delivery Date:</strong> {{ order()?.deliveryDate | date }}</p>
 

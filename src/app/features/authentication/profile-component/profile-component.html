@@ -4,7 +4,7 @@
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
 
         <!-- Left Column: Profile Picture Card -->
-        <mat-card class="col-span-1 p-6 flex flex-col items-center text-center h-fit">
+        <mat-card class="col-span-1 p-4 flex flex-col items-center text-center h-fit">
             <div class="relative w-32 h-32 mb-4">
                 <img [src]="currentImage()" (error)="handleImageError($event)"
                     class="w-full h-full rounded-full object-cover border-4 border-gray-100 shadow-sm"
@@ -58,6 +58,14 @@
                 <mat-icon>face</mat-icon>
                 {{ hasFaceId() ? 'Update Face ID' : 'Enable Face ID' }}
             </button>
+
+            <mat-divider class="w-full !my-4"></mat-divider>
+            <!-- New Button -->
+            <button mat-stroked-button color="accent" class="w-full" (click)="openChangePassword()">
+                <mat-icon>lock_reset</mat-icon>
+                Change Password
+            </button>
+
         </mat-card>
 
         <!-- Right Column: Edit Details Form -->
@@ -116,8 +124,6 @@
                     </div>
 
                 </form>
-
-
 
             </mat-card-content>
         </mat-card>

@@ -4,7 +4,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { map, tap, catchError } from 'rxjs/operators';
 import { of, Observable } from 'rxjs';
 import { ApiService } from './api-service'; // Custom ApiService for HTTP calls, so we don't need HttpClient or environment
-import { AuthResponse, LoginReq, User } from '../models/auth.models';
+import { AuthResponse, LoginReq, User, ChangePasswordReq } from '../models/auth.models';
 import { environment } from '../../../environments/environment';
 import { HttpParams } from '@angular/common/http';
 import { jwtDecode } from 'jwt-decode'
@@ -133,6 +133,19 @@ export class AuthService {
     );
   }
 
+  changePassword(data: ChangePasswordReq): Observable<boolean> {
+    return this.apiService.post<any>('api/account/change-password', data).pipe(
+      tap(() => {
+        this.snackBar.open('Password changed successfully, please log in again.', 'Close', { duration: 3000 });
+        localStorage.removeItem('token');
+        this.currentUserSignal.set(null);
+        this.router.navigate(['/account/login']);
+      }),
+      map(() => true),
+      catchError(() => of(false))
+    );
+  }
+
   // --- INTERNAL HELPER METHODS ---
 
   private setSession(authResponse: AuthResponse) {
@@ -143,7 +156,7 @@ export class AuthService {
     localStorage.setItem('token', authResponse.token);
 
     const userWithRoles = this.getUserRolesFromToken(authResponse.token, processedUser);
-    
+
     // 3. Update Signal State
     this.currentUserSignal.set(userWithRoles);
   }

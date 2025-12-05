@@ -134,11 +134,22 @@ export class ProductListComponent implements OnInit {
   loadCategories(): void {
     this.productService.getAllCategories().subscribe({
       next: (categories) => {
-        this.categories = categories;
+        const filteredCategories: any[] = [];
+
+        categories.forEach(category => {
+          this.productService.getProductsByCategory(category.id).subscribe({
+            next: (products) => {
+              // Keep only categories that actually have products
+              if (products && products.length > 0) {
+                filteredCategories.push(category);
+              }
+              // Update list only after finishing
+              this.categories = filteredCategories;
+            }
+          });
+        });
       },
-      error: (err) => {
-        console.error('Failed to load categories:', err);
-      }
+      error: (err) => console.error("Failed to load categories:", err)
     });
   }
 
@@ -146,11 +157,22 @@ export class ProductListComponent implements OnInit {
   loadBrands(): void {
     this.productService.getAllBrands().subscribe({
       next: (brands) => {
-        this.brands = brands;
+        const filteredBrands: any[] = [];
+
+        brands.forEach(brand => {
+          this.productService.getProductsByBrand(brand.id).subscribe({
+            next: (products) => {
+              // Keep only brands with products
+              if (products && products.length > 0) {
+                filteredBrands.push(brand);
+              }
+              // Update result list
+              this.brands = filteredBrands;
+            }
+          });
+        });
       },
-      error: (err) => {
-        console.error('Failed to load brands:', err);
-      }
+      error: (err) => console.error("Failed to load brands:", err)
     });
   }
 

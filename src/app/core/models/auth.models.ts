@@ -39,3 +39,9 @@ export interface UpdateProfileReq {
     phoneNumber?: string;
     profileImage?: File; // Handled as File for upload
 }
+
+export interface ChangePasswordReq {
+    currentPassword: string;
+    newPassword: string;
+    confirmNewPassword: string;
+}
