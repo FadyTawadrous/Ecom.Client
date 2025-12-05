@@ -34,6 +34,7 @@ export interface AddCartItemDTO {
   unitPrice: number;
   createdBy: string;
   appUserId: string ;
+  totalPrice: number;
 }
 
 // UpdateCartItemVM
