@@ -39,9 +39,12 @@ export class Products implements OnInit {
     brandId: ''
   };
 
-  columns: string[] = ['name', 'category', 'brand', 'price', 'stock', 'actions'];
+  thumbnail: File | null = null;
+  thumbnailPreview: string | null = null;
 
-  constructor(private adminApi: AdminApiService) {}
+  columns = ['name', 'category', 'brand', 'price', 'stock', 'actions'];
+
+  constructor(public adminApi: AdminApiService) {}
 
   ngOnInit() {
     this.load();
@@ -49,47 +52,76 @@ export class Products implements OnInit {
     this.loadBrands();
   }
 
+  // FILE SELECTION
+  onThumbnailSelected(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      this.thumbnail = file;
+
+      const reader = new FileReader();
+      reader.onload = () => this.thumbnailPreview = reader.result as string;
+      reader.readAsDataURL(file);
+    }
+  }
+
+  // LOAD PRODUCTS
   load() {
-    this.adminApi.getProducts()
-      .subscribe(res => this.products = res.result);
+    this.adminApi.getProducts().subscribe(res => {
+      this.products = res.result;
+    });
   }
 
   loadCategories() {
-    this.adminApi.getCategories()
-      .subscribe(res => this.categories = res.result);
+    this.adminApi.getCategories().subscribe(res => this.categories = res.result);
   }
 
   loadBrands() {
-    this.adminApi.getBrands()
-      .subscribe(res => this.brands = res.result);
+    this.adminApi.getBrands().subscribe(res => this.brands = res.result);
   }
 
+  // SAVE PRODUCT (CREATE/UPDATE)
   save() {
 
-    if (!this.form.title.trim()) {
-      alert('Title is required');
-      return;
-    }
-
-    const fd = new FormData();
-
-    fd.append('Id', this.form.id.toString());
-    fd.append('Title', this.form.title);
-    fd.append('Description', this.form.description);
-    fd.append('Price', this.form.price.toString());
-    fd.append('Stock', this.form.stock.toString());
-
-    if (this.form.categoryId)
-      fd.append('CategoryId', this.form.categoryId);
-
-    if (this.form.brandId)
-      fd.append('BrandId', this.form.brandId);
-
-    this.editing
-      ? this.adminApi.updateProduct(fd).subscribe(() => this.reset())
-      : this.adminApi.createProduct(fd).subscribe(() => this.reset());
+  if (!this.form.title.trim()) {
+    alert('Title is required');
+    return;
   }
 
+  const fd = new FormData();
+
+  fd.append("Id", String(this.form.id));
+  fd.append("Title", this.form.title);
+  fd.append("Description", this.form.description);
+  fd.append("Price", String(this.form.price));
+  fd.append("Stock", String(this.form.stock));
+
+  fd.append("BrandId", this.form.brandId.toString());
+  fd.append("CategoryId", this.form.categoryId.toString());
+  fd.append("DiscountPercentage", "0");
+
+  // SEND ONLY ONE OF THESE:
+
+  if (this.editing) {
+    fd.append("UpdatedBy", "admin");
+  } else {
+    fd.append("CreatedBy", "admin");
+  }
+
+
+  // FILE
+  if (this.thumbnail) {
+    fd.append("Thumbnail", this.thumbnail);
+  }
+
+  if (this.editing) {
+    this.adminApi.updateProduct(fd).subscribe(() => this.reset());
+  } else {
+    this.adminApi.createProduct(fd).subscribe(() => this.reset());
+  }
+}
+
+
+  // EDIT PRODUCT
   edit(p: any) {
     this.editing = true;
 
@@ -102,11 +134,14 @@ export class Products implements OnInit {
       categoryId: p.categoryId,
       brandId: p.brandId
     };
+
+    // PREVIEW EXISTING IMAGE
+    this.thumbnailPreview = this.adminApi.getImageUrl(p.thumbnailUrl);
+    this.thumbnail = null;
   }
 
   delete(id: number) {
-    this.adminApi.deleteProduct(id)
-      .subscribe(() => this.load());
+    this.adminApi.deleteProduct(id).subscribe(() => this.load());
   }
 
   reset() {
@@ -120,7 +155,10 @@ export class Products implements OnInit {
       brandId: ''
     };
 
+    this.thumbnail = null;
+    this.thumbnailPreview = null;
     this.editing = false;
+
     this.load();
   }
 }

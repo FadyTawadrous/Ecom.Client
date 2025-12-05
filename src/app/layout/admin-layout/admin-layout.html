@@ -1,23 +1,95 @@
-<div class="flex h-screen">
+<div class="flex h-screen bg-gray-100">
 
   <!-- Sidebar -->
-  <aside class="w-64 bg-gray-900 text-white flex flex-col p-4">
-    <h2 class="text-xl font-bold mb-6">Admin Panel</h2>
+  <mat-sidenav-container class="h-full w-72 shadow-xl">
+    <mat-sidenav mode="side" opened class="bg-gray-900 text-gray-200 flex flex-col">
 
-    <nav class="flex flex-col gap-3">
-      <a routerLink="/admin/dashboard" routerLinkActive="font-bold text-blue-400">Dashboard</a>
-      <a routerLink="/admin/products" routerLinkActive="font-bold text-blue-400">Products</a>
-      <a routerLink="/admin/categories" routerLinkActive="font-bold text-blue-400">Categories</a>
-      <a routerLink="/admin/brands" routerLinkActive="font-bold text-blue-400">Brands</a>
-      <a routerLink="/admin/orders" routerLinkActive="font-bold text-blue-400">Orders</a>
-      <a routerLink="/admin/users" routerLinkActive="font-bold text-blue-400">Users</a>
-      <a routerLink="/admin/roles" routerLinkActive="font-bold text-blue-400">Roles</a>
-    </nav>
-  </aside>
+      <!-- Logo -->
+      <div class="p-6 flex items-center gap-3 border-b border-gray-700">
+        <mat-icon class="text-blue-500">admin_panel_settings</mat-icon>
+        <h2 class="text-2xl font-semibold">Admin Panel</h2>
+      </div>
 
-  <!-- Main content -->
-  <main class="flex-1 bg-gray-100 p-6 overflow-auto">
-    <router-outlet></router-outlet>
-  </main>
+      <!-- User Profile -->
+      <div class="p-6 border-b border-gray-700">
+        <div class="flex items-center gap-3">
+          <div>
+            <p class="font-semibold text-black">Admin User</p>
+          </div>
+        </div>
+      </div>
 
+      <!-- Navigation -->
+      <nav class="flex flex-col gap-1 p-4">
+
+        <a mat-button routerLink="/admin/dashboard"
+          routerLinkActive="active-nav"
+          class="nav-item w-full !justify-start !items-center !text-left">
+            <mat-icon class="mr-3">dashboard</mat-icon>
+            <span>Dashboard</span>
+        </a>
+
+        <a mat-button routerLink="/admin/products"
+          routerLinkActive="active-nav"
+          class="nav-item w-full !justify-start !items-center !text-left">
+            <mat-icon class="mr-3">inventory_2</mat-icon>
+            <span>Products</span>
+        </a>
+
+        <a mat-button routerLink="/admin/categories"
+          routerLinkActive="active-nav"
+          class="nav-item w-full !justify-start !items-center !text-left">
+            <mat-icon class="mr-3">category</mat-icon>
+            <span>Categories</span>
+        </a>
+
+        <a mat-button routerLink="/admin/brands"
+          routerLinkActive="active-nav"
+          class="nav-item w-full !justify-start !items-center !text-left">
+            <mat-icon class="mr-3">storefront</mat-icon>
+            <span>Brands</span>
+        </a>
+
+        <a mat-button routerLink="/admin/orders"
+          routerLinkActive="active-nav"
+          class="nav-item w-full !justify-start !items-center !text-left">
+            <mat-icon class="mr-3">receipt_long</mat-icon>
+            <span>Orders</span>
+        </a>
+
+        <a mat-button routerLink="/admin/users"
+          routerLinkActive="active-nav"
+          class="nav-item w-full !justify-start !items-center !text-left">
+            <mat-icon class="mr-3">group</mat-icon>
+            <span>Users</span>
+        </a>
+
+        <a mat-button routerLink="/admin/roles"
+          routerLinkActive="active-nav"
+          class="nav-item w-full !justify-start !items-center !text-left">
+            <mat-icon class="mr-3">shield</mat-icon>
+            <span>Roles</span>
+        </a>
+
+      </nav>
+
+
+
+      
+      <div class="mt-auto p-6 border-t border-gray-700">
+      </div>
+
+    </mat-sidenav>
+  </mat-sidenav-container>
+
+  <!-- Main Content -->
+  <div class="flex-1 flex flex-col">
+
+
+    <!-- Routed Pages -->
+    <div class="p-6 overflow-y-auto flex-1">
+      <router-outlet></router-outlet>
+    </div>
+
+  </div>
 </div>

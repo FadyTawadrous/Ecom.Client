@@ -2,115 +2,108 @@
 
 <div class="grid grid-cols-3 gap-6">
 
-<!-- FORM -->
-<div class="bg-white rounded-xl shadow p-6">
+  <!-- FORM -->
+  <div class="bg-white rounded-xl shadow p-6">
 
-  <mat-form-field class="w-full mb-3">
-    <input matInput placeholder="Product Name"
-           [(ngModel)]="form.title" required>
-  </mat-form-field>
+    <mat-form-field class="w-full mb-3">
+      <input matInput placeholder="Product Name" [(ngModel)]="form.title" required>
+    </mat-form-field>
 
-  <mat-form-field class="w-full mb-3">
-    <input matInput type="number"
-           placeholder="Price"
-           [(ngModel)]="form.price">
-  </mat-form-field>
+    <mat-form-field class="w-full mb-3">
+      <input matInput type="number" placeholder="Price" [(ngModel)]="form.price">
+    </mat-form-field>
 
-  <mat-form-field class="w-full mb-3">
-    <input matInput type="number"
-           placeholder="Stock"
-           [(ngModel)]="form.stock">
-  </mat-form-field>
+    <mat-form-field class="w-full mb-3">
+      <input matInput type="number" placeholder="Stock" [(ngModel)]="form.stock">
+    </mat-form-field>
 
-  <!-- CATEGORY -->
-  <mat-form-field class="w-full mb-3">
-    <mat-label>Category</mat-label>
-    <mat-select [(ngModel)]="form.categoryId">
-      <mat-option *ngFor="let c of categories" [value]="c.id">
-        {{ c.name }}
-      </mat-option>
-    </mat-select>
-  </mat-form-field>
+    <mat-form-field class="w-full mb-3">
+      <mat-label>Category</mat-label>
+      <mat-select [(ngModel)]="form.categoryId">
+        <mat-option *ngFor="let c of categories" [value]="c.id">{{ c.name }}</mat-option>
+      </mat-select>
+    </mat-form-field>
 
-  <!-- BRAND -->
-  <mat-form-field class="w-full mb-3">
-    <mat-label>Brand</mat-label>
-    <mat-select [(ngModel)]="form.brandId">
-      <mat-option *ngFor="let b of brands" [value]="b.id">
-        {{ b.name }}
-      </mat-option>
-    </mat-select>
-  </mat-form-field>
-  
-  <textarea placeholder="Description"
-            class="border p-2 rounded w-full mb-3"
-            [(ngModel)]="form.description"></textarea>
+    <mat-form-field class="w-full mb-3">
+      <mat-label>Brand</mat-label>
+      <mat-select [(ngModel)]="form.brandId">
+        <mat-option *ngFor="let b of brands" [value]="b.id">{{ b.name }}</mat-option>
+      </mat-select>
+    </mat-form-field>
 
-  
-  <div class="mt-4 space-x-2">
-    <button mat-raised-button color="primary" (click)="save()">
-      {{ editing ? 'Update' : 'Create' }}
-    </button>
-    <button mat-stroked-button (click)="reset()">Cancel</button>
+    <textarea class="border p-2 rounded w-full mb-3"
+              placeholder="Description"
+              [(ngModel)]="form.description"></textarea>
+
+    <input type="file" accept="image/*" (change)="onThumbnailSelected($event)" class="mb-3">
+
+    <div *ngIf="thumbnailPreview" class="mb-3">
+      <img [src]="thumbnailPreview" class="w-32 h-32 object-cover rounded shadow">
+    </div>
+
+    <div class="mt-4 space-x-2">
+      <button mat-raised-button color="primary" (click)="save()">
+        {{ editing ? 'Update' : 'Create' }}
+      </button>
+      <button mat-stroked-button (click)="reset()">Cancel</button>
+    </div>
+
   </div>
-</div>
 
-<!-- TABLE -->
-<div class="col-span-2 bg-white rounded-xl shadow p-4">
+  <!-- TABLE -->
+  <div class="col-span-2 bg-white rounded-xl shadow p-4">
 
-  <table mat-table [dataSource]="products" class="w-full">
+    <table mat-table [dataSource]="products" class="w-full">
 
-    <!-- NAME -->
-    <ng-container matColumnDef="name">
-      <th mat-header-cell *matHeaderCellDef>Product</th>
-      <td mat-cell *matCellDef="let p">{{ p.title }}</td>
-    </ng-container>
+      <!--<ng-container matColumnDef="thumbnail">
+        <th mat-header-cell *matHeaderCellDef>Image</th>
+        <td mat-cell *matCellDef="let p">
+          <img [src]="adminApi.getImageUrl(p.thumbnailUrl)"
+               class="w-14 h-14 object-cover rounded" />
+        </td>
+      </ng-container>-->
 
-    <!-- CATEGORY -->
-    <ng-container matColumnDef="category">
-      <th mat-header-cell *matHeaderCellDef>Category</th>
-      <td mat-cell *matCellDef="let p">{{ p.categoryName }}</td>
-    </ng-container>
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef>Product</th>
+        <td mat-cell *matCellDef="let p">{{ p.title }}</td>
+      </ng-container>
 
-    <!-- BRAND -->
-    <ng-container matColumnDef="brand">
-      <th mat-header-cell *matHeaderCellDef>Brand</th>
-      <td mat-cell *matCellDef="let p">{{ p.brandName }}</td>
-    </ng-container>
+      <ng-container matColumnDef="category">
+        <th mat-header-cell *matHeaderCellDef>Category</th>
+        <td mat-cell *matCellDef="let p">{{ p.categoryName }}</td>
+      </ng-container>
 
-    <!-- PRICE -->
-    <ng-container matColumnDef="price">
-      <th mat-header-cell *matHeaderCellDef>Price</th>
-      <td mat-cell *matCellDef="let p">{{ p.price | currency }}</td>
-    </ng-container>
+      <ng-container matColumnDef="brand">
+        <th mat-header-cell *matHeaderCellDef>Brand</th>
+        <td mat-cell *matCellDef="let p">{{ p.brandName }}</td>
+      </ng-container>
 
-    <!-- STOCK -->
-    <ng-container matColumnDef="stock">
-      <th mat-header-cell *matHeaderCellDef>Stock</th>
-      <td mat-cell *matCellDef="let p">{{ p.stock }}</td>
-    </ng-container>
+      <ng-container matColumnDef="price">
+        <th mat-header-cell *matHeaderCellDef>Price</th>
+        <td mat-cell *matCellDef="let p">{{ p.price | currency }}</td>
+      </ng-container>
 
-    <!-- ACTIONS -->
-    <ng-container matColumnDef="actions">
-      <th mat-header-cell *matHeaderCellDef>Actions</th>
-      <td mat-cell *matCellDef="let p">
+      <ng-container matColumnDef="stock">
+        <th mat-header-cell *matHeaderCellDef>Stock</th>
+        <td mat-cell *matCellDef="let p">{{ p.stock }}</td>
+      </ng-container>
 
-        <button mat-icon-button color="primary" (click)="edit(p)">
-          <mat-icon>edit</mat-icon>
-        </button>
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Actions</th>
+        <td mat-cell *matCellDef="let p">
+          <button mat-icon-button color="primary" (click)="edit(p)">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button mat-icon-button color="warn" (click)="delete(p.id)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </td>
+      </ng-container>
 
-        <button mat-icon-button color="warn" (click)="delete(p.id)">
-          <mat-icon>delete</mat-icon>
-        </button>
+      <tr mat-header-row *matHeaderRowDef="columns"></tr>
+      <tr mat-row *matRowDef="let row; columns: columns"></tr>
 
-      </td>
-    </ng-container>
+    </table>
 
-    <tr mat-header-row *matHeaderRowDef="columns"></tr>
-    <tr mat-row *matRowDef="let row; columns: columns"></tr>
-
-  </table>
-
-</div>
-
+  </div>
 </div>

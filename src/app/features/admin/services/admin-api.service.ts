@@ -32,19 +32,24 @@ export class AdminApiService {
 
   constructor(private http: HttpClient) {}
 
-  // ==================================
-  // IMAGE HELPER (FIXED & UNIFIED)
-  // ==================================
-  getImageUrl(relativePath: string | null | undefined): string {
-    if (!relativePath) return 'assets/placeholder.png';
+   // IMAGE HELPER
+getImageUrl(relativePath: string | null | undefined): string {
+  // 1) No image → placeholder
+  if (!relativePath) return 'assets/placeholder.png';
 
-    if (relativePath.startsWith('http')) return relativePath;
+  // 2) Already full URL (in case backend ever returns that)
+  if (relativePath.startsWith('http')) return relativePath;
 
-    const base = environment.apiURL.replace('/api', '').replace(/\/$/, '');
-    const clean = relativePath.replace(/^\/+/, '');
+  // 3) Base URL (remove /api if your apiURL includes it)
+  const base = environment.apiURL.replace('/api', '').replace(/\/$/, '');
 
-    return `${base}/${clean}`;
-  }
+  // 4) Clean leading slashes from the path
+  const clean = relativePath.replace(/^\/+/, '');
+
+  // 5) Final URL
+  return `${base}/${clean}`;
+}
+
 
 
   // ========= DASHBOARD =========
