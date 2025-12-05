@@ -1,10 +1,52 @@
+/* --- Custom Dark Mode Form Fields --- */
+
+// Force width
 mat-form-field {
     width: 100%;
 }
 
-/* Override Mat Icon size for the small edit button */
-.mat-icon {
-    font-size: 1.2rem;
-    height: 1.2rem;
-    width: 1.2rem;
+// 1. Outline Borders (Default)
+::ng-deep .custom-dark-field .mdc-notched-outline__leading,
+::ng-deep .custom-dark-field .mdc-notched-outline__notch,
+::ng-deep .custom-dark-field .mdc-notched-outline__trailing {
+    border-color: #4b5563 !important; // gray-600
+}
+
+// 2. Outline Borders (Focused)
+::ng-deep .custom-dark-field.mat-focused .mdc-notched-outline__leading,
+::ng-deep .custom-dark-field.mat-focused .mdc-notched-outline__notch,
+::ng-deep .custom-dark-field.mat-focused .mdc-notched-outline__trailing {
+    border-color: #60a5fa !important; // blue-400
+    border-width: 2px !important;
+}
+
+// 3. Input Text
+::ng-deep .custom-dark-field input.mat-mdc-input-element {
+    color: white !important;
+    caret-color: #60a5fa;
+}
+
+// 4. Placeholder
+::ng-deep .custom-dark-field .mat-mdc-input-element::placeholder {
+    color: #6b7280 !important;
+}
+
+// 5. Label (Resting)
+::ng-deep .custom-dark-field .mdc-floating-label {
+    color: #9ca3af !important;
+}
+
+// 6. Label (Focused)
+::ng-deep .custom-dark-field.mat-focused .mdc-floating-label {
+    color: #60a5fa !important;
+}
+
+// 7. Error Text
+mat-error {
+    color: #f87171 !important;
+}
+
+/* Spinner Color */
+::ng-deep .custom-spinner circle {
+    stroke: white !important;
 }

@@ -247,24 +247,71 @@ export class ProductListComponent implements OnInit {
   }
 
   // Add to wishlist
-  onAddToWishlist(product: Product): void {
+  onToggleWishlist(product: Product): void {
     console.log(this.authService.isAuthenticated());
     if (!this.authService.isAuthenticated()) {
-      console.log('User not authenticated. Cannot add to wishlist.');
-      this.toast.warn('Please log in to add items to your wishlist!');
+      console.log('User not authenticated. Cannot edit wishlist.');
+      this.toast.warn('Please log in to edit items to your wishlist!');
       return;
     }
 
-    console.log('Add to wishlist:', product);
+    if (!product) return;
 
-    this.wishlistService.addToWishlist(product.id).subscribe({
-      next: (item) => {
-        if (item) this.toast.success('Item successfully added to wishlist!');
-        else this.toast.warn('Item already exists in wishlist!');
+    this.wishlistService.toggleWishlist(product.id).subscribe({
+      next: (result) => {
+        // If result is object (WishlistItem), it was added. If void/undefined, it was removed.
+        // Or strictly rely on the isInWishlist() check after the operation if signals update reactively.
+        
+        if (result) {
+            this.toast.success('Added to wishlist!');
+        } else {
+            // If the service returns void for remove, we assume removal.
+            // Adjust message logic based on exact service return type if needed.
+            this.toast.info('Removed from wishlist');
+        }
+        // Refresh wishlist signal
+        this.wishlistService.loadWishlist(1, this.wishlistService.totalItems()).subscribe(); 
       },
-      error: (err) => this.toast.error('Something went wrong')
+      error: (err) => {
+        console.error("Wishlist toggle error:", err);
+        this.toast.error('Failed to update wishlist');
+      }
     });
   }
+
+  
+
+  // // Toggle wishlist (Add or Remove)
+  // toggleWishlist(): void {
+  //   if (!this.authService.isAuthenticated()) {
+  //     this.toast.warn('Please log in to manage your wishlist!');
+  //     return;
+  //   }
+
+  //   if (!this.product) return;
+
+  //   this.wishlistService.toggleWishlist(this.product.id).subscribe({
+  //     next: (result) => {
+  //       // If result is object (WishlistItem), it was added. If void/undefined, it was removed.
+  //       // Or strictly rely on the isInWishlist() check after the operation if signals update reactively.
+  //       const inWishlist = this.isInWishlist(); // Note: Signals might take a tick to update depending on implementation
+        
+  //       if (result) {
+  //           this.toast.success('Added to wishlist!');
+  //       } else {
+  //           // If the service returns void for remove, we assume removal.
+  //           // Adjust message logic based on exact service return type if needed.
+  //           this.toast.info('Removed from wishlist');
+  //       }
+  //       // Refresh wishlist signal
+  //       this.wishlistService.loadWishlist(1, this.wishlistService.pageSize()).subscribe(); 
+  //     },
+  //     error: (err) => {
+  //       console.error("Wishlist toggle error:", err);
+  //       this.toast.error('Failed to update wishlist');
+  //     }
+  //   });
+  // }
 
   // Get page title based on current filters
   get pageTitle(): string {
