@@ -1,109 +1,115 @@
 <div class="product-list">
-  <!-- Header Section -->
-  <header class="list-header">
-    <h1 class="page-title">{{ pageTitle }}</h1>
-    
-    @if (hasActiveFilters) {
-      <button mat-stroked-button (click)="clearFiltersList()" class="clear-filters-btn">
-        <mat-icon>clear_all</mat-icon>
-        Clear Filters
-      </button>
-    }
-  </header>
 
-  <!-- Category Slider -->
-  <div class="slider-section">
-    <app-category-slider 
-      [categories]="categories"
-      [selectedCategoryId]="selectedCategoryId"
-      (categorySelected)="onCategorySelected($event)">
-    </app-category-slider>
-  </div>
+  <section class="hero-slider">
+    <div class="slider-track">
+      @for (slide of heroSlides; track $index) {
+      <div class="slide" [class.active]="$index === currentSlide">
+        <div class="slide-bg" [style.backgroundImage]="'url(' + slide.image + ')'">
+          <div class="overlay"></div>
+        </div>
 
-  <!-- Brand Slider -->
-  <div class="slider-section">
-    <app-brand-slider 
-      [brands]="brands"
-      [selectedBrandId]="selectedBrandId"
-      (brandSelected)="onBrandSelected($event)">
-    </app-brand-slider>
-  </div>
+        <div class="slide-content">
+          <h2>{{ slide.title }}</h2>
+          <p>{{ slide.subtitle }}</p>
+          <button mat-raised-button color="primary">Shop Now</button>
+        </div>
+      </div>
+      }
+    </div>
 
-  <!-- Main Content -->
+    <button class="nav-btn prev" (click)="prevSlide()">
+      <mat-icon>chevron_left</mat-icon>
+    </button>
+    <button class="nav-btn next" (click)="nextSlide()">
+      <mat-icon>chevron_right</mat-icon>
+    </button>
+
+    <div class="dots-container">
+      @for (slide of heroSlides; track $index) {
+      <span class="dot" [class.active]="$index === currentSlide" (click)="goToSlide($index)">
+      </span>
+      }
+    </div>
+  </section>
+
   <div class="content-wrapper">
-    <!-- Filters Sidebar -->
-     
+
     <aside class="sidebar">
-        <button mat-stroked-button (click)="clearFiltersList()" class="clear-filters-btn mb-4">
-        <mat-icon>clear_all</mat-icon>
-        Clear Filters
-      </button>
-      <app-search-filter
-        [currentFilter]="currentFilter"
-        (filterChange)="onFilterChange($event)">
-      </app-search-filter>
+      <div class="sidebar-header">
+        <h2 class="filter-title">Filters</h2>
+        @if (hasActiveFilters) {
+        <button mat-button color="warn" (click)="clearFiltersList()" class="clear-btn-small">
+          Clear All
+        </button>
+        }
+      </div>
+
+      <div class="filter-group">
+        <label class="group-label">Search</label>
+        <app-search-filter [currentFilter]="currentFilter" (filterChange)="onFilterChange($event)">
+        </app-search-filter>
+      </div>
+
+      <mat-divider class="filter-divider"></mat-divider>
+
+      <div class="filter-group">
+        <label class="group-label">Categories</label>
+        <app-category-slider [categories]="categories" [selectedCategoryId]="selectedCategoryId"
+          (categorySelected)="onCategorySelected($event)">
+        </app-category-slider>
+      </div>
+
+      <mat-divider class="filter-divider"></mat-divider>
+
+      <div class="filter-group">
+        <label class="group-label">Brands</label>
+        <app-brand-slider [brands]="brands" [selectedBrandId]="selectedBrandId"
+          (brandSelected)="onBrandSelected($event)">
+        </app-brand-slider>
+      </div>
     </aside>
 
-    <!-- Products Grid -->
     <main class="products-main">
-      <!-- Loading State -->
-      @if (isLoading()) {
-        <div class="loading-state">
-          <mat-spinner diameter="50"></mat-spinner>
-          <p>Loading products...</p>
-        </div>
-      }
+      <header class="list-header">
+        <h1 class="page-title">{{ pageTitle }}</h1>
 
-      <!-- Error State -->
-      @if (error && !isLoading()) {
-        <div class="error-state">
-          <mat-icon class="error-icon">error_outline</mat-icon>
-          <h3>Oops! Something went wrong</h3>
-          <p>{{ error }}</p>
-          <button mat-raised-button color="primary" (click)="loadProducts()">
-            <mat-icon>refresh</mat-icon>
-            Try Again
+        <div class="header-actions">
+
+          @if (hasActiveFilters) {
+          <button mat-stroked-button color="warn" (click)="clearFiltersList()" class="main-clear-btn">
+            <mat-icon>filter_alt_off</mat-icon>
+            Clear Filters
           </button>
-        </div>
-      }
-
-      <!-- Empty State -->
-      @if (!isLoading() && !error && products.length === 0) {
-        <div class="empty-state">
-          <mat-icon class="empty-icon">inventory_2</mat-icon>
-          <h3>No products found</h3>
-          <p>Try adjusting your filters or search terms</p>
-          <button mat-raised-button color="primary" (click)="clearFiltersList()">
-            View All Products
-          </button>
-        </div>
-      }
-
-      <!-- Products Grid -->
-      @if (!isLoading() && !error && products.length > 0) {
-        <div class="products-grid">
-          @for (product of paginatedProducts; track product.id) {
-            <div class="product-card-wrapper">
-              <app-product-card 
-                [product]="product"
-                (addToCart)="onAddToCart($event)"
-                (addToWishlist)="onToggleWishlist($event)">
-              </app-product-card>
-            </div>
           }
-        </div>
 
-        <!-- Pagination -->
-        @if (totalProducts > pageSize) {
-          <mat-paginator 
-            [length]="totalProducts"
-            [pageSize]="pageSize"
-            [pageIndex]="currentPage"
-            [pageSizeOptions]="pageSizeOptions"
-            (page)="onPageChange($event)"
-            aria-label="Select page">
-          </mat-paginator>
+          <span class="product-count" *ngIf="!isLoading()">
+            {{ products.length }} Results
+          </span>
+        </div>
+      </header>
+
+      @if (isLoading()) {
+      <div class="state-container loading-state">
+        <mat-spinner diameter="40"></mat-spinner>
+      </div>
+      }
+
+      @if (!isLoading() && !error && products.length > 0) {
+      <div class="products-grid">
+        @for (product of paginatedProducts; track product.id) {
+        <div class="product-card-wrapper">
+
+          <app-product-card [product]="product" (addToCart)="onAddToCart($event)"
+            (addToWishlist)="onToggleWishlist($event)">
+          </app-product-card>
+
+        </div>
         }
+      </div>
+
+      <mat-paginator *ngIf="totalProducts > pageSize" [length]="totalProducts" [pageSize]="pageSize"
+        [pageSizeOptions]="pageSizeOptions" (page)="onPageChange($event)">
+      </mat-paginator>
       }
     </main>
   </div>

@@ -6,12 +6,14 @@ import {
   DailyOrdersVM,
   RecentOrderVM
 } from '../services/admin-api.service';
+import { MaterialModule } from '../../../shared/material/material-module';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule],
-  templateUrl: './dashboard.html'
+  imports: [CommonModule, MaterialModule],
+  templateUrl: './dashboard.html',
+  styleUrl: './dashboard.scss'
 })
 export class Dashboard implements OnInit {
 

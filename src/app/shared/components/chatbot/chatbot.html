@@ -1,89 +1,77 @@
-<!-- Floating Button -->
-<button
-  (click)="toggleChat()"
-  class="fixed bottom-6 right-6 w-14 h-14 rounded-full 
-         bg-gradient-to-r from-indigo-500 to-purple-600
-         shadow-xl flex items-center justify-center
-         text-white hover:scale-105 transition z-50">
+<button (click)="toggleChat()" class="chat-toggle-btn" [class.active]="opened">
   <mat-icon>{{ opened ? 'close' : 'smart_toy' }}</mat-icon>
 </button>
 
+@if (opened) {
+<div class="chat-window">
 
-<!-- Chat Window -->
-<div *ngIf="opened"
-     class="fixed bottom-24 right-6 w-[390px] bg-white 
-            rounded-xl border shadow-2xl z-50 flex flex-col">
-
-  <!-- Header -->
-  <div class="bg-gradient-to-r from-indigo-600 to-purple-600
-              text-white p-3 flex items-center gap-2">
-    <mat-icon>smart_toy</mat-icon>
-    <span class="font-semibold">AI Product Assistant</span>
+  <div class="chat-header">
+    <div class="header-title">
+      <mat-icon class="header-icon">smart_toy</mat-icon>
+      <span>AI Assistant</span>
+    </div>
   </div>
 
+  <div class="chat-body">
 
-  <!-- Body -->
-  <div class="p-3 space-y-3 max-h-[430px] overflow-y-auto">
+    @if (tableHtml) {
+    <div class="html-content" [innerHTML]="tableHtml"></div>
+    }
 
-    <!-- ✅ TABLE FIRST -->
-    <div *ngIf="tableHtml" [innerHTML]="tableHtml"></div>
-
-
-    <!-- ✅ CLEAN TEXT ANSWER -->
-    <div *ngIf="cleanAnswer"
-         class="bg-indigo-50 border rounded p-3 text-sm leading-relaxed">
+    @if (cleanAnswer) {
+    <div class="message-bubble ai-message">
       {{ cleanAnswer }}
     </div>
+    }
 
-
-    <!-- ✅ STRUCTURED PRODUCTS -->
-    <div *ngIf="result?.products?.length" class="mt-2">
-
-      <table class="w-full text-xs border rounded">
-        <thead class="bg-slate-700 text-white">
+    @if (result?.products?.length) {
+    <div class="products-table-container">
+      <table class="products-table">
+        <thead>
           <tr>
-            <th class="p-2">Title</th>
-            <th class="p-2">Brand</th>
-            <th class="p-2">Category</th>
-            <th class="p-2 text-right">Price</th>
+            <th>Title</th>
+            <th>Brand</th>
+            <th>Category</th>
+            <th class="text-right">Price</th>
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let p of result.products"
-              class="hover:bg-indigo-50">
-            <td class="border p-2 font-medium">{{ p.title }}</td>
-            <td class="border p-2">{{ p.brandName }}</td>
-            <td class="border p-2">{{ p.categoryName }}</td>
-            <td class="border p-2 text-indigo-600 text-right">
+          @for (p of result.products; track p) {
+          <tr>
+            <td class="font-medium">{{ p.title }}</td>
+            <td>{{ p.brandName }}</td>
+            <td>{{ p.categoryName }}</td>
+            <td class="text-right price">
               {{ p.price ? ('$' + p.price) : 'N/A' }}
             </td>
           </tr>
+          }
         </tbody>
       </table>
-
     </div>
+    }
 
-
-    <!-- Loading -->
-    <div *ngIf="loading" class="flex justify-center py-4">
-      <mat-spinner diameter="26"></mat-spinner>
+    @if (loading) {
+    <div class="loading-state">
+      <mat-spinner diameter="24"></mat-spinner>
+      <span>Thinking...</span>
     </div>
+    }
 
+    @if (!loading && !cleanAnswer && !tableHtml && !result?.products?.length) {
+    <div class="welcome-state">
+      <p>How can I help you explore our collection today?</p>
+    </div>
+    }
   </div>
 
+  <div class="chat-footer">
+    <input [(ngModel)]="message" placeholder="Ask about products..." class="chat-input" (keydown.enter)="send()">
 
-  <!-- Input -->
-  <div class="border-t p-2 flex gap-2">
-    <input
-      [(ngModel)]="message"
-      placeholder="Ask about products, brands..."
-      class="flex-1 px-3 py-2 rounded-md border text-sm
-             focus:ring focus:ring-indigo-300"
-      (keydown.enter)="send()">
-
-    <button mat-mini-fab color="primary" (click)="send()">
-      <mat-icon>send</mat-icon>
+    <button mat-icon-button class="send-btn" (click)="send()" [disabled]="!message">
+      <mat-icon>arrow_upward</mat-icon>
     </button>
   </div>
 
 </div>
+}

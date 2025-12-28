@@ -1,0 +1,215 @@
+/* --- Earthy Minimalist Variables --- */
+$bg-page: #E6E5DF; // Warm Bone
+$bg-card: #FFFFFF; // White
+$text-primary: #2C2C2C; // Charcoal
+$text-secondary: #57534E; // Warm Grey
+$accent: #5D5C52; // Olive
+$border: #D6D3D1; // Stone
+$hover-bg: #F5F5F4; // Light Stone
+
+/* --- Page Layout --- */
+.about-page {
+    min-height: calc(100vh - 80px);
+    background-color: $bg-page;
+    padding: 60px 16px;
+    font-family: 'Helvetica Neue', sans-serif;
+    color: $text-primary;
+}
+
+.container {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+/* --- Hero Section --- */
+.hero-section {
+    text-align: center;
+    margin-bottom: 60px;
+
+    .hero-title {
+        font-family: 'Garamond', serif;
+        font-size: 48px;
+        font-weight: 500;
+        color: $text-primary;
+        margin: 0 0 24px 0;
+    }
+
+    .hero-desc {
+        font-size: 18px;
+        line-height: 1.6;
+        color: $text-secondary;
+        max-width: 700px;
+        margin: 0 auto 40px auto;
+    }
+
+    .hero-divider {
+        width: 100px;
+        margin: 0 auto;
+        border-top-color: $accent;
+        border-top-width: 2px;
+    }
+}
+
+/* --- Info Grid --- */
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 24px;
+    margin-bottom: 80px;
+}
+
+.info-card {
+    background-color: $bg-card;
+    border: 1px solid $border;
+    padding: 32px;
+    text-align: center;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    border-radius: 4px;
+    transition: transform 0.2s ease;
+
+    &:hover {
+        transform: translateY(-4px);
+        border-color: $accent;
+    }
+
+    .icon-box {
+        width: 56px;
+        height: 56px;
+        background-color: $hover-bg;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 20px auto;
+        color: $accent;
+
+        mat-icon {
+            font-size: 28px;
+            width: 28px;
+            height: 28px;
+        }
+    }
+
+    h3 {
+        font-family: 'Garamond', serif;
+        font-size: 22px;
+        margin: 0 0 12px 0;
+        color: $text-primary;
+    }
+
+    p {
+        color: $text-secondary;
+        line-height: 1.5;
+        margin: 0;
+    }
+}
+
+/* --- Team Section --- */
+.team-section {
+    margin-bottom: 80px;
+
+    .section-title {
+        text-align: center;
+        font-family: 'Garamond', serif;
+        font-size: 32px;
+        margin: 0 0 40px 0;
+        color: $text-primary;
+    }
+}
+
+.team-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 24px;
+}
+
+.team-card {
+    background-color: $bg-card; // White background (No gradients)
+    border: 1px solid $border;
+    padding: 24px;
+    text-align: center;
+    box-shadow: none;
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    .member-avatar {
+        width: 64px;
+        height: 64px;
+        background-color: $accent; // Olive background
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 16px;
+
+        mat-icon {
+            font-size: 32px;
+            width: 32px;
+            height: 32px;
+        }
+    }
+
+    .member-name {
+        font-size: 16px;
+        font-weight: 600;
+        margin: 0 0 4px 0;
+        color: $text-primary;
+    }
+
+    .member-role {
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: $text-secondary;
+    }
+}
+
+/* --- Footer Contact --- */
+.contact-footer {
+    text-align: center;
+    max-width: 600px;
+    margin: 0 auto;
+
+    mat-divider {
+        margin-bottom: 32px;
+        border-top-color: $border;
+    }
+
+    .contact-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+
+        .contact-label {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: $text-secondary;
+            margin: 0;
+        }
+
+        .contact-email {
+            font-family: 'Garamond', serif;
+            font-size: 24px;
+            color: $text-primary;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: color 0.2s;
+
+            mat-icon {
+                color: $accent;
+            }
+
+            &:hover {
+                color: $accent;
+                text-decoration: underline;
+            }
+        }
+    }
+}

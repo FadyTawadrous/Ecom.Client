@@ -7,6 +7,7 @@ import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
+import { MaterialModule } from '../../../shared/material/material-module';
 
 import { AdminApiService } from '../services/admin-api.service';
 
@@ -22,7 +23,8 @@ import { AdminApiService } from '../services/admin-api.service';
     MatPaginatorModule,
     MatFormFieldModule,
     MatInputModule,
-    MatButtonModule
+    MatButtonModule,
+    MaterialModule
   ]
 })
 export class AdminUsersComponent implements OnInit {

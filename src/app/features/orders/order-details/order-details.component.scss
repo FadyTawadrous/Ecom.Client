@@ -1,0 +1,271 @@
+/* --- Earthy Minimalist Variables --- */
+$bg-page: #E6E5DF; // Warm Bone
+$bg-card: #FFFFFF; // White
+$text-primary: #2C2C2C; // Charcoal
+$text-secondary: #57534E; // Warm Grey
+$accent: #5D5C52; // Olive
+$border: #D6D3D1; // Stone
+$hover-bg: #F5F5F4; // Light Stone
+
+/* --- Page Layout --- */
+.order-details-page {
+    min-height: calc(100vh - 80px);
+    background-color: $bg-page;
+    padding: 40px 16px;
+    font-family: 'Helvetica Neue', sans-serif;
+    color: $text-primary;
+}
+
+.container {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+/* --- Header --- */
+.page-header {
+    margin-bottom: 32px;
+    padding-left: 16px;
+    border-left: 4px solid $accent;
+
+    .page-title {
+        font-family: 'Garamond', serif;
+        font-size: 32px;
+        font-weight: 500;
+        margin: 0 0 8px 0;
+        color: $text-primary;
+    }
+
+    .page-subtitle {
+        font-size: 14px;
+        color: $text-secondary;
+        margin: 0;
+    }
+}
+
+/* --- Stepper Wrapper --- */
+.stepper-wrapper {
+    background-color: $bg-card;
+    border: 1px solid $border;
+    border-radius: 4px;
+    padding: 24px;
+    margin-bottom: 32px;
+    mix-blend-mode: multiply;
+    // Ensure stepper text fits the theme if needed
+}
+
+/* --- Main Card --- */
+.order-card {
+    background-color: $bg-card;
+    border: 1px solid $border;
+    border-radius: 4px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    padding: 0; // Reset padding
+}
+
+.card-content {
+    padding: 32px;
+}
+
+/* --- Card Header --- */
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+    gap: 16px;
+
+    .header-left {
+        display: flex;
+        gap: 16px;
+
+        .icon-box {
+            width: 48px;
+            height: 48px;
+            background-color: $accent;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #E6E5DF;
+        }
+
+        .title-group {
+            h2 {
+                font-family: 'Garamond', serif;
+                font-size: 24px;
+                font-weight: 600;
+                margin: 0 0 4px 0;
+                color: $text-primary;
+            }
+
+            .date {
+                font-size: 13px;
+                color: $text-secondary;
+            }
+        }
+    }
+}
+
+/* --- Status Badge --- */
+.status-badge {
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border: 1px solid transparent;
+
+    &.status-pending {
+        background: #F3F4F6;
+        color: #6B7280;
+        border-color: #E5E7EB;
+    }
+
+    &.status-processing {
+        background: #EFF6FF;
+        color: #3B82F6;
+        border-color: #DBEAFE;
+    }
+
+    &.status-shipped {
+        background: #FEF3C7;
+        color: #D97706;
+        border-color: #FDE68A;
+    }
+
+    &.status-delivered {
+        background: #ECFDF5;
+        color: #059669;
+        border-color: #A7F3D0;
+    }
+
+    &.status-cancelled {
+        background: #FEF2F2;
+        color: #DC2626;
+        border-color: #FECACA;
+    }
+}
+
+/* --- Info Grid --- */
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 24px;
+    margin: 32px 0;
+    padding: 24px;
+    background-color: #FAFAFA; // Light grey block
+    border: 1px solid $border;
+
+    .info-item {
+        display: flex;
+        flex-direction: column;
+
+        .label {
+            font-size: 11px;
+            text-transform: uppercase;
+            color: $text-secondary;
+            margin-bottom: 8px;
+            letter-spacing: 0.5px;
+        }
+
+        .value {
+            font-size: 16px;
+            font-weight: 500;
+            color: $text-primary;
+
+            &.tracking {
+                font-family: monospace;
+            }
+        }
+    }
+}
+
+/* --- Items Table --- */
+.section-title {
+    font-family: 'Garamond', serif;
+    font-size: 20px;
+    margin-bottom: 16px;
+    color: $text-primary;
+}
+
+.table-container {
+    border: 1px solid $border;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.items-table {
+    width: 100%;
+
+    th.mat-mdc-header-cell {
+        background-color: #F5F5F4;
+        color: $text-secondary;
+        font-size: 12px;
+        text-transform: uppercase;
+        font-weight: 600;
+        padding: 16px;
+        border-bottom: 1px solid $border;
+    }
+
+    td.mat-mdc-cell {
+        padding: 16px;
+        color: $text-primary;
+        border-bottom: 1px solid #f3f4f6;
+        font-size: 14px;
+
+        &.font-medium {
+            font-weight: 500;
+        }
+    }
+
+    .col-total {
+        text-align: right;
+        font-weight: 600;
+        color: $accent;
+    }
+
+    .col-qty {
+        color: $text-secondary;
+    }
+}
+
+/* --- Footer (Total) --- */
+.order-footer {
+    margin-top: 32px;
+    display: flex;
+    justify-content: flex-end;
+
+    .total-summary {
+        width: 300px;
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            font-size: 14px;
+            color: $text-secondary;
+
+            .free {
+                color: #059669;
+                font-weight: 600;
+            }
+
+            &.total {
+                margin-top: 16px;
+                padding-top: 16px;
+                border-top: 1px solid $border;
+                font-size: 18px;
+                font-weight: 700;
+                color: $text-primary;
+
+                .amount {
+                    color: $accent;
+                    font-family: 'Garamond', serif;
+                    font-size: 24px;
+                }
+            }
+        }
+    }
+}

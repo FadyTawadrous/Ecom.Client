@@ -19,7 +19,7 @@ import { MatButtonModule } from '@angular/material/button';
       </button>
 
       <button mat-stroked-button color="accent"
-              routerLink="/home">
+              routerLink="/shopping">
         Continue Shopping
       </button>
     </mat-card>

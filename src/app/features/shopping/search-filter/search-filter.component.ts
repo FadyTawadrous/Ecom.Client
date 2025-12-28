@@ -48,7 +48,7 @@ export class SearchFilterComponent implements OnInit {
     { min: 1000, max: 1000000000, label: 'Over $1000' }
   ];
 
-  ratingOptions = [4.5, 4, 3.5, 3];
+  ratingOptions = [4, 3, 2, 1];
 
   sortOptions = [
     { value: 'latest', label: 'Newest First' },

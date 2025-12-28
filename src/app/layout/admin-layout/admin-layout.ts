@@ -4,6 +4,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSidenavModule } from '@angular/material/sidenav';
+import { MaterialModule } from '../../shared/material/material-module';
 
 @Component({
   selector: 'app-admin-layout',
@@ -14,8 +15,10 @@ import { MatSidenavModule } from '@angular/material/sidenav';
     MatToolbarModule,
     MatButtonModule,
     MatIconModule,
-    MatSidenavModule
+    MatSidenavModule,
+    MaterialModule
   ],
-  templateUrl: './admin-layout.html'
+  templateUrl: './admin-layout.html',
+  styleUrl: './admin-layout.scss'
 })
 export class AdminLayout {}

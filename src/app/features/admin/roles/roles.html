@@ -1,31 +1,59 @@
-<h2 class="text-2xl font-bold mb-6">Roles Management</h2>
+<div class="admin-page">
 
-<div class="bg-white shadow rounded p-6 mb-6 space-y-4">
-
-  <mat-form-field class="w-full">
-    <input matInput placeholder="New Role Name" [(ngModel)]="newRole" />
-  </mat-form-field>
-
-  <button mat-flat-button color="primary" (click)="createRole()">
-    Add Role
-  </button>
-
-</div>
-
-<div class="bg-white shadow rounded p-6">
-
-  <h3 class="text-lg font-semibold mb-3">Existing Roles</h3>
-
-  <div *ngFor="let role of roles" class="flex items-center justify-between border-b py-3">
-
-    <span class="font-semibold text-gray-800">{{ role.name }}</span>
-
-    <button mat-stroked-button color="warn"
-            [disabled]="role.name === 'Admin' || role.name === 'Customer'"
-            (click)="deleteRole(role.name)">
-      Delete
-    </button>
-
+  <div class="page-header">
+    <h2 class="page-title">Roles Management</h2>
+    <p class="page-subtitle">Define user access levels and permissions.</p>
   </div>
 
+  <div class="content-grid">
+
+    <mat-card class="form-card">
+      <div class="card-header">
+        <h3>Add New Role</h3>
+      </div>
+
+      <div class="form-body">
+        <p class="form-hint">Enter a unique name for the new role.</p>
+
+        <mat-form-field appearance="outline" class="clean-field">
+          <mat-label>Role Name</mat-label>
+          <input matInput [(ngModel)]="newRole" placeholder="e.g. Moderator">
+          <mat-icon matSuffix>badge</mat-icon>
+        </mat-form-field>
+      </div>
+
+      <div class="form-actions">
+        <button mat-flat-button class="save-btn" (click)="createRole()" [disabled]="!newRole">
+          Add Role
+        </button>
+      </div>
+    </mat-card>
+
+    <mat-card class="list-card">
+      <div class="card-header">
+        <h3>Existing Roles</h3>
+      </div>
+
+      <div class="roles-list">
+        @for (role of roles; track role.name) {
+        <div class="role-item">
+          <div class="role-info">
+            <div class="icon-box">
+              <mat-icon>shield</mat-icon>
+            </div>
+            <span class="role-name">{{ role.name }}</span>
+          </div>
+
+          <div class="role-actions">
+            <button mat-stroked-button class="delete-btn" [disabled]="role.name === 'Admin' || role.name === 'Customer'"
+              (click)="deleteRole(role.name)">
+              <mat-icon>delete_outline</mat-icon> Delete
+            </button>
+          </div>
+        </div>
+        }
+      </div>
+    </mat-card>
+
+  </div>
 </div>

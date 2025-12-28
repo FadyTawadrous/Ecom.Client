@@ -1,107 +1,226 @@
-/* --- product-card.component.scss - DARK MODE --- */
+/* --- Variables --- */
+$bg-card: transparent;   // Transparent to show page color
+$bg-white: #ffffff;
+$text-primary: #1F2937;
+$text-secondary: #4B5563;
+$accent: #78716C; // Blue
+$accent-hover: #44403C; // Darker Blue
+$red-badge: #5D5C52; // Red
+$star-color: #f59e0b; // Amber
+$border: #e5e7eb;
+$btn-border: #78716C;    // Stone-500
+$btn-hover: #44403C;     // Darker stone
+$sale-bg: #5D5C52;       // Olive sale badge
 
 .product-card {
-  width: 280px;
-  margin: 16px;
-  transition: transform 0.3s ease;
+  width: 100%;
+  height: 100%; // Fill wrapper
+  background-color: $bg-card;
+  border: none;
+  border-radius: 0px;
+  box-shadow: none !important; // Flat look
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  display: flex;
+  flex-direction: column;
 
-  // Dark Mode Card Base
-  background-color: #1f2937 !important; /* gray-800 */
-  border: 1px solid #374151; /* gray-700 border */
-  
+  /* HOVER EFFECT: Lift card and shadow */
   &:hover {
     transform: translateY(-4px);
-    // Darker shadow for better visibility on dark background
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4); 
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+    border-color: transparent;
+
+    // Zoom image slightly
+    .product-image {
+      transform: scale(1.05);
+      opacity: 0.9;
+    }
   }
 }
 
-.product-image {
-  height: 200px;
-  object-fit: cover;
-  background-color: #374151; // gray-700 fallback color
+/* --- Image Section --- */
+.image-container {
+  position: relative;
+  width: 100%;
+  padding-top: 100%; // 1:1 Aspect Ratio (Square)
+  background-color: #F5F5F4; // Light gray bg for transparent images
+  overflow: hidden;
+  margin-bottom: 10px;
+
+  .product-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover; // Or 'contain' depending on your image quality
+    transition: transform 0.5s ease;
+    mix-blend-mode: multiply;
+  }
 }
 
-.product-content {
-  padding: 16px;
+/* --- Overlays (Badge & Wishlist) --- */
+.discount-badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background-color: $sale-bg;
+  color: white;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 700;
+  padding: 4px 8px;
+  border-radius: 0px;
+  z-index: 2;
+}
+
+.wishlist-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background-color: transparent;
+  width: 36px;
+  height: 36px;
+  line-height: 36px;
+  border-radius: 50%;
+  z-index: 2;
+  transition: all 0.2s;
+
+  // Center icon manually since we might override Mat-Icon-Button sizing
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  mat-icon {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+    color: $text-secondary;
+    transition: color 0.2s;
+  }
+
+  &:hover {
+    background-color: rgba(255,255,255,0.5);
+    // transform: scale(1.1);
+    mat-icon { color: $text-secondary; }
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  }
+
+  &.active mat-icon {
+    color: #b91c1c; // Red heart when active
+  }
+}
+
+/* --- Content Section --- */
+.card-content {
+  padding: 0px;
+  margin-bottom: 16px;
+  flex: 1; // Pushes actions to bottom
+  display: flex;
+  flex-direction: column;
+}
+
+.rating-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+
+  .stars {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    background: transparent; // Very light yellow bg
+    padding: 0;
+    border-radius: 0px;
+
+    .star-icon {
+      font-size: 14px;
+      width: 14px;
+      height: 14px;
+      color: #D4D4D8;
+    }
+
+    .rating-val {
+      font-size: 12px;
+      font-weight: 400;
+      color: $text-secondary; // Dark amber text
+    }
+  }
+
+  .brand-text {
+    font-size: 12px;
+    color: $text-secondary;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: none; // Hide brand for cleaner look
+  }
 }
 
 .product-title {
-  margin: 0 0 8px;
-  font-size: 16px;
-  font-weight: 500;
-  color: white; /* Changed from #333 to white */
-  height: 40px;
-  overflow: hidden;
+  margin: 0 0 4px 0;
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 1.4;
+  color: $text-primary;
+  font-family: 'Helvetica Neue', sans-serif;
+
+  // Truncate to 2 lines
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
-.product-price {
+.price-row {
   display: flex;
-  align-items: center;
+  align-items: baseline;
   gap: 8px;
-  margin-bottom: 8px;
-}
+  margin-top: auto; // Pushes to bottom of content area if title is short
 
-.current-price {
-  font-size: 18px;
-  font-weight: bold;
-  color: white; /* Changed from #333 to white */
-}
-
-.discount {
-  background-color: #f87171; /* red-400 (Brighter for dark mode) */
-  color: white;
-  padding: 2px 6px;
-  border-radius: 4px;
-  font-size: 12px;
-}
-
-.product-rating {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  // Use a softer gold/yellow accent for dark mode
-  color: #fcd34d; 
-  
-  mat-icon {
-    font-size: 18px;
-    width: 18px;
-    height: 18px;
-    color: #fcd34d !important; /* Force star color */
+  .current-price {
+    font-size: 15px;
+    font-weight: 500;
+    color: $text-primary;
   }
 
-  // Text rating next to star
-  span {
-    color: #9ca3af; /* gray-400 */
-    font-size: 14px;
+  .original-price {
+    font-size: 13px;
+    text-decoration: line-through;
+    color: $text-secondary;
+    margin-left: 8px;
   }
 }
 
-.product-actions {
-  display: flex;
-  justify-content: space-between;
-  padding: 8px 16px 16px;
-}
+/* --- Actions Section --- */
+.card-actions {
+  padding: 0;
+  margin-top: auto;
 
-.add-to-cart-btn {
-  flex: 1;
-  margin-right: 8px;
+  .add-to-cart-btn {
+    width: 100%;
+    border-radius: 0px;
+    height: 40px;
+    background-color: transparent;
+    color: $text-secondary;
+    box-shadow: none;
+    border: 1px solid $btn-border;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 500;
 
-  // Override Primary Button Style for Dark Mode
-  ::ng-deep &.mat-mdc-raised-button.mat-primary {
-    background-color: #60a5fa !important; /* blue-400 */
-    color: #111827 !important; /* Dark text for high contrast */
+    // Icon styling inside button
+    mat-icon {
+      display: none;
+    }
+
+    &:hover {
+      background-color: rgba(0,0,0,0.05); // Subtle darken
+      border-color: $text-primary;
+    }
   }
-}
-
-.wishlist-btn:hover {
-  transform: scale(1.1);
-}
-
-// Override Wishlist Button Color
-::ng-deep .wishlist-btn.mat-warn {
-    color: #f87171 !important; /* red-400 for warn/favorite icon */
 }

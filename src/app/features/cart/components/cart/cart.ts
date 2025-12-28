@@ -2,6 +2,7 @@ import { Component, OnInit, inject, computed } from '@angular/core';
 import { CommonModule, CurrencyPipe } from '@angular/common';
 import { Router } from '@angular/router';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { RouterLink } from '@angular/router';
 
 import { CartService } from '../../../../core/services/cart-service';
 import { UiService } from '../../../../core/services/ui-service';
@@ -22,6 +23,7 @@ import { ConfirmDialog } from '../../../../shared/components/confirm-dialog/conf
     MaterialModule,
     SharedModule,
     MatDialogModule,
+    RouterLink
   ],
   templateUrl: './cart.html',
   styleUrl: './cart.scss'

@@ -9,6 +9,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
+import { MaterialModule } from '../../../shared/material/material-module';
 
 @Component({
   selector: 'app-products',
@@ -17,9 +18,11 @@ import { MatSelectModule } from '@angular/material/select';
     CommonModule, FormsModule,
     MatFormFieldModule, MatInputModule,
     MatButtonModule, MatTableModule,
-    MatIconModule, MatSelectModule
+    MatIconModule, MatSelectModule,
+    MaterialModule
   ],
-  templateUrl: './products.html'
+  templateUrl: './products.html',
+  styleUrl: './products.scss'
 })
 export class Products implements OnInit {
 

@@ -1,137 +1,148 @@
-<h2 class="text-2xl font-bold mb-6">Orders Management</h2>
+<div class="admin-page">
 
-<!-- ================= FILTERS ================= -->
-<div class="bg-white shadow p-4 rounded mb-4 flex gap-4 items-center flex-wrap">
-
-  <input type="text" placeholder="Order Number"
-         class="border p-2 rounded w-48"
-         [(ngModel)]="filters.orderNumber"
-         (input)="applyFilters()"/>
-
-  <!--<input type="text" placeholder="User (email / id)"
-         class="border p-2 rounded w-48"
-         [(ngModel)]="filters.user"
-         (input)="applyFilters()"/>-->
-
-  <select class="border p-2 rounded w-44"
-          [(ngModel)]="filters.status"
-          (change)="applyFilters()">
-    <option value="">All Status</option>
-    <option *ngFor="let s of statusList" [value]="s">{{ s }}</option>
-  </select>
-
-  <button (click)="resetFilters()" class="bg-gray-500 text-white px-3 py-1 rounded">
-    Reset
-  </button>
-
-</div>
-
-
-<div class="grid grid-cols-3 gap-4">
-
-  <!-- ================= TABLE ================= -->
-  <div class="col-span-2 bg-white shadow rounded p-4">
-
-    <div *ngIf="loading" class="text-center p-6 text-gray-500">
-      Loading orders...
-    </div>
-
-    <table *ngIf="!loading" class="w-full border text-sm">
-
-      <thead class="bg-gray-200">
-        <tr>
-          <th class="p-2">#</th>
-          <!--<th>User</th>-->
-          <th>Total</th>
-          <th>Status</th>
-          <th class="text-center">Actions</th>
-        </tr>
-      </thead>
-
-      <tbody>
-
-        <tr *ngFor="let o of orders" class="border-b hover:bg-gray-50">
-
-          <td class="p-2">{{ o.id }}</td>
-
-          <!--<td>
-            {{ o.userName || o.email || o.appUserId || 'Guest' }}
-          </td>-->
-
-          <td>{{ o.totalAmount | currency }}</td>
-
-          <td>
-            <span class="font-semibold"
-              [ngClass]="{
-                'text-yellow-600': o.status === 'Pending',
-                'text-blue-600': o.status === 'Processing',
-                'text-purple-600': o.status === 'Shipped',
-                'text-green-600': o.status === 'Delivered',
-                'text-red-600': o.status === 'Cancelled'
-              }">
-              {{ o.status }}
-            </span>
-          </td>
-
-          <td class="flex gap-1 justify-center items-center">
-
-            <button (click)="viewOrder(o.id)"
-              class="bg-gray-300 px-2 rounded">
-              View
-            </button>
-
-            <select (change)="onStatusChange(o, $event)"
-                    class="border rounded">
-
-              <option value="">Change</option>
-              <option *ngFor="let s of statusList" [value]="s">{{ s }}</option>
-
-            </select>
-
-            <button (click)="cancelOrder(o.id)"
-              class="bg-red-500 text-white px-2 rounded">
-              Cancel
-            </button>
-
-          </td>
-        </tr>
-
-      </tbody>
-    </table>
-
+  <div class="page-header">
+    <h2 class="page-title">Orders Management</h2>
+    <p class="page-subtitle">Track, update, and manage customer orders.</p>
   </div>
 
+  <div class="orders-grid">
 
-  <!-- ================= DETAILS ================= -->
-  <div class="bg-white shadow rounded p-4">
+    <div class="main-panel">
 
-    <h3 class="font-bold mb-3">Order Details</h3>
+      <mat-card class="filter-card">
+        <div class="filter-row">
 
-    <div *ngIf="!selectedOrder" class="text-gray-400">
-      Click an order to view details
+          <mat-form-field appearance="outline" class="clean-field">
+            <mat-label>Order Number</mat-label>
+            <input matInput [(ngModel)]="filters.orderNumber" (input)="applyFilters()">
+            <mat-icon matSuffix>search</mat-icon>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="clean-field">
+            <mat-label>Status</mat-label>
+            <mat-select [(ngModel)]="filters.status" (selectionChange)="applyFilters()">
+              <mat-option value="">All Status</mat-option>
+              @for (s of statusList; track s) {
+              <mat-option [value]="s">{{ s }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+
+          <button mat-stroked-button class="reset-btn" (click)="resetFilters()">
+            Reset
+          </button>
+
+        </div>
+      </mat-card>
+
+      <mat-card class="table-card">
+
+        @if (loading) {
+        <div class="loading-state">
+          <mat-spinner diameter="40"></mat-spinner>
+          <p>Loading orders...</p>
+        </div>
+        } @else {
+        <div class="table-container">
+          <table class="custom-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Total</th>
+                <th>Status</th>
+                <th class="text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (o of orders; track o.id) {
+              <tr [class.selected]="selectedOrder?.id === o.id" (click)="viewOrder(o.id)">
+                <td class="font-medium">#{{ o.id }}</td>
+                <td class="font-medium">{{ o.totalAmount | currency }}</td>
+                <td>
+                  <span class="status-badge" [ngClass]="o.status.toLowerCase()">
+                    {{ o.status }}
+                  </span>
+                </td>
+                <td class="actions-cell">
+
+                  <div class="status-select-wrapper" (click)="$event.stopPropagation()">
+                    <select (change)="onStatusChange(o, $event)" class="native-select">
+                      <option value="" disabled selected>Update Status</option>
+                      @for (s of statusList; track s) {
+                      <option [value]="s">{{ s }}</option>
+                      }
+                    </select>
+                  </div>
+
+                  <button mat-icon-button class="cancel-btn" (click)="cancelOrder(o.id); $event.stopPropagation()"
+                    matTooltip="Cancel Order">
+                    <mat-icon>cancel</mat-icon>
+                  </button>
+
+                </td>
+              </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+        }
+
+      </mat-card>
     </div>
 
-    <div *ngIf="selectedOrder">
-
-      <p><strong>ID:</strong> {{ selectedOrder.id }}</p>
-      <p><strong>Number:</strong> {{ selectedOrder.orderNumber }}</p>
-      <!--<p><strong>User:</strong> {{ selectedOrder.userName || selectedOrder.email }}</p>-->
-      <p><strong>Status:</strong> {{ selectedOrder.status }}</p>
-      <p><strong>Total:</strong> {{ selectedOrder.totalAmount | currency }}</p>
-
-      <hr class="my-3">
-
-      <div *ngFor="let item of selectedOrder.items" class="text-sm">
-
-        {{ item.productTitle }} × {{ item.quantity }}
-        <span class="float-right text-gray-600">
-          {{ item.totalPrice | currency }}
-        </span>
-
+    <mat-card class="details-card">
+      <div class="card-header">
+        <h3>Order Details</h3>
       </div>
 
-    </div>
+      <div class="details-body">
+
+        @if (!selectedOrder) {
+        <div class="empty-selection">
+          <mat-icon>touch_app</mat-icon>
+          <p>Select an order to view full details.</p>
+        </div>
+        } @else {
+        <div class="order-summary">
+
+          <div class="summary-row">
+            <span class="label">Order ID</span>
+            <span class="value">#{{ selectedOrder.id }}</span>
+          </div>
+
+          <div class="summary-row">
+            <span class="label">Status</span>
+            <span class="status-badge" [ngClass]="selectedOrder.status.toLowerCase()">
+              {{ selectedOrder.status }}
+            </span>
+          </div>
+
+          <div class="summary-row">
+            <span class="label">Total Amount</span>
+            <span class="value price">{{ selectedOrder.totalAmount | currency }}</span>
+          </div>
+
+          <mat-divider class="my-4"></mat-divider>
+
+          <h4 class="items-title">Items ({{ selectedOrder.items?.length || 0 }})</h4>
+
+          <div class="items-list">
+            @for (item of selectedOrder.items; track item.productId) {
+            <div class="order-item">
+              <div class="item-info">
+                <span class="item-name">{{ item.productTitle }}</span>
+                <span class="item-qty">Qty: {{ item.quantity }}</span>
+              </div>
+              <span class="item-price">{{ item.totalPrice | currency }}</span>
+            </div>
+            }
+          </div>
+
+        </div>
+        }
+
+      </div>
+    </mat-card>
 
   </div>
-
 </div>

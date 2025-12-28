@@ -2,11 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AdminApiService } from '../services/admin-api.service';
 import { FormsModule } from '@angular/forms';
+import { MaterialModule } from '../../../shared/material/material-module';
 
 @Component({
   selector: 'app-orders',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, MaterialModule],
   templateUrl: './orders.html',
   styleUrl: './orders.scss'
 })

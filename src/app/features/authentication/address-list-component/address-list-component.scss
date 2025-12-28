@@ -1,27 +1,263 @@
-/* Ensure icons inside our custom circle buttons are centered */
-button.mat-mdc-icon-button {
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
+/* --- Earthy Minimalist Variables --- */
+$bg-page: #E6E5DF; // Warm Bone
+$bg-card: #FFFFFF; // White
+$text-primary: #2C2C2C; // Charcoal
+$text-secondary: #57534E; // Warm Grey
+$accent: #5D5C52; // Olive
+$border: #D6D3D1; // Stone
+$error: #991b1b; // Muted Red
+$hover-bg: #F5F5F4; // Light Stone
 
-    .mat-icon {
-        line-height: 1;
+/* --- Page Layout --- */
+.address-page {
+    min-height: calc(100vh - 80px);
+    background-color: $bg-page;
+    padding: 40px 16px;
+    font-family: 'Helvetica Neue', sans-serif;
+    color: $text-primary;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* --- Header --- */
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 48px;
+    border-bottom: 1px solid $border;
+    padding-bottom: 24px;
+
+    @media (max-width: 600px) {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 24px;
+    }
+
+    .header-content {
+        .page-title {
+            font-family: 'Garamond', serif;
+            font-size: 36px;
+            font-weight: 500;
+            margin: 0 0 8px 0;
+            color: $text-primary;
+        }
+
+        .page-subtitle {
+            font-size: 16px;
+            color: $text-secondary;
+            margin: 0;
+        }
+    }
+
+    .add-btn {
+        background-color: $accent;
+        color: white;
+        height: 48px;
+        padding: 0 24px;
+        border-radius: 0; // Square button
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-weight: 600;
+
+        mat-icon {
+            margin-right: 8px;
+        }
+
+        &:hover {
+            background-color: darken($accent, 5%);
+        }
     }
 }
 
-/* Optional: Smooth entry animation for the cards */
-mat-card {
-    animation: fadeIn 0.4s ease-out forwards;
-}
+/* --- Empty State --- */
+.empty-state {
+    background-color: $bg-card;
+    border: 1px dashed $border;
+    padding: 64px 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
 
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(10px);
+    .icon-circle {
+        width: 80px;
+        height: 80px;
+        background-color: #F5F5F4;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 24px;
+
+        mat-icon {
+            font-size: 40px;
+            width: 40px;
+            height: 40px;
+            color: $text-secondary;
+        }
     }
 
-    to {
-        opacity: 1;
-        transform: translateY(0);
+    h3 {
+        font-family: 'Garamond', serif;
+        font-size: 24px;
+        font-weight: 600;
+        margin: 0 0 12px 0;
+        color: $text-primary;
+    }
+
+    p {
+        margin: 0 0 32px 0;
+        color: $text-secondary;
+    }
+
+    .empty-add-btn {
+        border-color: $accent;
+        color: $accent;
+
+        &:hover {
+            background-color: #F5F5F4;
+        }
+    }
+}
+
+/* --- Grid Layout --- */
+.address-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 24px;
+}
+
+/* --- Address Card --- */
+.address-card {
+    background-color: $bg-card;
+    border: 1px solid $border;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    border-radius: 4px;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+
+
+    &:hover {
+        transform: translateY(-2px);
+        border-color: $accent;
+    }
+
+    .card-content {
+        padding: 24px;
+    }
+
+    /* Header inside Card */
+    .address-header {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        margin-bottom: 16px;
+
+        .location-icon {
+            width: 40px;
+            height: 40px;
+            background-color: $hover-bg;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            color: $accent;
+        }
+
+        .location-text {
+            .city {
+                font-family: 'Garamond', serif;
+                font-size: 20px;
+                font-weight: 600;
+                margin: 0;
+                color: $text-primary;
+            }
+
+            .country {
+                font-size: 12px;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+                color: $text-secondary;
+            }
+        }
+    }
+
+    /* Details Section */
+    .address-details {
+        padding: 16px 0;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+
+        .detail-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            color: $text-secondary;
+            font-size: 14px;
+
+            mat-icon {
+                font-size: 18px;
+                width: 18px;
+                height: 18px;
+                margin-top: 2px;
+            }
+
+            .street {
+                color: $text-primary;
+                font-weight: 500;
+                line-height: 1.4;
+            }
+
+            .zip {
+                font-family: monospace;
+                background: $hover-bg;
+                padding: 2px 6px;
+                border-radius: 2px;
+            }
+        }
+    }
+
+    /* Footer Actions */
+    .card-actions {
+        margin-top: 8px;
+        padding-top: 16px;
+        border-top: 1px solid #f3f4f6;
+        display: flex;
+        justify-content: flex-end;
+        gap: 8px;
+
+        .action-btn {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+
+            mat-icon {
+                font-size: 18px;
+                width: 18px;
+                height: 18px;
+                margin-right: 4px;
+            }
+
+            &.edit {
+                color: $text-secondary;
+
+                &:hover {
+                    color: $text-primary;
+                    background-color: $hover-bg;
+                }
+            }
+
+            &.delete {
+                color: $error;
+
+                &:hover {
+                    background-color: #FEF2F2;
+                }
+            }
+        }
     }
 }

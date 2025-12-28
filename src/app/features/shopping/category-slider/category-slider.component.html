@@ -1,24 +1,35 @@
-<div class="category-slider">
-  <!-- "All Categories" Button -->
-  <button 
-    mat-stroked-button 
-    class="category-button"
-    [class.active]="!selectedCategoryId"
-    (click)="selectAllCategories()">
-    <mat-icon>apps</mat-icon>
-    <span>All Categories</span>
-  </button>
+<div class="category-list-container">
   
-  <!-- Loop through each category -->
+  <button mat-button 
+          class="category-item" 
+          [class.active]="!selectedCategoryId || selectedCategoryId === 0"
+          (click)="selectAllCategories()">
+    
+    <div class="item-content">
+      <mat-icon class="cat-icon">apps</mat-icon>
+      <span class="cat-name">All Categories</span>
+    </div>
+
+    @if(!selectedCategoryId || selectedCategoryId === 0) {
+      <mat-icon class="active-check">check</mat-icon>
+    }
+  </button>
+
   @for (category of categories; track category.id) {
-    <button 
-      mat-stroked-button 
-      class="category-button"
-      [class.active]="isCategorySelected(category.id)"
-      (click)="selectCategory(category.id)">
+    <button mat-button 
+            class="category-item" 
+            [class.active]="isCategorySelected(category.id)"
+            (click)="selectCategory(category.id)">
       
-      <!-- Category Name -->
-      <span class="category-name">{{ category.name }}</span>
+      <div class="item-content">
+        <mat-icon class="cat-icon">label_important</mat-icon>
+        <span class="cat-name">{{ category.name }}</span>
+      </div>
+
+      @if(isCategorySelected(category.id)) {
+        <mat-icon class="active-check">check</mat-icon>
+      }
     </button>
   }
+
 </div>

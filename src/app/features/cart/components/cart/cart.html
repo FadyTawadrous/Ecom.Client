@@ -1,146 +1,116 @@
-<!-- Outer Container: Dark Gradient Background -->
-<div class="min-h-[calc(100vh-80px)] bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 px-4 py-8">
-  <div class="container mx-auto max-w-6xl">
+<div class="cart-page">
+  <div class="container">
 
-    <!-- Page Header -->
-    <h1 class="text-3xl font-bold text-white mb-8 tracking-tight pl-3 border-l-4 border-blue-500">
-      Your Shopping Cart
-    </h1>
+    <div class="page-header">
+      <h1 class="page-title">Shopping Cart</h1>
+      <p class="page-subtitle">Review your items before checkout</p>
+    </div>
 
-    <!-- LOADING STATE -->
     @if (loading()) {
-    <div class="flex justify-center py-20">
-      <mat-spinner diameter="50" class="custom-spinner"></mat-spinner>
+    <div class="state-container">
+      <mat-spinner diameter="40"></mat-spinner>
+      <p>Updating cart...</p>
     </div>
     } @else {
 
-    <!-- EMPTY CART STATE -->
     @if (cartItems().length === 0) {
-    <div
-      class="flex flex-col items-center justify-center py-20 px-4 bg-gray-800/30 rounded-3xl border-2 border-dashed border-gray-700/50 backdrop-blur-sm">
-      <div class="w-24 h-24 bg-gray-700/50 rounded-full flex items-center justify-center mb-6 shadow-inner">
-        <mat-icon class="text-gray-500 !w-12 !h-12 !text-[48px]">remove_shopping_cart</mat-icon>
+    <div class="empty-state">
+      <div class="icon-circle">
+        <mat-icon>shopping_cart_checkout</mat-icon>
       </div>
-      <h3 class="text-2xl font-bold text-gray-300 mb-2">Your cart is empty</h3>
-      <p class="text-gray-500 text-lg mb-8">Looks like you haven't added anything yet.</p>
-      <button mat-flat-button routerLink="/shop"
-        class="!h-12 !px-8 !rounded-xl !bg-gradient-to-r !from-blue-600 !to-indigo-600 hover:!from-blue-500 hover:!to-indigo-500 !text-white !shadow-lg transition-all duration-300">
+      <h3>Your cart is empty</h3>
+      <p>Looks like you haven't added anything yet.</p>
+
+      <button mat-flat-button routerLink="/shopping" routerLinkActive="active" class="shop-btn">
         Start Shopping
       </button>
     </div>
     } @else {
 
-    <!-- CART CONTENT CARD -->
-    <mat-card
-      class="!bg-gray-800/80 !backdrop-blur-md !text-white !rounded-2xl !border !border-gray-700 !shadow-2xl overflow-hidden">
+    <mat-card class="cart-card">
 
-      <!-- Responsive Table Container -->
-      <div class="overflow-x-auto">
-        <table mat-table [dataSource]="cartItems()" class="w-full !bg-transparent">
+      <div class="table-container">
+        <table mat-table [dataSource]="cartItems()" class="cart-table">
 
-          <!-- IMAGE COLUMN -->
           <ng-container matColumnDef="image">
-            <th mat-header-cell *matHeaderCellDef class="!pl-6"> Image </th>
-            <td mat-cell *matCellDef="let item" class="!pl-6 !py-4">
-              <div class="w-16 h-16 rounded-xl bg-white p-1 shadow-md border border-gray-600 overflow-hidden">
-                <img [src]="getProductImage(item)" class="w-full h-full object-contain mix-blend-multiply"
-                  alt="Product">
+            <th mat-header-cell *matHeaderCellDef class="col-image"> Image </th>
+            <td mat-cell *matCellDef="let item" class="col-image">
+              <div class="img-frame">
+                <img [src]="getProductImage(item)" alt="Product">
               </div>
             </td>
           </ng-container>
 
-          <!-- PRODUCT NAME COLUMN -->
           <ng-container matColumnDef="productName">
-            <th mat-header-cell *matHeaderCellDef> Product </th>
-            <td mat-cell *matCellDef="let item">
-              <span class="font-semibold text-gray-100 text-lg">{{ getProductName(item) }}</span>
-              <!-- Optional: Add brand or category in smaller text here -->
+            <th mat-header-cell *matHeaderCellDef class="col-name"> Product </th>
+            <td mat-cell *matCellDef="let item" class="col-name">
+              <span class="product-name">{{ getProductName(item) }}</span>
             </td>
           </ng-container>
 
-          <!-- PRICE COLUMN -->
           <ng-container matColumnDef="unitPrice">
-            <th mat-header-cell *matHeaderCellDef> Price </th>
-            <td mat-cell *matCellDef="let item" class="text-gray-300">
+            <th mat-header-cell *matHeaderCellDef class="col-price"> Price </th>
+            <td mat-cell *matCellDef="let item" class="col-price">
               {{ item.unitPrice | currency }}
             </td>
           </ng-container>
 
-          <!-- QUANTITY COLUMN -->
           <ng-container matColumnDef="quantity">
-            <th mat-header-cell *matHeaderCellDef> Qty </th>
-            <td mat-cell *matCellDef="let item">
-              <div class="flex items-center gap-3 bg-gray-900/50 rounded-lg px-2 py-1 w-fit border border-gray-600">
-                <button mat-icon-button (click)="decrement(item)" [disabled]="item.quantity <= 1"
-                  class="!w-8 !h-8 !text-gray-400 hover:!text-white disabled:!text-gray-700">
-                  <mat-icon class="!text-lg">remove</mat-icon>
+            <th mat-header-cell *matHeaderCellDef class="col-qty"> Qty </th>
+            <td mat-cell *matCellDef="let item" class="col-qty">
+              <div class="qty-selector">
+                <button mat-icon-button (click)="decrement(item)" [disabled]="item.quantity <= 1">
+                  <mat-icon>remove</mat-icon>
                 </button>
-
-                <span class="font-bold text-white w-6 text-center">{{ item.quantity }}</span>
-
-                <button mat-icon-button (click)="increment(item)" class="!w-8 !h-8 !text-gray-400 hover:!text-white">
-                  <mat-icon class="!text-lg">add</mat-icon>
+                <span class="qty-val">{{ item.quantity }}</span>
+                <button mat-icon-button (click)="increment(item)">
+                  <mat-icon>add</mat-icon>
                 </button>
               </div>
             </td>
           </ng-container>
 
-          <!-- TOTAL PRICE COLUMN -->
           <ng-container matColumnDef="totalPrice">
-            <th mat-header-cell *matHeaderCellDef> Total </th>
-            <td mat-cell *matCellDef="let item" class="font-bold text-indigo-300 text-lg">
+            <th mat-header-cell *matHeaderCellDef class="col-total"> Total </th>
+            <td mat-cell *matCellDef="let item" class="col-total">
               {{ item.totalPrice | currency }}
             </td>
           </ng-container>
 
-          <!-- REMOVE BUTTON -->
           <ng-container matColumnDef="remove">
-            <th mat-header-cell *matHeaderCellDef class="!pr-6"></th>
-            <td mat-cell *matCellDef="let item" class="!pr-6 text-right">
-              <button mat-icon-button color="warn" (click)="removeItem(item.id)"
-                class="!bg-red-500/10 hover:!bg-red-500/90 hover:!text-white !text-red-400 transition-all duration-300">
-                <mat-icon>delete_outline</mat-icon>
+            <th mat-header-cell *matHeaderCellDef class="col-remove"></th>
+            <td mat-cell *matCellDef="let item" class="col-remove">
+              <button mat-icon-button class="remove-btn" (click)="removeItem(item.id)">
+                <mat-icon>close</mat-icon>
               </button>
             </td>
           </ng-container>
 
-          <!-- Header Row -->
-          <tr mat-header-row *matHeaderRowDef="['image','productName','unitPrice','quantity','totalPrice','remove']"
-            class="!bg-gray-900/50 !h-14 border-b !border-gray-700"></tr>
-
-          <!-- Data Row -->
+          <tr mat-header-row *matHeaderRowDef="['image','productName','unitPrice','quantity','totalPrice','remove']">
+          </tr>
           <tr mat-row
-            *matRowDef="let row; columns: ['image','productName','unitPrice','quantity','totalPrice','remove']"
-            class="!h-24 hover:!bg-gray-700/30 transition-colors border-b !border-gray-700/50 last:border-0"></tr>
+            *matRowDef="let row; columns: ['image','productName','unitPrice','quantity','totalPrice','remove']"></tr>
 
         </table>
       </div>
 
-      <mat-divider class="!bg-gray-700"></mat-divider>
+      <div class="cart-footer">
 
-      <!-- FOOTER ACTIONS -->
-      <div class="p-6 bg-gray-900/30 flex flex-col md:flex-row justify-between items-center gap-6">
-
-        <button mat-stroked-button color="warn" (click)="clearCart()"
-          class="!border-red-500/50 !text-red-400 hover:!bg-red-500/10 !rounded-xl !px-6 !h-12 w-full md:w-auto">
-          <mat-icon class="mr-2">delete_sweep</mat-icon> Clear Cart
+        <button mat-button class="clear-btn" (click)="clearCart()">
+          <mat-icon>delete_outline</mat-icon> Clear Cart
         </button>
 
-        <div class="flex flex-col md:flex-row items-center gap-6 w-full md:w-auto">
-          <div class="text-right">
-            <span class="text-gray-400 text-sm uppercase tracking-wider block">Grand Total</span>
-            <span class="text-3xl font-bold text-white">{{ total() | currency }}</span>
+        <div class="checkout-group">
+          <div class="total-display">
+            <span class="label">Grand Total</span>
+            <span class="value">{{ total() | currency }}</span>
           </div>
 
-          <button mat-flat-button (click)="goToPayment()" class="!h-14 !px-10 !text-lg !rounded-xl 
-                                       !bg-gradient-to-r !from-blue-600 !to-indigo-600 
-                                       hover:!from-blue-500 hover:!to-indigo-500 
-                                       !text-white !shadow-lg hover:!shadow-blue-500/25 
-                                       hover:scale-105 active:scale-95 transition-all duration-300 
-                                       w-full md:w-auto flex items-center justify-center gap-2">
+          <button mat-flat-button class="checkout-btn" (click)="goToPayment()">
             Checkout <mat-icon>arrow_forward</mat-icon>
           </button>
         </div>
+
       </div>
 
     </mat-card>

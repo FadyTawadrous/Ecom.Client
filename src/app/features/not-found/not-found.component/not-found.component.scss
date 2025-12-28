@@ -1,23 +1,209 @@
-/* Smooth floating animation for the 404 text */
-@keyframes float {
+/* --- Earthy Minimalist Variables --- */
+$bg-page: #E6E5DF; // Warm Bone
+$bg-card: #FFFFFF; // White
+$text-primary: #2C2C2C; // Charcoal
+$text-secondary: #57534E; // Warm Grey
+$accent: #5D5C52; // Olive
+$border: #D6D3D1; // Stone
+$hover-bg: #F5F5F4; // Light Stone
 
-  0%,
-  100% {
-    transform: translateY(0);
+/* --- Page Layout --- */
+.not-found-page {
+  min-height: calc(100vh - 80px);
+  background-color: $bg-page;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  padding: 24px;
+}
+
+/* --- Background Shapes --- */
+.background-shape {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.6;
+  z-index: 0;
+
+  &.shape-1 {
+    top: -10%;
+    left: -10%;
+    width: 400px;
+    height: 400px;
+    background-color: #D6D3D1; // Stone
   }
 
-  50% {
-    transform: translateY(-10px);
+  &.shape-2 {
+    bottom: -10%;
+    right: -10%;
+    width: 500px;
+    height: 500px;
+    background-color: #E7E5E4; // Warm Grey Light
   }
 }
 
-.floating-element {
-  animation: float 6s ease-in-out infinite;
+/* --- Content Container --- */
+.content-container {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 600px;
+  text-align: center;
 }
 
-/* Ensure Material Icons are centered vertically in buttons */
-button .material-icons {
-  font-size: 1.25rem;
-  /* 20px */
-  line-height: 1;
+/* --- Card --- */
+.error-card {
+  background-color: $bg-card;
+  border: 1px solid $border;
+  padding: 48px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
+  border-radius: 4px; // Square-ish look
+
+  @media (max-width: 600px) {
+    padding: 32px 16px;
+  }
+}
+
+/* --- Visual --- */
+.error-visual {
+  position: relative;
+  margin-bottom: 24px;
+
+  .error-code {
+    font-size: 140px;
+    font-weight: 800;
+    line-height: 1;
+    margin: 0;
+    color: #F5F5F4; // Very light grey text background
+    letter-spacing: -5px;
+    user-select: none;
+  }
+
+  .icon-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    mat-icon {
+      font-size: 64px;
+      width: 64px;
+      height: 64px;
+      color: $text-secondary;
+      opacity: 0.5;
+    }
+  }
+}
+
+/* --- Text Content --- */
+.error-title {
+  font-family: 'Garamond', serif;
+  font-size: 40px;
+  font-weight: 500;
+  color: $text-primary;
+  margin: 0 0 16px 0;
+}
+
+.error-desc {
+  font-size: 16px;
+  color: $text-secondary;
+  line-height: 1.6;
+  max-width: 400px;
+  margin: 0 auto 40px auto;
+}
+
+/* --- Action Buttons --- */
+.action-buttons {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  margin-bottom: 40px;
+
+  @media (max-width: 600px) {
+    flex-direction: column;
+  }
+
+  .home-btn {
+    background-color: $accent;
+    color: white;
+    height: 48px;
+    padding: 0 32px;
+    border-radius: 0;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 600;
+
+    mat-icon {
+      margin-right: 8px;
+    }
+
+    &:hover {
+      background-color: darken($accent, 5%);
+    }
+  }
+
+  .back-btn {
+    color: $text-primary;
+    border-color: $border;
+    height: 48px;
+    padding: 0 32px;
+    border-radius: 0;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+
+    mat-icon {
+      margin-right: 8px;
+    }
+
+    &:hover {
+      background-color: $hover-bg;
+    }
+  }
+}
+
+/* --- Quick Links --- */
+.quick-links {
+  margin-top: 32px;
+
+  .links-label {
+    display: block;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: $text-secondary;
+    margin-bottom: 16px;
+  }
+
+  .links-row {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+
+    .link-pill {
+      border: 1px solid $border;
+      border-radius: 20px;
+      color: $text-secondary;
+      padding: 0 20px;
+      height: 36px;
+      font-size: 13px;
+
+      mat-icon {
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
+        margin-right: 6px;
+        color: $accent;
+      }
+
+      &:hover {
+        background-color: $hover-bg;
+        color: $text-primary;
+        border-color: $text-secondary;
+      }
+    }
+  }
 }

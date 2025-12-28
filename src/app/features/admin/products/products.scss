@@ -1,0 +1,295 @@
+/* --- Earthy Minimalist Variables --- */
+$bg-page: #E6E5DF; // Warm Bone
+$bg-card: #FFFFFF; // White
+$text-primary: #2C2C2C; // Charcoal
+$text-secondary: #57534E; // Warm Grey
+$accent: #5D5C52; // Olive
+$border: #D6D3D1; // Stone
+$hover-bg: #F5F5F4; // Light Stone
+$error: #991b1b;
+
+/* --- Page Layout --- */
+.admin-page {
+    padding: 32px;
+    background-color: $bg-page;
+    min-height: 100%;
+}
+
+/* --- Header --- */
+.page-header {
+    margin-bottom: 32px;
+
+    .page-title {
+        font-family: 'Garamond', serif;
+        font-size: 32px;
+        font-weight: 500;
+        margin: 0 0 8px 0;
+        color: $text-primary;
+    }
+
+    .page-subtitle {
+        font-size: 14px;
+        color: $text-secondary;
+        margin: 0;
+    }
+}
+
+/* --- Grid Layout --- */
+.content-grid {
+    display: grid;
+    grid-template-columns: 350px 1fr;
+    gap: 24px;
+    align-items: start;
+
+    @media (max-width: 1000px) {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* --- Cards --- */
+mat-card {
+    background-color: $bg-card;
+    border: 1px solid $border;
+    border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    padding: 0; // Reset padding
+}
+
+/* --- Form Styles --- */
+.form-card {
+    .card-header {
+        padding: 20px 24px;
+        border-bottom: 1px solid $border;
+
+        h3 {
+            margin: 0;
+            font-family: 'Garamond', serif;
+            font-size: 20px;
+            color: $text-primary;
+        }
+    }
+
+    .form-body {
+        padding: 24px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .form-row {
+        display: flex;
+        gap: 16px;
+    }
+
+    /* File Upload */
+    .file-upload-container {
+        border: 1px dashed $border;
+        padding: 16px;
+        border-radius: 4px;
+        background-color: #FAFAFA;
+        text-align: center;
+
+        .file-label {
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            color: $text-secondary;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+
+            mat-icon {
+                color: $accent;
+            }
+
+            &:hover {
+                color: $text-primary;
+            }
+        }
+
+        .preview-box {
+            margin-top: 16px;
+            position: relative;
+            display: inline-block;
+
+            img {
+                width: 100%;
+                max-height: 150px;
+                object-fit: cover;
+                border-radius: 4px;
+                border: 1px solid $border;
+            }
+
+            .remove-img {
+                position: absolute;
+                top: -8px;
+                right: -8px;
+                background-color: white;
+                color: $error;
+                border: 1px solid $border;
+                width: 24px;
+                height: 24px;
+                line-height: 24px;
+
+                mat-icon {
+                    font-size: 14px;
+                }
+            }
+        }
+    }
+
+    .form-actions {
+        padding: 16px 24px;
+        background-color: #FAFAFA;
+        border-top: 1px solid $border;
+        display: flex;
+        justify-content: flex-end;
+        gap: 12px;
+
+        .save-btn {
+            background-color: $accent;
+            color: white;
+
+            &:hover {
+                background-color: darken($accent, 5%);
+            }
+        }
+    }
+}
+
+/* --- Table Styles --- */
+.table-card {
+    overflow: hidden;
+
+    .table-container {
+        overflow-x: auto;
+    }
+
+    .admin-table {
+        width: 100%;
+
+        th.mat-mdc-header-cell {
+            background-color: #FAFAFA;
+            color: $text-secondary;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+            padding: 16px;
+            border-bottom: 1px solid $border;
+        }
+
+        td.mat-mdc-cell {
+            padding: 16px;
+            color: $text-primary;
+            border-bottom: 1px solid #f3f4f6;
+            font-size: 13px;
+
+            &.font-medium {
+                font-weight: 500;
+            }
+
+            &.text-secondary {
+                color: $text-secondary;
+            }
+        }
+
+        /* Thumbnail Column */
+        .col-thumb {
+            width: 80px;
+
+            .thumb-img {
+                width: 48px;
+                height: 48px;
+                object-fit: cover;
+                border-radius: 4px;
+                border: 1px solid $border;
+            }
+        }
+
+        /* Stock Badge */
+        .stock-badge {
+            background-color: #ECFDF5;
+            color: #059669;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+
+            &.low {
+                background-color: #FEF2F2;
+                color: #DC2626;
+            }
+        }
+
+        /* Actions Column */
+        .col-actions {
+            text-align: right;
+            width: 100px;
+
+            .action-btn {
+                width: 32px;
+                height: 32px;
+
+                mat-icon {
+                    font-size: 18px;
+                }
+
+                &.edit {
+                    color: $text-secondary;
+
+                    &:hover {
+                        color: $accent;
+                    }
+                }
+
+                &.delete {
+                    color: #9ca3af;
+
+                    &:hover {
+                        color: $error;
+                    }
+                }
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hide-mobile {
+                display: none;
+            }
+        }
+    }
+}
+
+/* --- Clean Field Overrides --- */
+.clean-field {
+    width: 100%;
+
+    ::ng-deep {
+        .mdc-text-field--outlined {
+            background-color: #FAFAFA;
+        }
+
+        .mdc-notched-outline__leading,
+        .mdc-notched-outline__notch,
+        .mdc-notched-outline__trailing {
+            border-color: $border !important;
+        }
+
+        &.mat-focused {
+
+            .mdc-notched-outline__leading,
+            .mdc-notched-outline__notch,
+            .mdc-notched-outline__trailing {
+                border-color: $accent !important;
+                border-width: 1px !important;
+            }
+
+            .mdc-floating-label {
+                color: $accent !important;
+            }
+        }
+    }
+}

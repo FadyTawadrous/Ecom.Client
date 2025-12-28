@@ -1,4 +1,5 @@
-import { Component, inject, OnInit, signal, ViewChild } from '@angular/core';
+import { Component, inject, OnInit, signal, ViewChild, OnDestroy } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProductService } from '../../../core/services/product-service';
 import { Product, ProductFilter, Category, Brand } from '../../../core/models/product.models';
@@ -9,16 +10,45 @@ import { ToastService } from '../../../core/services/toast.service';
 import { AuthService } from '../../../core/services/auth-service';
 import { CartService } from '../../../core/services/cart-service';
 
+
+interface HeroSlide {
+  image: string;
+  title: string;
+  subtitle: string;
+}
+
 @Component({
   selector: 'app-product-list',
   templateUrl: './product-list-component.html',
   styleUrls: ['./product-list-component.scss'],
   standalone: false
 })
-export class ProductListComponent implements OnInit {
+export class ProductListComponent implements OnInit, OnDestroy {
   private authService = inject(AuthService);
   private wishlistService = inject(WishlistService);
   private toast = inject(ToastService);
+
+  // --- SLIDER LOGIC ---
+  currentSlide = 0;
+  slideInterval: any;
+  
+  heroSlides: HeroSlide[] = [
+    {
+      image: 'https://picsum.photos/id/1/1200/400', // Placeholder image
+      title: 'New Season Arrivals',
+      subtitle: 'Check out the latest trends for this summer.'
+    },
+    {
+      image: 'https://picsum.photos/id/20/1200/400',
+      title: 'Exclusive Electronics',
+      subtitle: 'Up to 50% off on selected gadgets.'
+    },
+    {
+      image: 'https://picsum.photos/id/180/1200/400',
+      title: 'Modern Workspace',
+      subtitle: 'Upgrade your desk setup today.'
+    }
+  ];
 
   @ViewChild(SearchFilterComponent) searchFilterComponent!: SearchFilterComponent;
 
@@ -56,6 +86,39 @@ export class ProductListComponent implements OnInit {
     this.loadBrands();
     this.setupRouteParams();
     this.loadProducts();
+    this.startAutoSlide(); // Start the slider
+  }
+
+  ngOnDestroy() {
+    this.stopAutoSlide(); // Prevent memory leaks
+  }
+
+  // Slider Navigation
+  nextSlide() {
+    this.currentSlide = (this.currentSlide + 1) % this.heroSlides.length;
+  }
+
+  prevSlide() {
+    this.currentSlide = (this.currentSlide - 1 + this.heroSlides.length) % this.heroSlides.length;
+  }
+
+  goToSlide(index: number) {
+    this.currentSlide = index;
+    // Reset timer when user manually interacts
+    this.stopAutoSlide();
+    this.startAutoSlide();
+  }
+
+  startAutoSlide() {
+    this.slideInterval = setInterval(() => {
+      this.nextSlide();
+    }, 5000); // Change every 5 seconds
+  }
+
+  stopAutoSlide() {
+    if (this.slideInterval) {
+      clearInterval(this.slideInterval);
+    }
   }
 
   // Setup route parameters for category/brand filtering
@@ -324,7 +387,7 @@ export class ProductListComponent implements OnInit {
     } else if (this.searchQuery) {
       return `Search Results for "${this.searchQuery}"`;
     } else {
-      return 'All Products';
+      return 'Products';
     }
   }
 

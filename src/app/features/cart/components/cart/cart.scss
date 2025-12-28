@@ -1,39 +1,325 @@
-/* --- Material Table Dark Mode Overrides --- */
+/* --- Earthy Minimalist Variables --- */
+$bg-page: #E6E5DF; // Warm Bone
+$bg-card: #FFFFFF; // White
+$text-primary: #2C2C2C; // Charcoal
+$text-secondary: #57534E; // Warm Grey
+$accent: #5D5C52; // Olive
+$border: #D6D3D1; // Stone
+$error: #991b1b; // Muted Red
+$hover-bg: #FAFAFA;
 
-// Force text colors for headers
-::ng-deep .mat-mdc-header-cell {
-  color: #9ca3af !important; // gray-400
-  font-size: 0.85rem !important;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  font-weight: 600 !important;
+/* --- Page Layout --- */
+.cart-page {
+  min-height: calc(100vh - 80px);
+  background-color: $bg-page;
+  padding: 40px 16px;
+  font-family: 'Helvetica Neue', sans-serif;
+  color: $text-primary;
 }
 
-// Remove default table background
-::ng-deep .mat-mdc-table {
-  background: transparent !important;
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
-// Fix Ripple effects on dark mode buttons
-::ng-deep .mat-mdc-icon-button {
-  --mat-mdc-icon-button-state-layer-color: currentColor;
+/* --- Header --- */
+.page-header {
+  margin-bottom: 40px;
+  padding-left: 16px;
+  border-left: 4px solid $accent;
+
+  .page-title {
+    font-family: 'Garamond', serif;
+    font-size: 36px;
+    font-weight: 500;
+    margin: 0 0 8px 0;
+    color: $text-primary;
+  }
+
+  .page-subtitle {
+    font-size: 16px;
+    color: $text-secondary;
+    margin: 0;
+  }
 }
 
-/* Spinner Color Override */
-::ng-deep .custom-spinner circle {
-  stroke: white !important;
+/* --- States (Loading / Empty) --- */
+.state-container,
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  text-align: center;
+  color: $text-secondary;
+
+  mat-spinner {
+    margin-bottom: 24px;
+
+    ::ng-deep circle {
+      stroke: $accent !important;
+    }
+  }
 }
 
-/* Optional: Scrollbar for the table on mobile */
-.overflow-x-auto::-webkit-scrollbar {
-  height: 8px;
+.empty-state {
+  background-color: $bg-card;
+  border: 1px dashed $border;
+  padding: 64px 24px;
+  mix-blend-mode: multiply;
+
+  .icon-circle {
+    width: 80px;
+    height: 80px;
+    background-color: #F5F5F4;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 24px;
+
+    mat-icon {
+      font-size: 40px;
+      width: 40px;
+      height: 40px;
+      color: $text-secondary;
+    }
+  }
+
+  h3 {
+    font-family: 'Garamond', serif;
+    font-size: 24px;
+    font-weight: 600;
+    margin: 0 0 12px 0;
+    color: $text-primary;
+  }
+
+  p {
+    margin: 0 0 32px 0;
+  }
+
+  .shop-btn {
+    background-color: $accent;
+    color: white;
+    padding: 0 32px;
+    height: 48px;
+    border-radius: 0;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 600;
+
+    &:hover {
+      background-color: darken($accent, 5%);
+    }
+  }
 }
 
-.overflow-x-auto::-webkit-scrollbar-track {
-  background: #1f2937;
-}
-
-.overflow-x-auto::-webkit-scrollbar-thumb {
-  background: #4b5563;
+/* --- Cart Card --- */
+.cart-card {
+  background-color: $bg-card;
+  border: 1px solid $border;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
   border-radius: 4px;
+  overflow: hidden;
+  padding: 0; // Reset default padding
+}
+
+/* --- Table Styles --- */
+.table-container {
+  overflow-x: auto;
+}
+
+.cart-table {
+  width: 100%;
+
+  // Header
+  th.mat-mdc-header-cell {
+    background-color: #F5F5F4;
+    color: $text-secondary;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 600;
+    padding: 24px 16px;
+    border-bottom: 1px solid $border;
+  }
+
+  // Cells
+  td.mat-mdc-cell {
+    padding: 24px 16px;
+    color: $text-primary;
+    border-bottom: 1px solid #f3f4f6;
+    font-size: 14px;
+  }
+
+  // Image Col
+  .col-image {
+    width: 100px;
+
+    .img-frame {
+      width: 80px;
+      height: 80px;
+      background-color: white;
+      border: 1px solid $border;
+      padding: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+        mix-blend-mode: multiply;
+      }
+    }
+  }
+
+  // Name Col
+  .col-name .product-name {
+    font-family: 'Garamond', serif;
+    font-size: 18px;
+    font-weight: 500;
+  }
+
+  // Price & Total Col
+  .col-price {
+    color: $text-secondary;
+  }
+
+  .col-total {
+    font-weight: 600;
+    color: $accent;
+    font-size: 16px;
+  }
+
+  // Qty Col
+  .col-qty {
+    .qty-selector {
+      display: inline-flex;
+      align-items: center;
+      border: 1px solid $border;
+      height: 36px;
+
+      button {
+        width: 36px;
+        height: 36px;
+        color: $text-secondary;
+
+        mat-icon {
+          font-size: 16px;
+          width: 16px;
+          height: 16px;
+        }
+
+        &:hover {
+          background-color: #F5F5F4;
+        }
+      }
+
+      .qty-val {
+        width: 32px;
+        text-align: center;
+        font-weight: 600;
+        font-size: 14px;
+      }
+    }
+  }
+
+  // Remove Col
+  .col-remove {
+    width: 60px;
+    text-align: right;
+
+    .remove-btn {
+      color: #9ca3af;
+
+      &:hover {
+        color: $error;
+        background-color: #fef2f2;
+      }
+    }
+  }
+}
+
+/* --- Cart Footer --- */
+.cart-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 32px 24px;
+  background-color: #FAFAFA; // Very light grey footer
+  border-top: 1px solid $border;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .clear-btn {
+    color: $error;
+    text-transform: uppercase;
+    font-size: 12px;
+    letter-spacing: 1px;
+
+    mat-icon {
+      margin-right: 8px;
+    }
+
+    &:hover {
+      background-color: #fef2f2;
+    }
+  }
+
+  .checkout-group {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+
+    @media (max-width: 600px) {
+      flex-direction: column;
+      gap: 16px;
+      width: 100%;
+    }
+
+    .total-display {
+      text-align: right;
+
+      .label {
+        display: block;
+        font-size: 11px;
+        text-transform: uppercase;
+        color: $text-secondary;
+        margin-bottom: 4px;
+      }
+
+      .value {
+        font-size: 24px;
+        font-weight: 700;
+        color: $text-primary;
+        font-family: 'Garamond', serif;
+      }
+    }
+
+    .checkout-btn {
+      background-color: $accent;
+      color: white;
+      height: 56px;
+      padding: 0 40px;
+      border-radius: 0;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-weight: 600;
+      font-size: 14px;
+
+      mat-icon {
+        margin-left: 8px;
+      }
+
+      &:hover {
+        background-color: darken($accent, 5%);
+      }
+    }
+  }
 }

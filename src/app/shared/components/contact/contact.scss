@@ -1,0 +1,229 @@
+/* --- Earthy Minimalist Variables --- */
+$bg-page: #E6E5DF; // Warm Bone
+$bg-card: #FFFFFF; // White
+$text-primary: #2C2C2C; // Charcoal
+$text-secondary: #57534E; // Warm Grey
+$accent: #5D5C52; // Olive
+$border: #D6D3D1; // Stone
+$hover-bg: #F5F5F4; // Light Stone
+
+/* --- Page Layout --- */
+.contact-page {
+    min-height: calc(100vh - 80px);
+    background-color: $bg-page;
+    padding: 60px 16px;
+    font-family: 'Helvetica Neue', sans-serif;
+    color: $text-primary;
+}
+
+.container {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+/* --- Header --- */
+.page-header {
+    text-align: center;
+    margin-bottom: 48px;
+
+    .page-title {
+        font-family: 'Garamond', serif;
+        font-size: 42px;
+        font-weight: 500;
+        margin: 0 0 16px 0;
+        color: $text-primary;
+    }
+
+    .page-subtitle {
+        font-size: 16px;
+        color: $text-secondary;
+        margin: 0;
+    }
+}
+
+/* --- Grid Layout --- */
+.contact-grid {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 32px;
+
+    @media (max-width: 768px) {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* --- Form Card --- */
+.form-card {
+    background-color: $bg-card;
+    border: 1px solid $border;
+    padding: 40px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    border-radius: 4px;
+}
+
+.contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Material Field Overrides (Clean Style) */
+.clean-field {
+    width: 100%;
+
+    ::ng-deep {
+        .mdc-text-field--outlined {
+            background-color: #FAFAFA;
+        }
+
+        .mat-mdc-input-element {
+            color: $text-primary !important;
+            caret-color: $accent;
+        }
+
+        .mdc-floating-label {
+            color: $text-secondary !important;
+        }
+
+        .mat-icon {
+            color: $text-secondary;
+        }
+
+        .mdc-notched-outline__leading,
+        .mdc-notched-outline__notch,
+        .mdc-notched-outline__trailing {
+            border-color: $border !important;
+        }
+
+        &.mat-focused {
+            .mdc-floating-label {
+                color: $accent !important;
+            }
+
+            .mdc-notched-outline__leading,
+            .mdc-notched-outline__notch,
+            .mdc-notched-outline__trailing {
+                border-color: $accent !important;
+                border-width: 1px !important;
+            }
+        }
+    }
+}
+
+/* Submit Button */
+.submit-btn {
+    width: 100%;
+    height: 56px;
+    background-color: $accent;
+    color: white;
+    border-radius: 0; // Square button
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 600;
+    font-size: 14px;
+    margin-top: 16px;
+
+    &:hover:not(:disabled) {
+        background-color: darken($accent, 5%);
+    }
+
+    &:disabled {
+        background-color: $border;
+        color: #9ca3af;
+    }
+
+    .btn-content {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+
+        mat-icon {
+            font-size: 18px;
+            width: 18px;
+            height: 18px;
+        }
+    }
+}
+
+/* --- Info Card (Dark Olive) --- */
+.info-card {
+    background-color: $accent; // Solid Olive
+    color: #E6E5DF; // Light Bone Text
+    padding: 40px;
+    border-radius: 4px;
+    box-shadow: 0 10px 30px rgba(93, 92, 82, 0.2);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    .info-title {
+        font-family: 'Garamond', serif;
+        font-size: 32px;
+        margin: 0 0 32px 0;
+        color: white;
+    }
+
+    .info-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 16px;
+        margin-bottom: 24px;
+
+        .icon-box {
+            width: 40px;
+            height: 40px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            mat-icon {
+                color: white;
+            }
+        }
+
+        .label {
+            display: block;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            opacity: 0.7;
+            margin-bottom: 4px;
+        }
+
+        .value {
+            font-size: 16px;
+            font-weight: 500;
+            margin: 0;
+        }
+    }
+
+    .info-divider {
+        border-top-color: rgba(255, 255, 255, 0.2);
+        margin: 24px 0;
+    }
+
+    .response-note {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        background-color: rgba(255, 255, 255, 0.05);
+        padding: 12px;
+        border-radius: 4px;
+        font-size: 13px;
+
+        mat-icon {
+            font-size: 20px;
+            width: 20px;
+            height: 20px;
+            opacity: 0.8;
+        }
+
+        p {
+            margin: 0;
+            opacity: 0.9;
+        }
+    }
+}

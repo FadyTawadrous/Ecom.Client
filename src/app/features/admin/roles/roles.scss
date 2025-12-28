@@ -1,0 +1,217 @@
+/* --- Earthy Minimalist Variables --- */
+$bg-page: #E6E5DF; // Warm Bone
+$bg-card: #FFFFFF; // White
+$text-primary: #2C2C2C; // Charcoal
+$text-secondary: #57534E; // Warm Grey
+$accent: #5D5C52; // Olive
+$border: #D6D3D1; // Stone
+$hover-bg: #F5F5F4; // Light Stone
+$error: #991b1b;
+
+/* --- Page Layout --- */
+.admin-page {
+    padding: 32px;
+    background-color: $bg-page;
+    min-height: 100%;
+}
+
+/* --- Header --- */
+.page-header {
+    margin-bottom: 32px;
+
+    .page-title {
+        font-family: 'Garamond', serif;
+        font-size: 32px;
+        font-weight: 500;
+        margin: 0 0 8px 0;
+        color: $text-primary;
+    }
+
+    .page-subtitle {
+        font-size: 14px;
+        color: $text-secondary;
+        margin: 0;
+    }
+}
+
+/* --- Grid Layout --- */
+.content-grid {
+    display: grid;
+    grid-template-columns: 350px 1fr;
+    gap: 24px;
+    align-items: start;
+
+    @media (max-width: 900px) {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* --- Cards --- */
+mat-card {
+    background-color: $bg-card;
+    border: 1px solid $border;
+    border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    padding: 0;
+}
+
+.card-header {
+    padding: 20px 24px;
+    border-bottom: 1px solid $border;
+
+    h3 {
+        margin: 0;
+        font-family: 'Garamond', serif;
+        font-size: 20px;
+        color: $text-primary;
+    }
+}
+
+/* --- Form Styles --- */
+.form-card {
+    .form-body {
+        padding: 24px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+
+        .form-hint {
+            font-size: 13px;
+            color: $text-secondary;
+            margin: 0;
+        }
+    }
+
+    .form-actions {
+        padding: 16px 24px;
+        background-color: #FAFAFA;
+        border-top: 1px solid $border;
+        display: flex;
+        justify-content: flex-end;
+
+        .save-btn {
+            background-color: $accent;
+            color: white;
+            width: 100%; // Full width button for this small card
+
+            &:hover:not(:disabled) {
+                background-color: darken($accent, 5%);
+            }
+
+            &:disabled {
+                background-color: $border;
+                color: #9ca3af;
+            }
+        }
+    }
+}
+
+/* --- List Styles --- */
+.list-card {
+    .roles-list {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .role-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px 24px;
+        border-bottom: 1px solid #f3f4f6;
+        transition: background-color 0.2s;
+
+        &:last-child {
+            border-bottom: none;
+        }
+
+        &:hover {
+            background-color: $hover-bg;
+        }
+
+        .role-info {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+
+            .icon-box {
+                width: 40px;
+                height: 40px;
+                background-color: #FAFAFA;
+                border: 1px solid $border;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: $accent;
+            }
+
+            .role-name {
+                font-size: 16px;
+                font-weight: 600;
+                color: $text-primary;
+            }
+        }
+
+        .role-actions {
+            .delete-btn {
+                color: $error;
+                border-color: rgba(153, 27, 27, 0.3);
+
+                mat-icon {
+                    margin-right: 8px;
+                    font-size: 18px;
+                }
+
+                &:hover:not(:disabled) {
+                    background-color: #FEF2F2;
+                }
+
+                &:disabled {
+                    color: $text-secondary;
+                    border-color: $border;
+                    opacity: 0.5;
+                }
+            }
+        }
+    }
+}
+
+/* --- Clean Field Overrides --- */
+.clean-field {
+    width: 100%;
+
+    ::ng-deep {
+        .mdc-text-field--outlined {
+            background-color: #FAFAFA;
+        }
+
+        .mdc-notched-outline__leading,
+        .mdc-notched-outline__notch,
+        .mdc-notched-outline__trailing {
+            border-color: $border !important;
+        }
+
+        .mat-icon {
+            color: $text-secondary;
+        }
+
+        &.mat-focused {
+
+            .mdc-notched-outline__leading,
+            .mdc-notched-outline__notch,
+            .mdc-notched-outline__trailing {
+                border-color: $accent !important;
+                border-width: 1px !important;
+            }
+
+            .mdc-floating-label {
+                color: $accent !important;
+            }
+
+            .mat-icon {
+                color: $accent;
+            }
+        }
+    }
+}

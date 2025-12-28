@@ -1,63 +1,50 @@
-<!-- product-card.component.html - UPDATED -->
-<mat-card class="product-card" (click)="navigateToProductDetails()">
-  
-  <!-- Product Image -->
-  <img 
-    mat-card-image 
-    [src]="getThumbnail(product)"
-    [alt]="product.title"
-    class="product-image"
-    (click)="navigateToProductDetails()"
-    style="cursor: pointer">
-  
-  <!-- Product Info -->
-  <mat-card-content class="product-content" style="cursor: pointer">
-    <!-- Title -->
-    <h3 class="product-title" (click)="navigateToProductDetails()">
+<mat-card class="product-card" appearance="outlined" (click)="navigateToProductDetails()">
+
+  <div class="image-container">
+    <img [src]="getThumbnail(product)" [alt]="product.title" class="product-image" loading="lazy">
+
+    @if (product.discountPercentage > 0) {
+    <span class="discount-badge">
+      -{{ product.discountPercentage | number:'1.0-0' }}%
+    </span>
+    }
+
+    <button mat-icon-button class="wishlist-btn" [class.active]="isInWishlist()"
+      (click)="onToggleWishlist(); $event.stopPropagation()">
+      <mat-icon>{{ isInWishlist() ? 'favorite' : 'favorite_border' }}</mat-icon>
+    </button>
+  </div>
+
+  <mat-card-content class="card-content">
+
+    <div class="rating-row">
+      <div class="stars">
+        <mat-icon class="star-icon">star</mat-icon>
+        <span class="rating-val">{{ product.rating }}</span>
+      </div>
+      <span class="brand-text">{{ product.brandName || 'Generic' }}</span>
+    </div>
+
+    <h3 class="product-title" [title]="product.title">
       {{ product.title }}
     </h3>
-    
-    <!-- Price with discount if available -->
-    <div class="product-price">
-      <span class="current-price">
-        {{ product.price | currency }}
+
+    <div class="price-row">
+      <span class="current-price">{{ product.price | currency }}</span>
+
+      @if(product.discountPercentage > 0) {
+      <span class="original-price">
+        {{ (product.price / (1 - product.discountPercentage/100)) | currency }}
       </span>
-      @if (product.discountPercentage > 0) {
-        <span class="discount">
-          -{{ product.discountPercentage }}%
-        </span>
       }
     </div>
-    
-    <!-- Rating -->
-    <div class="product-rating">
-      <mat-icon>star</mat-icon>
-      <span>{{ product.rating }}</span>
-    </div>
   </mat-card-content>
-  
-  <!-- Action Buttons - Don't make these navigate -->
-  <mat-card-actions class="product-actions">
-    <!-- Add to Cart Button -->
-    <button
-      mat-raised-button 
-      color="primary"
-      (click)="onAddToCart(); $event.stopPropagation()" 
-      class="add-to-cart-btn">
-      <mat-icon>shopping_cart</mat-icon>
+
+  <mat-card-actions class="card-actions">
+    <button mat-flat-button color="primary" class="add-to-cart-btn" (click)="onAddToCart(); $event.stopPropagation()">
+      <mat-icon>add_shopping_cart</mat-icon>
       Add to Cart
     </button>
-    
-    <!-- Wishlist Button -->
-    <button 
-      mat-icon-button 
-      color="warn"
-      (click)="onToggleWishlist(); $event.stopPropagation()" 
-      class="wishlist-btn">
-      <mat-icon>
-            {{ isInWishlist() ? 'favorite' : 'favorite_border' }}
-      </mat-icon>
-    </button>
   </mat-card-actions>
-  
+
 </mat-card>

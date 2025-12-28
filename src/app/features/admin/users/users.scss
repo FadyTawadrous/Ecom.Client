@@ -1,0 +1,209 @@
+/* --- Earthy Minimalist Variables --- */
+$bg-page: #E6E5DF; // Warm Bone
+$bg-card: #FFFFFF; // White
+$text-primary: #2C2C2C; // Charcoal
+$text-secondary: #57534E; // Warm Grey
+$accent: #5D5C52; // Olive
+$border: #D6D3D1; // Stone
+$hover-bg: #F5F5F4; // Light Stone
+$error: #991b1b;
+
+/* --- Page Layout --- */
+.admin-page {
+    padding: 32px;
+    background-color: $bg-page;
+    min-height: 100%;
+}
+
+/* --- Header --- */
+.page-header {
+    margin-bottom: 32px;
+
+    .page-title {
+        font-family: 'Garamond', serif;
+        font-size: 32px;
+        font-weight: 500;
+        margin: 0 0 8px 0;
+        color: $text-primary;
+    }
+
+    .page-subtitle {
+        font-size: 14px;
+        color: $text-secondary;
+        margin: 0;
+    }
+}
+
+/* --- Card Styles --- */
+.users-card {
+    background-color: $bg-card;
+    border: 1px solid $border;
+    border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    padding: 0;
+    overflow: hidden;
+}
+
+/* --- Controls / Filter --- */
+.card-controls {
+    padding: 24px;
+    border-bottom: 1px solid $border;
+    background-color: #FAFAFA;
+
+    .search-field {
+        max-width: 400px;
+        width: 100%;
+    }
+}
+
+/* --- Table Styles --- */
+.table-container {
+    overflow-x: auto;
+}
+
+.admin-table {
+    width: 100%;
+
+    th.mat-mdc-header-cell {
+        background-color: $bg-card;
+        color: $text-secondary;
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-weight: 600;
+        padding: 16px 24px;
+        border-bottom: 1px solid $border;
+    }
+
+    td.mat-mdc-cell {
+        padding: 16px 24px;
+        color: $text-primary;
+        border-bottom: 1px solid #f3f4f6;
+        font-size: 14px;
+
+        &.font-medium {
+            font-weight: 500;
+        }
+
+        &.text-secondary {
+            color: $text-secondary;
+        }
+    }
+
+    /* Avatar Column (if enabled) */
+    .col-thumb {
+        width: 60px;
+
+        .avatar-img {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 1px solid $border;
+        }
+    }
+
+    /* Roles Badge */
+    .roles-wrapper {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+
+        .role-badge {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 4px 8px;
+            border-radius: 4px;
+            background-color: #F3F4F6;
+            color: $text-secondary;
+            border: 1px solid #E5E7EB;
+            font-weight: 600;
+
+            &.admin {
+                background-color: #ECFDF5; // Light green/mint
+                color: #047857;
+                border-color: #A7F3D0;
+            }
+        }
+    }
+
+    .no-role {
+        font-size: 12px;
+        color: #9CA3AF;
+        font-style: italic;
+    }
+
+    /* Actions */
+    .col-actions {
+        text-align: right;
+
+        .delete-btn {
+            color: $error;
+            font-size: 12px;
+            text-transform: uppercase;
+
+            mat-icon {
+                font-size: 18px;
+                margin-right: 4px;
+            }
+
+            &:hover {
+                background-color: #FEF2F2;
+            }
+        }
+    }
+}
+
+/* --- Paginator Override --- */
+::ng-deep .mat-mdc-paginator {
+    background: transparent !important;
+    border-top: 1px solid $border;
+
+    .mat-mdc-paginator-page-size-label {
+        color: $text-secondary;
+    }
+
+    .mat-mdc-select-value {
+        color: $text-primary;
+    }
+}
+
+/* --- Clean Search Field --- */
+.clean-field {
+    width: 100%;
+
+    ::ng-deep {
+        .mdc-text-field--outlined {
+            background-color: white;
+        }
+
+        .mdc-notched-outline__leading,
+        .mdc-notched-outline__notch,
+        .mdc-notched-outline__trailing {
+            border-color: $border !important;
+        }
+
+        .mat-icon {
+            color: $text-secondary;
+        }
+
+        &.mat-focused {
+
+            .mdc-notched-outline__leading,
+            .mdc-notched-outline__notch,
+            .mdc-notched-outline__trailing {
+                border-color: $accent !important;
+                border-width: 1px !important;
+            }
+
+            .mdc-floating-label {
+                color: $accent !important;
+            }
+
+            .mat-icon {
+                color: $accent;
+            }
+        }
+    }
+}

@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
+import { MaterialModule } from '../../material/material-module';
 
 @Component({
   selector: 'app-contact-us',
@@ -13,8 +14,10 @@ import { MatButtonModule } from '@angular/material/button';
     FormsModule,
     MatFormFieldModule,
     MatInputModule,
-    MatButtonModule
-  ]
+    MatButtonModule,
+    MaterialModule
+  ],
+  styleUrls: ['./contact.scss']
 })
 export class Contact {
   

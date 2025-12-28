@@ -1,130 +1,134 @@
-/* --- brand-slider.component.scss - DARK MODE --- */
+/* --- Variables --- */
+$text-primary: #111827;
+$text-secondary: #6b7280;
+$accent: #2563eb; // Blue
+$bg-hover: #f3f4f6; // Light Gray
+$bg-active: #eff6ff; // Light Blue Tint
+$skeleton-color: #e5e7eb;
+$active-bg: #D6D3D1; // Stone-300
+$active-text: #2C2C2C;
 
-.brand-slider {
-  display: flex;
-  gap: 10px;
-  padding: 16px 0;
-  overflow-x: auto;
-  white-space: nowrap;
-
-  // Custom scrollbar (Tailwind/Dark Mode Colors)
-  scrollbar-width: thin;
-  scrollbar-color: #4b5563 #111827; /* gray-600 track, gray-900 background */
-
-  // For Webkit browsers (Chrome, Safari)
-  &::-webkit-scrollbar {
-    height: 6px;
-  }
-  &::-webkit-scrollbar-thumb {
-    background-color: #4b5563; /* gray-600 */
-    border-radius: 3px;
-  }
-  &::-webkit-scrollbar-track {
-    background: #1f2937; /* gray-800 or darker */
-  }
-}
-
-.brand-button {
+.brand-list-container {
   display: flex;
   flex-direction: column;
+  gap: 4px;
+  width: 100%;
+}
+
+.brand-item {
+  // Reset Material Button basics
+  width: 100%;
+  border-radius: 8px;
+  padding: 0 12px;
+  height: 40px;
+  font-weight: 500;
+  color: $text-secondary;
+  background: transparent;
+  border: none;
+
+  // Flex layout
+  display: flex;
   align-items: center;
-  padding: 12px 8px;
-  border-radius: 12px;
-  
-  // Default Dark Mode State
-  border: 2px solid #374151; /* gray-700 border */
-  background: #1f2937; /* gray-800 background */
+  justify-content: space-between;
   transition: all 0.2s ease;
-  cursor: pointer;
-  min-width: auto;
-  width: auto;
-  height: auto;
-  
-  // Override mat-stroked-button background color on hover
-  ::ng-deep .mat-mdc-button-base {
-    background: #1f2937; /* Ensure internal background is dark */
-  }
 
-  // Active state
-  &.active {
-    border-color: #60a5fa !important; /* blue-400 accent */
-    background-color: rgba(96, 165, 250, 0.1) !important; /* subtle blue background */
-    
-    .brand-name {
-      color: #60a5fa !important; /* blue-400 text */
-      font-weight: 500;
-    }
-    
-    mat-icon {
-      color: #60a5fa !important; /* blue-400 icon */
-    }
-  }
-  
-  // Hover effect
-  &:hover:not(.active) {
-    border-color: #4b5563 !important; /* gray-600 on hover */
-    background-color: #374151 !important; /* slightly lighter dark background */
-    transform: translateY(-1px);
-  }
-}
-
-// Icon styling
-mat-icon {
-  margin-bottom: 6px;
-  color: #9ca3af !important; /* gray-400 default icon color */
-  font-size: 20px;
-  width: 20px;
-  height: 20px;
-}
-
-.brand-name {
-  font-size: 12px;
-  color: #e5e7eb !important; /* gray-200 default text color */
-  text-align: center;
-  max-width: 100px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  padding: 0 4px;
-}
-
-/* --- States (Loading/Empty) --- */
-
-.loading {
-    display: flex;
-    gap: 10px;
-}
-
-.skeleton {
-    width: 80px;
-    min-width: 80px;
-    height: 70px;
-    border-radius: 12px;
-    background: #374151; /* gray-700 for skeleton loader */
-    animation: pulse 1.5s infinite ease-in-out;
-}
-
-.empty-state {
+  // Content (Left)
+  .item-content {
     display: flex;
     align-items: center;
-    gap: 8px;
-    padding: 12px 16px;
-    border-radius: 8px;
-    background-color: #1f2937; /* gray-800 */
-    border: 1px solid #374151; /* gray-700 */
-    color: #9ca3af; /* gray-400 */
-    
-    mat-icon {
-        color: #9ca3af !important;
-        font-size: 18px;
-        width: 18px;
-        height: 18px;
-        margin-bottom: 0;
+    gap: 12px;
+    overflow: hidden;
+
+    .brand-icon {
+      font-size: 20px;
+      width: 20px;
+      height: 20px;
+      color: #9ca3af; // Gray-400
     }
+
+    .brand-name {
+      font-size: 14px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+
+  // Checkmark (Right)
+  .active-check {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    color: $accent;
+    opacity: 0;
+    transform: translateX(-5px);
+    transition: all 0.2s ease;
+  }
+
+  /* --- HOVER STATE --- */
+  &:hover:not(.active) {
+    background-color: rgba(0,0,0,0.03);
+    color: $text-primary;
+
+    .brand-icon {
+      color: $text-secondary;
+    }
+  }
+
+  /* --- ACTIVE STATE --- */
+  &.active {
+    background-color: $active-bg;
+    color: $active-text;
+    font-weight: 600;
+
+    .item-content .brand-icon {
+      color: $active-text;
+    }
+
+    .active-check {
+      opacity: 1;
+      transform: translateX(0);
+      color: #5D5C52;
+    }
+  }
+}
+
+/* --- Skeleton Loading (Vertical) --- */
+.skeleton-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 4px 12px; // Match button padding
+  margin-top: 8px;
+
+  .skeleton-row {
+    height: 24px;
+    width: 100%;
+    border-radius: 4px;
+    background: $skeleton-color;
+    animation: pulse 1.5s infinite ease-in-out;
+
+    // Vary widths slightly to look natural
+    &:nth-child(even) {
+      width: 85%;
+    }
+
+    &:nth-child(3) {
+      width: 60%;
+    }
+  }
 }
 
 @keyframes pulse {
-    0% { opacity: 0.6; }
-    50% { opacity: 1; }
-    100% { opacity: 0.6; }
+  0% {
+    opacity: 0.5;
+  }
+
+  50% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0.5;
+  }
 }

@@ -16,7 +16,8 @@ import { Component } from "@angular/core";
     MatButtonModule,
     MatProgressSpinnerModule
   ],
-  templateUrl: './chatbot.html'
+  templateUrl: './chatbot.html',
+  styleUrl: './chatbot.scss'
 })
 export class ChatbotComponent {
 

@@ -49,7 +49,9 @@
               {
                 "glob": "**/*",
                 "input": "public"
-              }
+              },
+              "src/favicon.svg",
+              "src/assets"
             ],
             "styles": [
               "src/styles.scss",
@@ -114,7 +116,9 @@
               {
                 "glob": "**/*",
                 "input": "public"
-              }
+              },
+              "src/favicon.svg",
+              "src/assets"
             ],
             "styles": [
               "src/styles.scss"

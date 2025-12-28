@@ -2,10 +2,11 @@ import { Component } from '@angular/core';
 import { MatIcon } from "@angular/material/icon";
 import { MatCard } from "@angular/material/card";
 import { CommonModule } from '@angular/common';
+import { MaterialModule } from '../../material/material-module';
 
 @Component({
   selector: 'app-about',
-  imports: [MatIcon, MatCard, CommonModule],
+  imports: [MatIcon, MatCard, CommonModule, MaterialModule],
   templateUrl: './about.html',
   styleUrl: './about.scss',
 })

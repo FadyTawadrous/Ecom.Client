@@ -1,260 +1,221 @@
-/* --- search-filter.component.scss - DARK MODE --- */
+/* --- Earthy Theme Variables --- */
+$text-primary: #2C2C2C; // Charcoal
+$text-secondary: #57534E; // Warm Grey
+$accent: #5D5C52; // Olive
+$bg-hover: #F5F5F4; // Light Stone/Bone
+$border: #D6D3D1; // Stone
+$star-filled: #F59E0B; // Amber/Gold
+$star-empty: #D4D4D8; // Light Grey
 
 .search-filter {
-  // Dark Mode Container Styles
-  background: #1f2937; /* gray-800 background */
-  border-radius: 16px;
-  padding: 24px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4); /* Stronger shadow for dark mode lift */
-  border: 1px solid #374151; /* gray-700 border */
-}
-
-/* --- Filter Header and Titles --- */
-.filter-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 28px;
-  padding-bottom: 16px;
-  border-bottom: 1px solid #374151; /* gray-700 separator */
-  
-  .filter-title {
-    margin: 0;
-    font-size: 20px;
-    font-weight: 600;
-    color: white; /* Changed from #2c3e50 to white */
-  }
+  width: 100%;
 }
 
 .filter-section {
-  margin-bottom: 28px;
-  
+  margin-bottom: 32px;
+
+  &.first-section {
+    margin-top: 8px;
+  }
+
   h4 {
     margin: 0 0 12px;
-    font-size: 16px;
-    font-weight: 600;
-    color: white; /* Changed from #34495e to white */
-  }
-  
-  .rating-subtitle {
-    margin: 0 0 16px;
-    font-size: 14px;
-    color: #9ca3af; /* gray-400 */
-    font-weight: 400;
-  }
-}
-
-/* --- Price Range Buttons --- */
-.price-ranges {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 10px;
-  margin-bottom: 20px;
-  
-  .price-range-btn {
     font-size: 13px;
-    padding: 10px 8px;
-    border-radius: 10px;
-    min-height: 44px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    // Apply dark mode button defaults
-    border: 1px solid #4b5563; /* gray-600 */
-    background-color: #374151; /* gray-700 */
-    color: #e5e7eb; /* gray-200 text */
-    
-    .price-label {
-      font-weight: 500;
-      color: inherit;
-    }
-
-    // Hover State
-    &:hover:not(.active) {
-      border-color: #60a5fa; /* blue-400 */
-      background-color: #4b5563; /* gray-600 slightly darker hover */
-    }
-    
-    &.active {
-      // Replace Blue/Indigo gradient with Blue-400 flat color/gradient
-      background: linear-gradient(135deg, #60a5fa, #3b82f6); /* blue-400 to blue-500 */
-      color: white;
-      font-weight: 600;
-      border-color: #60a5fa;
-      
-      .price-label {
-        color: white;
-      }
-    }
+    font-weight: 700;
+    color: $text-primary;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-family: 'Helvetica Neue', sans-serif;
   }
 }
 
-/* --- Custom Price Inputs --- */
-.custom-price {
-  .custom-price-label {
-    margin: 0 0 12px;
-    font-size: 14px;
-    color: #9ca3af; /* gray-400 */
-    font-weight: 500;
-  }
-  
-  .price-inputs {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    
-    .price-input {
-      flex: 1;
-    }
-    
-    .price-to {
-      color: #9ca3af; /* gray-400 */
-      font-size: 15px;
-      font-weight: 500;
-    }
-  }
-}
-
-/* --- Rating Buttons --- */
-.rating-buttons {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  
-  .rating-btn {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 12px 20px;
-    border-radius: 12px;
-    min-height: 56px;
-
-    // Default Dark Mode Button Styles
-    border: 1px solid #4b5563; /* gray-600 */
-    background-color: #374151; /* gray-700 */
-    
-    .rating-content {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-    
-    .stars {
-      display: flex;
-      gap: 2px;
-      
-      .star {
-        font-size: 20px;
-        width: 20px;
-        height: 20px;
-        color: #fcd34d; /* yellow-300 (Lighter yellow for dark mode) */
-      }
-    }
-    
-    .rating-text {
-      font-size: 14px;
-      font-weight: 500;
-      color: #e5e7eb; /* gray-200 */
-    }
-    
-    &.active {
-      // Replace Orange gradient with a consistent accent color (Blue-400 or Orange/Amber accent)
-      // Sticking to Blue-400 for consistency across the application
-      background: linear-gradient(135deg, #60a5fa, #3b82f6);
-      border-color: #60a5fa;
-      color: white;
-      
-      .stars {
-        .star {
-          color: white; /* White stars for active state */
-        }
-      }
-      
-      .rating-text {
-        color: white;
-        font-weight: 600;
-      }
-    }
-
-    // Hover State
-    &:hover:not(.active) {
-      border-color: #60a5fa; /* blue-400 */
-      background-color: #4b5563; /* gray-600 */
-    }
-  }
-}
-
-/* --- Form Fields (Apply Custom Dark Field Styles) --- */
-// Since we can't apply the .custom-dark-field class directly via SCSS
-// we target the mat-form-field inside this component and force the styles.
-mat-form-field {
+/* --- 1. Clean Form Fields --- */
+.clean-field {
   width: 100%;
-  
-  // Apply generic dark mode text/label styles globally to inputs within this filter
-  ::ng-deep &.mat-mdc-form-field {
-    // This uses the same classes as your reference dark mode input styles
-    
-    // Input/Text Color
+
+  ::ng-deep {
+    .mdc-text-field--outlined {
+      background-color: #FAFAFA !important; // Light grey input bg
+    }
+
+    // Input Text Color
     .mat-mdc-input-element {
-      color: white !important;
-      caret-color: #60a5fa !important;
+      color: $text-primary !important;
+      caret-color: $accent !important;
     }
 
-    // Placeholder Color
-    .mat-mdc-input-element::placeholder {
-      color: #6b7280 !important; // gray-500
-    }
-
-    // Label Color (Default)
+    // Placeholder/Label Colors
     .mdc-floating-label {
-      color: #9ca3af !important; // gray-400
+      color: $text-secondary !important;
     }
 
-    // Label Color (Focused/Floating)
     &.mat-focused .mdc-floating-label {
-      color: #60a5fa !important; // blue-400
+      color: $accent !important;
     }
 
-    // Outline/Border Default
+    // Borders (Outline)
     .mdc-notched-outline__leading,
     .mdc-notched-outline__notch,
     .mdc-notched-outline__trailing {
-      border-color: #4b5563 !important; // gray-600
+      border-color: $border !important;
     }
 
-    // Outline/Border Focused
+    // Focused Borders
     &.mat-focused .mdc-notched-outline__leading,
     &.mat-focused .mdc-notched-outline__notch,
     &.mat-focused .mdc-notched-outline__trailing {
-      border-color: #60a5fa !important; // blue-400
-      border-width: 2px !important;
+      border-color: $accent !important;
+      border-width: 1px !important;
     }
-  }
 
-  // Icons inside the form field
-  ::ng-deep .mat-icon {
-    color: #9ca3af !important; // gray-400
+    // Icons/Prefixes
+    .mat-icon,
+    .mat-mdc-form-field-text-prefix {
+      color: $text-secondary !important;
+    }
   }
 }
 
-/* --- Responsive --- */
-@media (max-width: 768px) {
-  .price-ranges {
-    grid-template-columns: 1fr;
+/* --- 2. Price Range Chips --- */
+.price-ranges {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  margin-bottom: 16px;
+
+  .price-range-btn {
+    border: 1px solid $border;
+    border-radius: 4px; // Square-ish look
+    color: $text-secondary;
+    background: white;
+    font-size: 13px;
+    height: 36px;
+    line-height: 36px;
+    padding: 0 4px;
+
+    .price-label {
+      font-weight: 500;
+    }
+
+    &:hover {
+      background-color: $bg-hover;
+      border-color: $text-secondary;
+    }
+
+    &.active {
+      background-color: $accent; // Olive
+      color: white;
+      border-color: $accent;
+      font-weight: 600;
+    }
   }
-  
-  .rating-buttons {
-    .rating-btn {
-      padding: 10px 16px;
-      min-height: 52px;
-      
-      .rating-content {
-        gap: 10px;
+}
+
+/* --- 3. Custom Price Inputs --- */
+.custom-price {
+  .custom-price-label {
+    font-size: 12px;
+    color: $text-secondary;
+    margin-bottom: 8px;
+    font-weight: 600;
+  }
+
+  .price-inputs {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    .price-sep {
+      color: $text-secondary;
+      font-weight: 500;
+    }
+
+    .small-field {
+      ::ng-deep {
+        .mat-mdc-text-field-wrapper {
+          padding-left: 12px;
+          padding-right: 12px;
+        }
+
+        .mat-mdc-form-field-infix {
+          padding-top: 6px !important;
+          padding-bottom: 6px !important;
+          min-height: 38px !important;
+          display: flex;
+          align-items: center;
+        }
+
+        .mat-mdc-input-element {
+          margin-top: 4px;
+        }
+
+        .mdc-floating-label {
+          top: 18px !important;
+        }
       }
-      
+    }
+  }
+}
+
+/* --- 4. Rating Buttons --- */
+.rating-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  .rating-row-btn {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 0 12px;
+    height: 42px;
+    border-radius: 4px; // Square-ish
+
+    border: 1px solid $border;
+    background: white;
+    color: $text-secondary;
+    transition: all 0.2s ease;
+
+    .rating-content {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .stars {
+      display: flex;
+      gap: 2px; // Closer stars
+
+      .star {
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
+        // Color is handled inline in HTML, default fallback:
+        color: $star-empty;
+      }
+    }
+
+    .rating-text {
+      font-size: 13px;
+      font-weight: 500;
+      color: $text-secondary;
+    }
+
+    /* Hover State */
+    &:hover {
+      background-color: $bg-hover;
+      border-color: $text-secondary;
+    }
+
+    /* Active State */
+    &.active {
+      background-color: #F5F5F4; // Light Stone
+      border-color: $accent; // Olive Border
+
       .rating-text {
-        font-size: 13px;
+        color: $accent;
+        font-weight: 700;
       }
     }
   }

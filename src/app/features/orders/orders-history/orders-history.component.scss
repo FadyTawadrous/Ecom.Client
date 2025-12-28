@@ -1,55 +1,254 @@
-/* --- Status Badges (Dark Mode Optimized) --- */
-.status-badge {
-  padding: 4px 12px;
-  border-radius: 99px;
-  font-size: 0.75rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  border: 1px solid transparent;
+/* --- Earthy Minimalist Variables --- */
+$bg-page: #E6E5DF; // Warm Bone
+$bg-card: #FFFFFF; // White
+$text-primary: #2C2C2C; // Charcoal
+$text-secondary: #57534E; // Warm Grey
+$accent: #5D5C52; // Olive
+$border: #D6D3D1; // Stone
+$hover-bg: #F5F5F4; // Light Stone
 
-  /* Pending */
-  &.status-0 {
-    background: rgba(107, 114, 128, 0.2);
-    /* Gray-500/20 */
-    color: #d1d5db;
-    /* Gray-300 */
-    border-color: rgba(107, 114, 128, 0.3);
+/* --- Page Layout --- */
+.orders-page {
+  min-height: calc(100vh - 80px);
+  background-color: $bg-page;
+  padding: 40px 16px;
+  font-family: 'Helvetica Neue', sans-serif;
+  color: $text-primary;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* --- Header --- */
+.page-header {
+  margin-bottom: 40px;
+  padding-left: 16px;
+  border-left: 4px solid $accent;
+
+  .page-title {
+    font-family: 'Garamond', serif;
+    font-size: 36px;
+    font-weight: 500;
+    margin: 0 0 8px 0;
+    color: $text-primary;
   }
 
-  /* Processing (Assuming 1) */
-  &.status-1 {
-    background: rgba(59, 130, 246, 0.15);
-    /* Blue-500/15 */
-    color: #93c5fd;
-    /* Blue-300 */
-    border-color: rgba(59, 130, 246, 0.3);
+  .page-subtitle {
+    font-size: 16px;
+    color: $text-secondary;
+    margin: 0;
+  }
+}
+
+/* --- Empty State --- */
+.empty-state {
+  background-color: $bg-card;
+  border: 1px dashed $border;
+  padding: 64px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+
+  .icon-circle {
+    width: 80px;
+    height: 80px;
+    background-color: #F5F5F4;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 24px;
+
+    mat-icon {
+      font-size: 40px;
+      width: 40px;
+      height: 40px;
+      color: $text-secondary;
+    }
   }
 
-  /* Shipped (Assuming 2) */
-  &.status-2 {
-    background: rgba(245, 158, 11, 0.15);
-    /* Amber-500/15 */
-    color: #fcd34d;
-    /* Amber-300 */
-    border-color: rgba(245, 158, 11, 0.3);
+  h3 {
+    font-family: 'Garamond', serif;
+    font-size: 24px;
+    font-weight: 600;
+    margin: 0 0 12px 0;
+    color: $text-primary;
   }
 
-  /* Delivered (Assuming 3) */
-  &.status-3 {
-    background: rgba(16, 185, 129, 0.15);
-    /* Emerald-500/15 */
-    color: #6ee7b7;
-    /* Emerald-300 */
-    border-color: rgba(16, 185, 129, 0.3);
+  p {
+    margin: 0 0 32px 0;
+    color: $text-secondary;
   }
 
-  /* Cancelled (Assuming 4 or fallback) */
-  &.status-4 {
-    background: rgba(239, 68, 68, 0.15);
-    /* Red-500/15 */
-    color: #fca5a5;
-    /* Red-300 */
-    border-color: rgba(239, 68, 68, 0.3);
+  .shop-btn {
+    background-color: $accent;
+    color: white;
+    padding: 0 32px;
+    height: 48px;
+    border-radius: 0;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 600;
+
+    &:hover {
+      background-color: darken($accent, 5%);
+    }
+  }
+}
+
+/* --- Orders Grid --- */
+.orders-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 24px;
+}
+
+/* --- Order Card --- */
+.order-card {
+  background-color: $bg-card;
+  border: 1px solid $border;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  border-radius: 4px;
+  transition: transform 0.2s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    border-color: $accent;
+  }
+
+  .card-content {
+    padding: 24px;
+  }
+
+  /* Header */
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+
+    .order-id {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 600;
+      color: $text-primary;
+      font-size: 16px;
+
+      mat-icon {
+        font-size: 20px;
+        width: 20px;
+        height: 20px;
+        color: $text-secondary;
+      }
+    }
+  }
+
+  /* Status Badges */
+  .status-badge {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border: 1px solid transparent;
+
+    &.status-0 {
+      background: #F3F4F6;
+      color: #6B7280;
+      border-color: #E5E7EB;
+    }
+
+    // Gray
+    &.status-1 {
+      background: #EFF6FF;
+      color: #3B82F6;
+      border-color: #DBEAFE;
+    }
+
+    // Blue
+    &.status-2 {
+      background: #FEF3C7;
+      color: #D97706;
+      border-color: #FDE68A;
+    }
+
+    // Amber
+    &.status-3 {
+      background: #ECFDF5;
+      color: #059669;
+      border-color: #A7F3D0;
+    }
+
+    // Green
+    &.status-4 {
+      background: #FEF2F2;
+      color: #DC2626;
+      border-color: #FECACA;
+    }
+
+    // Red
+  }
+
+  /* Details List */
+  .details-list {
+    margin: 16px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+
+    .detail-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 14px;
+
+      .label {
+        color: $text-secondary;
+      }
+
+      .value {
+        font-weight: 500;
+        color: $text-primary;
+      }
+
+      .price {
+        font-size: 18px;
+        font-weight: 600;
+        color: $accent;
+        font-family: 'Garamond', serif;
+      }
+
+      .tracking {
+        font-family: monospace;
+        background-color: #F5F5F4;
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-size: 12px;
+      }
+    }
+  }
+
+  /* Footer */
+  .card-footer {
+    padding-top: 16px;
+    border-top: 1px solid #f3f4f6;
+    display: flex;
+    justify-content: flex-end;
+
+    .view-btn {
+      color: $text-primary;
+      border-color: $border;
+      border-radius: 0; // Square button
+
+      &:hover {
+        background-color: #FAFAFA;
+        border-color: $text-secondary;
+      }
+    }
   }
 }

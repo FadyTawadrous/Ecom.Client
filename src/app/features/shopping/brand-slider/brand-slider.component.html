@@ -1,42 +1,37 @@
-<!-- Your exact HTML with just styling enhancements -->
-<div class="brand-slider">
-  <!-- "All Brands" Button -->
-  <button 
-    mat-stroked-button 
-    class="brand-button"
-    [class.active]="!selectedBrandId"
+<div class="brand-list-container">
+
+  <button mat-button class="brand-item" [class.active]="!selectedBrandId || selectedBrandId === 0"
     (click)="selectAllBrands()">
-    <mat-icon>apps</mat-icon>
-    <span class="brand-name">All Brands</span>
+
+    <div class="item-content">
+      <mat-icon class="brand-icon">apps</mat-icon>
+      <span class="brand-name">All Brands</span>
+    </div>
+
+    @if(!selectedBrandId || selectedBrandId === 0) {
+    <mat-icon class="active-check">check</mat-icon>
+    }
   </button>
-  
-  <!-- Loop through each brand -->
+
   @for (brand of brands; track brand.id) {
-    <button 
-      mat-stroked-button 
-      class="brand-button"
-      [class.active]="isBrandSelected(brand.id)"
-      (click)="selectBrand(brand.id)">
-      <span class="brand-name">
-        {{ brand.name || 'Brand ' + brand.id }}
-      </span>
-    </button>
-  }
-  
-  <!-- Loading state -->
-  @if ( brands.length === 0) {
-    <div class="loading">
-      @for (item of [1,2,3,4,5]; track $index) {
-        <div class="skeleton"></div>
-      }
+  <button mat-button class="brand-item" [class.active]="isBrandSelected(brand.id)" (click)="selectBrand(brand.id)">
+
+    <div class="item-content">
+      <mat-icon class="brand-icon">verified</mat-icon>
+      <span class="brand-name">{{ brand.name || 'Brand ' + brand.id }}</span>
     </div>
+
+    @if(isBrandSelected(brand.id)) {
+    <mat-icon class="active-check">check</mat-icon>
+    }
+  </button>
   }
-  
-  <!-- Empty state -->
-  @if   (brands.length === 0) {
-    <div class="empty-state">
-      <mat-icon>inventory_2</mat-icon>
-      <span>No brands found</span>
-    </div>
+
+  @if (brands.length === 0) {
+  <div class="skeleton-list">
+    @for (item of [1,2,3,4,5]; track $index) {
+    <div class="skeleton-row"></div>
+    }
+  </div>
   }
 </div>

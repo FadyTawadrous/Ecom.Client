@@ -3,11 +3,11 @@ import { CommonModule } from '@angular/common';
 import { WishlistItem } from '../../../core/models/wishlist.models';
 import { CartService } from '../../../core/services/cart-service';
 import { Router } from '@angular/router';
-
+import { MaterialModule } from '../../../shared/material/material-module';
 @Component({
   selector: 'app-wishlist-item',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, MaterialModule],
   templateUrl: './wishlist-item.html',
   styleUrls: ['./wishlist-item.scss']
 })

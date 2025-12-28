@@ -1,78 +1,90 @@
-<div class="max-w-6xl mx-auto px-6 py-20">
+<div class="contact-page">
+  <div class="container">
 
-  <!-- TITLE -->
-  <h1 class="text-4xl font-bold text-center text-indigo-600 mb-4">
-    Contact Us
-  </h1>
-  <p class="text-center text-gray-500 mb-14">
-    We'd love to hear from you. Fill the form and we’ll get back shortly.
-  </p>
+    <div class="page-header">
+      <h1 class="page-title">Contact Us</h1>
+      <p class="page-subtitle">We'd love to hear from you. Fill out the form below.</p>
+    </div>
 
-  <div class="grid md:grid-cols-2 gap-10 items-center">
+    <div class="contact-grid">
 
-    <!-- FORM -->
-    <form (ngSubmit)="submit()" #f="ngForm"
-          class="bg-white p-8 rounded-xl shadow-2xl">
+      <mat-card class="form-card">
+        <form (ngSubmit)="submit()" #f="ngForm" class="contact-form">
 
-      <!-- NAME -->
-      <mat-form-field appearance="outline" class="w-full mb-4">
-        <mat-label>Your Name</mat-label>
-        <input matInput required
-               [(ngModel)]="model.name"
-               name="name">
-      </mat-form-field>
+          <mat-form-field appearance="outline" class="clean-field">
+            <mat-label>Your Name</mat-label>
+            <input matInput required [(ngModel)]="model.name" name="name">
+            <mat-icon matSuffix>person_outline</mat-icon>
+          </mat-form-field>
 
-      <!-- EMAIL -->
-      <mat-form-field appearance="outline" class="w-full mb-4">
-        <mat-label>Your Email</mat-label>
-        <input matInput type="email" required
-               [(ngModel)]="model.email"
-               name="email">
-      </mat-form-field>
+          <mat-form-field appearance="outline" class="clean-field">
+            <mat-label>Your Email</mat-label>
+            <input matInput type="email" required [(ngModel)]="model.email" name="email">
+            <mat-icon matSuffix>mail_outline</mat-icon>
+          </mat-form-field>
 
-      <!-- MESSAGE -->
-      <mat-form-field appearance="outline" class="w-full mb-6">
-        <mat-label>Your Message</mat-label>
-        <textarea matInput rows="5" required
-                  [(ngModel)]="model.message"
-                  name="message"></textarea>
-      </mat-form-field>
+          <mat-form-field appearance="outline" class="clean-field">
+            <mat-label>Your Message</mat-label>
+            <textarea matInput rows="6" required [(ngModel)]="model.message" name="message"></textarea>
+          </mat-form-field>
 
-      <!-- BUTTON -->
-      <button mat-raised-button
-              type="submit"
-              color="primary"
-              class="w-full py-3 text-lg"
-              [disabled]="f.invalid || sending">
+          <div class="form-actions">
+            <button mat-flat-button type="submit" class="submit-btn" [disabled]="f.invalid || sending">
+              @if (sending) {
+              <span>Sending...</span>
+              } @else {
+              <span class="btn-content">Send Message <mat-icon>arrow_forward</mat-icon></span>
+              }
+            </button>
+          </div>
 
-        {{ sending ? 'Sending...' : 'Send Message 🚀' }}
+        </form>
+      </mat-card>
 
-      </button>
+      <mat-card class="info-card">
+        <div class="info-content">
+          <h2 class="info-title">Reach Us</h2>
 
-    </form>
+          <div class="info-item">
+            <div class="icon-box">
+              <mat-icon>email</mat-icon>
+            </div>
+            <div>
+              <span class="label">Email</span>
+              <p class="value">e.com.store61425&#64;gmail.com</p>
+            </div>
+          </div>
 
-    <!-- CONTACT CARD -->
-    <div class="bg-gradient-to-br from-indigo-600 to-purple-600
-                text-white p-10 rounded-2xl shadow-xl">
+          <div class="info-item">
+            <div class="icon-box">
+              <mat-icon>public</mat-icon>
+            </div>
+            <div>
+              <span class="label">Support</span>
+              <p class="value">Global Support</p>
+            </div>
+          </div>
 
-      <h2 class="text-2xl font-bold mb-6">Reach Us</h2>
+          <div class="info-item">
+            <div class="icon-box">
+              <mat-icon>schedule</mat-icon>
+            </div>
+            <div>
+              <span class="label">Availability</span>
+              <p class="value">Available 24/7</p>
+            </div>
+          </div>
 
-      <p class="mb-4 text-lg">
-        📧 Email <br>
-        <span class="font-semibold">
-          e.com.store61425@gmail.com
-        </span>
-      </p>
+          <mat-divider class="info-divider"></mat-divider>
 
-      <p class="mb-4 text-lg">🌍 Global Support</p>
-      <p class="mb-4 text-lg">⏰ Available 24/7</p>
-
-      <div class="mt-8 p-4 text-sm rounded-lg bg-white/20">
-        We usually reply within 24 hours.
-      </div>
+          <div class="response-note">
+            <mat-icon>info</mat-icon>
+            <p>We usually reply within 24 hours.</p>
+          </div>
+        </div>
+      </mat-card>
 
     </div>
 
   </div>
-
 </div>

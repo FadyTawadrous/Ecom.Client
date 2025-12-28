@@ -5,6 +5,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
+import { MaterialModule } from '../../../shared/material/material-module';
 
 @Component({
   selector: 'app-roles',
@@ -14,9 +15,11 @@ import { CommonModule } from '@angular/common';
     FormsModule,
     MatFormFieldModule,
     MatInputModule,
-    MatButtonModule
+    MatButtonModule,
+    MaterialModule
   ],
   templateUrl: './roles.html',
+  styleUrl: './roles.scss'
 })
 export class AdminRolesComponent implements OnInit {
 

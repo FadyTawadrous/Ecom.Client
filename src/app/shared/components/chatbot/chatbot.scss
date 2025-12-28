@@ -1,0 +1,272 @@
+/* --- 1. Add this import at the very top --- */
+@use 'sass:color';
+
+/* --- Earthy Minimalist Variables --- */
+$bg-primary: #2C2C2C; // Charcoal
+$bg-window: #FFFFFF; // White
+$bg-message: #F5F5F4; // Stone-100
+$text-primary: #2C2C2C;
+$text-secondary: #57534E;
+$accent: #5D5C52; // Olive
+$border: #E5E5E5;
+
+/* --- Floating Toggle Button --- */
+:host {
+    display: block;
+    z-index: 9999;
+}
+
+.chat-toggle-btn {
+    position: fixed !important;
+    bottom: 30px !important;
+    right: 30px !important;
+    z-index: 9999 !important;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+
+    background-color: #2C2C2C;
+    color: #FFFFFF;
+    border: 2px solid #E6E5DF;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    margin: 0;
+    padding: 0;
+    transition: transform 0.3s ease;
+
+    &:hover {
+        transform: scale(1.1);
+        background-color: #1a1a1a;
+    }
+
+    &.active {
+        background-color: #5D5C52;
+        transform: rotate(90deg);
+    }
+
+    mat-icon {
+        font-size: 28px;
+        width: 28px;
+        height: 28px;
+    }
+}
+
+/* --- Main Window --- */
+.chat-window {
+    position: fixed !important;
+    bottom: 100px !important;
+    right: 30px !important;
+    z-index: 9999 !important;
+
+    width: 400px;
+    max-width: calc(100vw - 48px);
+    background-color: $bg-window;
+    border: 1px solid $border;
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    animation: slideUp 0.3s ease-out;
+    border-radius: 4px;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* --- Header --- */
+.chat-header {
+    background-color: $bg-primary;
+    color: #E6E5DF;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .header-title {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+
+        .header-icon {
+            color: #E6E5DF;
+        }
+
+        span {
+            font-family: 'Garamond', serif;
+            font-size: 18px;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+    }
+}
+
+/* --- Body --- */
+.chat-body {
+    padding: 20px;
+    height: 400px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    background-color: #FAFAFA;
+
+    &::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background-color: #D6D3D1;
+    }
+}
+
+.message-bubble {
+    padding: 12px 16px;
+    font-size: 14px;
+    line-height: 1.5;
+    color: $text-primary;
+    background-color: $bg-message;
+    border-left: 3px solid $accent;
+
+    &.ai-message {
+        align-self: flex-start;
+        width: 100%;
+    }
+}
+
+.welcome-state {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    text-align: center;
+    color: $text-secondary;
+    font-family: 'Garamond', serif;
+    font-size: 18px;
+    font-style: italic;
+    opacity: 0.7;
+}
+
+/* --- Table Styles --- */
+.products-table-container {
+    border: 1px solid $border;
+    background-color: white;
+    overflow: hidden;
+}
+
+.products-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+
+    th {
+        background-color: #F5F5F4;
+        color: $text-secondary;
+        font-weight: 600;
+        text-transform: uppercase;
+        padding: 8px 12px;
+        text-align: left;
+        letter-spacing: 0.5px;
+    }
+
+    td {
+        padding: 8px 12px;
+        border-bottom: 1px solid #f0f0f0;
+        color: $text-primary;
+
+        &.font-medium {
+            font-weight: 600;
+        }
+
+        &.price {
+            font-weight: 600;
+            color: $accent;
+        }
+    }
+
+    tr:last-child td {
+        border-bottom: none;
+    }
+
+    tr:hover td {
+        background-color: #FAFAFA;
+    }
+}
+
+/* --- Loading --- */
+.loading-state {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    color: $text-secondary;
+    font-size: 13px;
+    padding: 12px;
+
+    mat-spinner ::ng-deep circle {
+        stroke: $text-secondary !important;
+    }
+}
+
+/* --- Footer (Input) --- */
+.chat-footer {
+    border-top: 1px solid $border;
+    padding: 12px;
+    background-color: white;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    .chat-input {
+        flex: 1;
+        border: 1px solid transparent;
+        background-color: #F5F5F4;
+        padding: 10px 16px;
+        font-size: 14px;
+        color: $text-primary;
+        outline: none;
+        transition: all 0.2s;
+
+        &::placeholder {
+            color: #A8A29E;
+        }
+
+        &:focus {
+            background-color: white;
+            border-color: $text-secondary;
+        }
+    }
+
+    .send-btn {
+        background-color: $accent;
+        color: white;
+        width: 40px;
+        height: 40px;
+        border-radius: 0;
+
+        &:disabled {
+            background-color: #E5E5E5;
+            color: #A3A3A3;
+        }
+
+        &:hover:not(:disabled) {
+            /* --- 2. Corrected darken() to color.adjust() --- */
+            background-color: color.adjust($accent, $lightness: -10%);
+        }
+
+        mat-icon {
+            font-size: 20px;
+        }
+    }
+}

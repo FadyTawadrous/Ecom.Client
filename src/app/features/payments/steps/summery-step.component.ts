@@ -21,96 +21,255 @@ import { MaterialModule } from '../../../shared/material/material-module';
     MaterialModule,
   ],
   template: `
-    <mat-card class="!bg-gray-800/80 !backdrop-blur-md !text-white !rounded-2xl !border !border-gray-700 !shadow-2xl overflow-hidden relative p-8 max-w-2xl mx-auto">
+    <div class="summary-step">
+  <mat-card class="summary-card">
+    
+    <div class="card-header">
+      <div class="icon-circle">
+        <mat-icon>assignment_turned_in</mat-icon>
+      </div>
+      <h2 class="title">Order Summary</h2>
+      <p class="subtitle">Please review your details before completing the order.</p>
+    </div>
+
+    <div class="card-content">
       
-      <!-- Decorative Glow -->
-      <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 via-indigo-500 to-blue-500"></div>
-
-      <!-- Header -->
-      <div class="mb-8 text-center">
-        <div class="w-16 h-16 bg-blue-500/10 rounded-full flex items-center justify-center mx-auto mb-4 border border-blue-500/20">
-          <mat-icon class="text-blue-400 !w-8 !h-8 !text-[32px]">assignment_turned_in</mat-icon>
+      <div class="info-block full-width">
+        <div class="block-header">
+          <mat-icon>location_on</mat-icon>
+          <span>Shipping Address</span>
         </div>
-        <h2 class="text-3xl font-bold tracking-tight text-white">Order Summary</h2>
-        <p class="text-gray-400 mt-1">Please review your details before completing the order.</p>
+        <div class="block-body">
+          <p class="primary-text">{{ service.addressData()?.street }}</p>
+          <p class="secondary-text">
+            {{ service.addressData()?.city }}, {{ service.addressData()?.country }}
+          </p>
+        </div>
       </div>
 
-      <div class="space-y-6">
-        
-        <!-- Shipping Section -->
-        <div class="bg-gray-900/50 rounded-xl p-5 border border-gray-700/50 flex items-start gap-4">
-          <mat-icon class="text-gray-500 mt-1">location_on</mat-icon>
-          <div>
-            <h3 class="text-xs font-bold text-gray-500 uppercase tracking-widest mb-1">Shipping Address</h3>
-            <p class="text-gray-200 text-lg leading-snug">
-              {{ service.addressData()?.street }}
-            </p>
-            <p class="text-gray-400">
-              {{ service.addressData()?.city }}, {{ service.addressData()?.country }}
-            </p>
+      <div class="split-row">
+        <div class="info-block">
+          <div class="block-header">
+            <mat-icon>local_shipping</mat-icon>
+            <span>Delivery</span>
+          </div>
+          <div class="block-body">
+            <p class="primary-text capitalize">{{ service.deliveryType() }}</p>
+            <p class="secondary-text">Standard Shipping</p>
           </div>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          
-          <!-- Delivery Method -->
-          <div class="bg-gray-900/50 rounded-xl p-5 border border-gray-700/50 flex items-start gap-4">
-            <mat-icon class="text-gray-500 mt-1">local_shipping</mat-icon>
-            <div>
-              <h3 class="text-xs font-bold text-gray-500 uppercase tracking-widest mb-1">Delivery</h3>
-              <p class="text-gray-200 font-medium text-lg capitalize">
-                {{ service.deliveryType() }}
-              </p>
-              <p class="text-gray-500 text-sm">Standard Shipping</p>
-            </div>
+        <div class="info-block">
+          <div class="block-header">
+            <mat-icon>credit_card</mat-icon>
+            <span>Payment</span>
           </div>
-
-          <!-- Payment Method -->
-          <div class="bg-gray-900/50 rounded-xl p-5 border border-gray-700/50 flex items-start gap-4">
-            <mat-icon class="text-gray-500 mt-1">credit_card</mat-icon>
-            <div>
-              <h3 class="text-xs font-bold text-gray-500 uppercase tracking-widest mb-1">Payment</h3>
-              <p class="text-gray-200 font-medium text-lg">
-                Stripe Secure
-              </p>
-              <p class="text-gray-500 text-sm">**** **** **** 4242</p>
-            </div>
+          <div class="block-body">
+            <p class="primary-text">Stripe Secure</p>
+            <p class="secondary-text">**** **** **** 4242</p>
           </div>
         </div>
-
       </div>
 
-      <mat-divider class="!bg-gray-700 !my-8"></mat-divider>
+    </div>
 
-      <!-- Total Section -->
-      <div class="flex flex-col items-center justify-center mb-8">
-        <span class="text-gray-400 text-sm uppercase tracking-widest font-semibold mb-2">Total Amount</span>
-        <span class="text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-400 drop-shadow-lg">
-          {{ total | currency }}
-        </span>
+    <mat-divider></mat-divider>
+
+    <div class="card-footer">
+      <div class="total-section">
+        <span class="label">Total Amount</span>
+        <span class="value">{{ total | currency }}</span>
       </div>
 
-      <!-- Action Button -->
-      <button mat-flat-button (click)="placeOrder()"
-        class="!w-full !h-14 !text-lg !rounded-xl 
-               !bg-gradient-to-r !from-blue-600 !to-indigo-600 
-               hover:!from-blue-500 hover:!to-indigo-500 
-               !text-white !shadow-lg hover:!shadow-blue-500/25 
-               hover:scale-[1.01] active:scale-95 transition-all duration-300 
-               flex items-center justify-center gap-2 group">
+      <button mat-flat-button class="place-order-btn" (click)="placeOrder()">
         <span>Place Order</span>
-        <mat-icon class="group-hover:translate-x-1 transition-transform">arrow_forward</mat-icon>
+        <mat-icon>arrow_forward</mat-icon>
       </button>
+    </div>
 
-    </mat-card>
+  </mat-card>
+</div>
   `,
   styles: [`
-    /* Ensure icons are centered properly in the flex containers */
+    /* --- Earthy Minimalist Variables --- */
+$bg-card: #FFFFFF;       // White
+$text-primary: #2C2C2C;  // Charcoal
+$text-secondary: #57534E;// Warm Grey
+$accent: #5D5C52;        // Olive
+$border: #D6D3D1;        // Stone
+$hover-bg: #F5F5F4;      // Light Stone
+
+/* --- Layout --- */
+.summary-step {
+  display: flex;
+  justify-content: center;
+  padding: 24px 0;
+  background-color: #E6E5DF;
+}
+
+/* --- Main Card --- */
+.summary-card {
+  width: 100%;
+  max-width: 600px;
+  background-color: $bg-card;
+  border: 1px solid $border;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+  border-radius: 4px; // Square-ish corners
+  padding: 40px !important; // Override default padding
+}
+
+/* --- Header --- */
+.card-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin-bottom: 40px;
+
+  .icon-circle {
+    width: 64px;
+    height: 64px;
+    background-color: $hover-bg;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 16px;
+    border: 1px solid $border;
+
     mat-icon {
-      height: 24px;
-      width: 24px;
-      font-size: 24px;
+      font-size: 32px;
+      width: 32px;
+      height: 32px;
+      color: $accent;
     }
+  }
+
+  .title {
+    font-family: 'Garamond', serif;
+    font-size: 32px;
+    font-weight: 500;
+    color: $text-primary;
+    margin: 0 0 8px 0;
+  }
+
+  .subtitle {
+    color: $text-secondary;
+    font-size: 14px;
+    margin: 0;
+  }
+}
+
+/* --- Content Blocks --- */
+.card-content {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  margin-bottom: 32px;
+}
+
+.split-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+
+  @media (max-width: 600px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.info-block {
+  background-color: #FAFAFA;
+  border: 1px solid $border;
+  padding: 20px;
+  border-radius: 4px;
+
+  .block-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+    color: $text-secondary;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 600;
+
+    mat-icon { font-size: 18px; width: 18px; height: 18px; }
+  }
+
+  .block-body {
+    .primary-text {
+      font-size: 16px;
+      font-weight: 500;
+      color: $text-primary;
+      margin: 0 0 4px 0;
+      line-height: 1.4;
+      
+      &.capitalize { text-transform: capitalize; }
+    }
+    
+    .secondary-text {
+      font-size: 14px;
+      color: $text-secondary;
+      margin: 0;
+    }
+  }
+}
+
+/* --- Footer / Total --- */
+.card-footer {
+  margin-top: 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+
+  .total-section {
+    text-align: center;
+    
+    .label {
+      display: block;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: $text-secondary;
+      margin-bottom: 8px;
+    }
+    
+    .value {
+      font-family: 'Garamond', serif;
+      font-size: 40px;
+      font-weight: 500;
+      color: $text-primary;
+      line-height: 1;
+    }
+  }
+
+  .place-order-btn {
+    width: 100%;
+    height: 56px;
+    background-color: $accent;
+    color: white;
+    font-size: 16px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 600;
+    border-radius: 0; // Square button
+    
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+
+    mat-icon { transition: transform 0.2s; }
+
+    &:hover {
+      background-color: darken($accent, 5%);
+      mat-icon { transform: translateX(4px); }
+    }
+  }
+}
   `]
 })
 

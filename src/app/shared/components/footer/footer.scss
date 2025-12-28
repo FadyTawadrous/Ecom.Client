@@ -1,3 +1,159 @@
-footer a:hover {
-  color: white;
+/* --- Earthy Theme Variables --- */
+$bg-footer: #2C2C2C; // Charcoal background
+$text-light: #E6E5DF; // Bone/Off-white text
+$text-muted: #A8A29E; // Stone-400
+$accent: #5D5C52; // Olive
+$border-color: #44403C; // Dark Stone border
+
+.site-footer {
+  background-color: $bg-footer;
+  color: $text-light;
+  padding: 80px 0 32px;
+  font-family: 'Helvetica Neue', sans-serif;
+  border-top: 1px solid $border-color;
+}
+
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 32px;
+}
+
+/* --- Main Grid --- */
+.footer-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 48px;
+  margin-bottom: 64px;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+}
+
+/* --- Typography & Links (Applies to child components too) --- */
+::ng-deep {
+
+  // Targeting headings inside app-footer-links if they use h3/h4
+  .footer-col h3,
+  .footer-heading {
+    font-family: 'Garamond', 'Times New Roman', serif;
+    font-size: 20px;
+    font-weight: 500;
+    margin-bottom: 24px;
+    color: #FFFFFF;
+    letter-spacing: 0.5px;
+  }
+
+  // Links inside app-footer-links
+  .footer-col a {
+    display: block;
+    color: $text-muted;
+    text-decoration: none;
+    margin-bottom: 12px;
+    font-size: 14px;
+    transition: all 0.2s ease;
+    width: fit-content;
+
+    &:hover {
+      color: $text-light;
+      transform: translateX(4px); // Subtle slide effect
+    }
+  }
+}
+
+/* --- Newsletter Section --- */
+.newsletter-box {
+  margin-top: 32px;
+  padding-top: 32px;
+  border-top: 1px solid $border-color;
+
+  .footer-desc {
+    color: $text-muted;
+    font-size: 14px;
+    margin-bottom: 16px;
+  }
+}
+
+.input-group {
+  display: flex;
+  gap: 0; // Connected input/button
+
+  .newsletter-input {
+    flex: 1;
+    background-color: #1F1F1F; // Slightly darker than footer
+    border: 1px solid $border-color;
+    border-right: none;
+    padding: 12px 16px;
+    color: white;
+    font-size: 14px;
+    border-radius: 0; // Square corners
+    outline: none;
+
+    &::placeholder {
+      color: #78716C;
+    }
+
+    &:focus {
+      background-color: #000;
+      border-color: #78716C;
+    }
+  }
+
+  .subscribe-btn {
+    background-color: $text-light; // Bone white button
+    color: $bg-footer; // Dark text
+    border: none;
+    padding: 0 24px;
+    font-weight: 600;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-radius: 0; // Square corners
+    cursor: pointer;
+    transition: background 0.2s;
+
+    &:hover {
+      background-color: #FFFFFF;
+    }
+  }
+}
+
+/* --- Bottom Bar --- */
+.bottom-bar {
+  padding-top: 32px;
+  border-top: 1px solid $border-color;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+
+  @media (min-width: 768px) {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  p {
+    font-size: 13px;
+    color: $text-muted;
+    margin: 0;
+  }
+
+  .legal-links {
+    display: flex;
+    gap: 24px;
+
+    a {
+      font-size: 13px;
+      color: $text-muted;
+      text-decoration: none;
+      transition: color 0.2s;
+
+      &:hover {
+        color: $text-light;
+        text-decoration: underline;
+      }
+    }
+  }
 }

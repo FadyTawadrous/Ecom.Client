@@ -1,66 +1,320 @@
-/* --- Custom Utility Mappings for Dynamic Classes --- */
-/* Using standard CSS instead of @apply to avoid build isolation issues */
+/* --- Earthy Minimalist Variables --- */
+$bg-page: #E6E5DF; // Warm Bone
+$bg-card: #FFFFFF; // White
+$text-primary: #2C2C2C; // Charcoal
+$text-secondary: #57534E; // Warm Grey
+$accent: #5D5C52; // Olive
+$border: #D6D3D1; // Stone
+$hover-bg: #F5F5F4; // Light Stone
+$selected-bg: #F0FDF4; // Very light green/olive tint for selected
+$selected-border: $accent;
 
-/* Backgrounds */
-.bg-gray-800-80 {
-  background-color: rgba(31, 41, 55, 0.8);
-  /* gray-800 / 0.8 */
+/* --- Page Layout --- */
+.delivery-page {
+  min-height: calc(100vh - 80px);
+  background-color: $bg-page;
+  padding: 40px 16px;
+  font-family: 'Helvetica Neue', sans-serif;
+  color: $text-primary;
 }
 
-.bg-blue-900-20 {
-  background-color: rgba(30, 58, 138, 0.2);
-  /* blue-900 / 0.2 */
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
 }
 
-.bg-blue-500-20 {
-  background-color: rgba(59, 130, 246, 0.2);
-  /* blue-500 / 0.2 */
+/* --- Header --- */
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 40px;
+  border-bottom: 1px solid $border;
+  padding-bottom: 24px;
+
+  @media (max-width: 600px) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 24px;
+  }
+
+  .header-content {
+    .page-title {
+      font-family: 'Garamond', serif;
+      font-size: 32px;
+      font-weight: 500;
+      margin: 0 0 8px 0;
+      color: $text-primary;
+    }
+
+    .page-subtitle {
+      font-size: 16px;
+      color: $text-secondary;
+      margin: 0;
+    }
+  }
+
+  .add-btn {
+    background-color: $accent;
+    color: white;
+    height: 48px;
+    padding: 0 24px;
+    border-radius: 0; // Square button
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 600;
+
+    mat-icon {
+      margin-right: 8px;
+    }
+
+    &:hover {
+      background-color: darken($accent, 5%);
+    }
+  }
 }
 
-.bg-gray-700-50 {
-  background-color: rgba(55, 65, 81, 0.5);
-  /* gray-700 / 0.5 */
+/* --- Empty State --- */
+.empty-state {
+  background-color: $bg-card;
+  border: 1px dashed $border;
+  padding: 64px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+
+  .icon-circle {
+    width: 80px;
+    height: 80px;
+    background-color: #F5F5F4;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 24px;
+
+    mat-icon {
+      font-size: 40px;
+      width: 40px;
+      height: 40px;
+      color: $text-secondary;
+    }
+  }
+
+  h3 {
+    font-family: 'Garamond', serif;
+    font-size: 24px;
+    font-weight: 600;
+    margin: 0 0 12px 0;
+    color: $text-primary;
+  }
+
+  p {
+    margin: 0 0 32px 0;
+    color: $text-secondary;
+  }
+
+  .empty-add-btn {
+    border-color: $accent;
+    color: $accent;
+
+    &:hover {
+      background-color: #F5F5F4;
+    }
+  }
 }
 
-/* Borders */
-.border-blue-500-30 {
-  border-color: rgba(59, 130, 246, 0.3);
-  /* blue-500 / 0.3 */
+/* --- Address Grid --- */
+.address-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 24px;
 }
 
-.hover-border-blue-500-50:hover {
-  border-color: rgba(59, 130, 246, 0.5);
-  /* blue-500 / 0.5 */
+/* --- Address Card --- */
+.address-card {
+  background-color: $bg-card;
+  border: 2px solid transparent; // Reserve space for border
+  border-color: $border; // Default border
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  overflow: hidden;
+
+  /* Hover State */
+  &:hover {
+    transform: translateY(-2px);
+    border-color: darken($border, 20%);
+  }
+
+  /* Selected State */
+  &.selected {
+    border-color: $accent;
+    background-color: #FBFBF9; // Very subtle warmth
+    box-shadow: 0 8px 30px rgba(93, 92, 82, 0.15); // Olive shadow
+  }
+
+  .card-content {
+    padding: 24px;
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  /* Location Header */
+  .location-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+
+    .city-icon {
+      color: $accent;
+    }
+
+    .location-text {
+      .city {
+        font-family: 'Garamond', serif;
+        font-size: 20px;
+        font-weight: 600;
+        margin: 0;
+        color: $text-primary;
+      }
+
+      .country {
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: $text-secondary;
+      }
+    }
+  }
+
+  /* Details */
+  .street-details {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+
+    .detail-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: $text-secondary;
+      font-size: 14px;
+
+      .icon-box {
+        width: 32px;
+        height: 32px;
+        background-color: $hover-bg;
+        border-radius: 4px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        mat-icon {
+          font-size: 18px;
+          width: 18px;
+          height: 18px;
+          color: $text-secondary;
+        }
+      }
+
+      .street {
+        color: $text-primary;
+        font-weight: 500;
+      }
+
+      .zip {
+        font-family: monospace;
+      }
+    }
+  }
+
+  /* Edit Button */
+  .card-actions {
+    .action-btn {
+      color: $text-secondary;
+
+      &:hover {
+        color: $text-primary;
+        background-color: $hover-bg;
+      }
+    }
+  }
+
+  /* Footer Indicator */
+  .card-footer {
+    padding: 12px 24px;
+    background-color: $hover-bg;
+    border-top: 1px solid #f3f4f6;
+    min-height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .selected-indicator {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: $accent;
+      font-weight: 700;
+      text-transform: uppercase;
+      font-size: 12px;
+      letter-spacing: 1px;
+    }
+
+    .select-text {
+      font-size: 12px;
+      color: $text-secondary;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      opacity: 0.7;
+    }
+  }
+
+  // Change footer color when selected
+  &.selected .card-footer {
+    background-color: $accent;
+
+    .selected-indicator {
+      color: white;
+    }
+  }
 }
 
-/* Shadows */
-.shadow-blue-500-20 {
-  box-shadow: 0 10px 25px -5px rgba(59, 130, 246, 0.2);
-}
+/* --- Bottom Actions --- */
+.footer-actions {
+  margin-top: 48px;
+  display: flex;
+  justify-content: flex-end;
+  border-top: 1px solid $border;
+  padding-top: 24px;
 
-/* --- Base Component Styles --- */
-:host {
-  display: block;
-}
+  .continue-btn {
+    background-color: $accent;
+    color: white;
+    height: 56px;
+    padding: 0 40px;
+    border-radius: 0;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 600;
+    font-size: 14px;
 
-/* Animation for Card Selection */
-mat-card {
-  border-radius: 12px;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
+    mat-icon {
+      margin-left: 8px;
+    }
 
-/* Slight scale effect when selected */
-mat-card.border-blue-500 {
-  transform: scale(1.01);
-}
+    &:hover:not(:disabled) {
+      background-color: darken($accent, 5%);
+    }
 
-/* Ensure Material Icons are centered in buttons */
-button .mat-icon {
-  line-height: 1;
-}
-
-/* Disabled Button Opacity override */
-button[disabled] {
-  opacity: 0.5;
-  cursor: not-allowed;
+    &:disabled {
+      background-color: $border;
+      color: #9ca3af;
+    }
+  }
 }

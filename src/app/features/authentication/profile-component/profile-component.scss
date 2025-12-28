@@ -1,52 +1,361 @@
-/* --- Custom Dark Mode Form Fields --- */
+@use 'sass:color';
 
-// Force width
-mat-form-field {
+/* --- Earthy Minimalist Variables --- */
+$bg-page: #E6E5DF; // Warm Bone
+$bg-card: #FFFFFF; // White
+$text-primary: #2C2C2C; // Charcoal
+$text-secondary: #57534E; // Warm Grey
+$accent: #5D5C52; // Olive
+$border: #D6D3D1; // Stone
+$error: #991b1b; // Muted Red
+
+/* --- Page Layout --- */
+.profile-page {
+    min-height: calc(100vh - 80px);
+    background-color: $bg-page;
+    padding: 40px 16px;
+    font-family: 'Helvetica Neue', sans-serif;
+    color: $text-primary;
+}
+
+.container {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.page-title {
+    font-family: 'Garamond', serif;
+    font-size: 32px;
+    font-weight: 500;
+    margin-bottom: 32px;
+    padding-left: 16px;
+    border-left: 4px solid $accent;
+    color: $text-primary;
+}
+
+.profile-grid {
+    display: grid;
+    grid-template-columns: 1fr 2fr; // Sidebar 1/3, Main 2/3
+    gap: 32px;
+
+    @media (max-width: 768px) {
+        grid-template-columns: 1fr; // Stack on mobile
+    }
+}
+
+/* --- Card Base --- */
+.profile-card {
+    background-color: $bg-card;
+    border: 1px solid $border;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+/* --- Left Card: User Info --- */
+.user-info-card {
+    padding: 32px 24px;
+    height: fit-content;
+
+    .avatar-section {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        margin-bottom: 24px;
+
+        .avatar-wrapper {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            margin-bottom: 16px;
+
+            img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                border-radius: 50%;
+                border: 4px solid $bg-page; // Ring effect
+            }
+
+            .edit-avatar-btn {
+                position: absolute;
+                bottom: 0;
+                right: 0;
+                background-color: $accent;
+                color: white;
+                border: none;
+                border-radius: 50%;
+                width: 36px;
+                height: 36px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                transition: transform 0.2s;
+
+                &:hover {
+                    transform: scale(1.1);
+                }
+
+                mat-icon {
+                    font-size: 18px;
+                    width: 18px;
+                    height: 18px;
+                }
+            }
+
+            .hidden-input {
+                display: none;
+            }
+        }
+
+        .user-display-name {
+            font-size: 20px;
+            font-weight: 600;
+            margin: 0 0 4px 0;
+        }
+
+        .user-email {
+            font-size: 14px;
+            color: $text-secondary;
+            margin: 0 0 16px 0;
+        }
+
+        .roles-container {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+
+            .role-badge {
+                font-size: 12px;
+                padding: 4px 12px;
+                border-radius: 20px;
+                background-color: #F5F5F4;
+                color: $text-secondary;
+                border: 1px solid $border;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+                font-weight: 600;
+
+                &.admin {
+                    background-color: $accent;
+                    color: white;
+                    border-color: $accent;
+                }
+            }
+        }
+
+        .face-id-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            color: #15803d; // Green
+            background-color: #dcfce7;
+            padding: 6px 16px;
+            border-radius: 20px;
+
+            mat-icon {
+                font-size: 18px;
+                width: 18px;
+                height: 18px;
+            }
+        }
+    }
+
+    .card-actions {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        margin-top: 24px;
+
+        .action-btn {
+            justify-content: flex-start;
+            padding: 24px 16px;
+            border-color: $border;
+            color: $text-primary;
+            border-radius: 0; // Square buttons
+
+            mat-icon {
+                margin-right: 12px;
+                color: $text-secondary;
+            }
+
+            &:hover {
+                background-color: #FAFAFA;
+                border-color: $text-secondary;
+            }
+        }
+    }
+}
+
+/* --- Right Card: Edit Form --- */
+.form-card {
+    padding: 32px;
+
+    mat-card-header {
+        padding: 0 0 24px 0;
+
+        mat-card-title {
+            font-family: 'Garamond', serif;
+            font-size: 24px;
+            font-weight: 600;
+        }
+    }
+
+    mat-card-content {
+        padding: 0;
+    }
+}
+
+.profile-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+
+    @media (max-width: 600px) {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Material Field Overrides */
+.clean-field {
     width: 100%;
+
+    ::ng-deep {
+        .mdc-text-field--outlined {
+            background-color: #FAFAFA;
+        }
+
+        .mat-mdc-input-element {
+            color: $text-primary !important;
+            caret-color: $accent;
+        }
+
+        .mdc-floating-label {
+            color: $text-secondary !important;
+        }
+
+        .mat-icon {
+            color: $text-secondary;
+        }
+
+        .mdc-notched-outline__leading,
+        .mdc-notched-outline__notch,
+        .mdc-notched-outline__trailing {
+            border-color: $border !important;
+        }
+
+        &.mat-focused {
+            .mdc-floating-label {
+                color: $accent !important;
+            }
+
+            .mdc-notched-outline__leading,
+            .mdc-notched-outline__notch,
+            .mdc-notched-outline__trailing {
+                border-color: $accent !important;
+                border-width: 1px !important;
+            }
+        }
+
+        mat-error {
+            color: $error;
+        }
+    }
+
+    &.read-only {
+        opacity: 0.7;
+
+        ::ng-deep .mdc-text-field--outlined {
+            background-color: #f3f4f6;
+        }
+    }
 }
 
-// 1. Outline Borders (Default)
-::ng-deep .custom-dark-field .mdc-notched-outline__leading,
-::ng-deep .custom-dark-field .mdc-notched-outline__notch,
-::ng-deep .custom-dark-field .mdc-notched-outline__trailing {
-    border-color: #4b5563 !important; // gray-600
+/* File Feedback */
+.file-feedback {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px;
+    background-color: #FAFAFA;
+    border: 1px dashed $border;
+
+    .icon-circle {
+        width: 40px;
+        height: 40px;
+        background-color: $border;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        mat-icon {
+            color: white;
+        }
+    }
+
+    .file-info {
+        display: flex;
+        flex-direction: column;
+
+        .status-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            color: $text-secondary;
+            letter-spacing: 0.5px;
+        }
+
+        .file-name {
+            font-size: 14px;
+            font-weight: 500;
+        }
+    }
 }
 
-// 2. Outline Borders (Focused)
-::ng-deep .custom-dark-field.mat-focused .mdc-notched-outline__leading,
-::ng-deep .custom-dark-field.mat-focused .mdc-notched-outline__notch,
-::ng-deep .custom-dark-field.mat-focused .mdc-notched-outline__trailing {
-    border-color: #60a5fa !important; // blue-400
-    border-width: 2px !important;
-}
+/* Form Footer */
+.form-footer {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 24px;
+    padding-top: 24px;
+    border-top: 1px solid $border;
 
-// 3. Input Text
-::ng-deep .custom-dark-field input.mat-mdc-input-element {
-    color: white !important;
-    caret-color: #60a5fa;
-}
+    .save-btn {
+        background-color: $accent;
+        color: white;
+        padding: 0 32px;
+        height: 48px;
+        border-radius: 0;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-weight: 600;
 
-// 4. Placeholder
-::ng-deep .custom-dark-field .mat-mdc-input-element::placeholder {
-    color: #6b7280 !important;
-}
+        &:disabled {
+            background-color: $border;
+            color: #9ca3af;
+        }
 
-// 5. Label (Resting)
-::ng-deep .custom-dark-field .mdc-floating-label {
-    color: #9ca3af !important;
-}
+        &:hover:not(:disabled) {
+            background-color: color.adjust($accent, $lightness: -5%);
+        }
 
-// 6. Label (Focused)
-::ng-deep .custom-dark-field.mat-focused .mdc-floating-label {
-    color: #60a5fa !important;
-}
+        .btn-content {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
 
-// 7. Error Text
-mat-error {
-    color: #f87171 !important;
-}
-
-/* Spinner Color */
-::ng-deep .custom-spinner circle {
-    stroke: white !important;
+        .btn-spinner ::ng-deep circle {
+            stroke: white !important;
+        }
+    }
 }
